@@ -138,7 +138,7 @@ function isWalkable(point: Point) {
 }
 
 function isInTempleInterior(point: Point) {
-  return Math.abs(point.x) < 2.85 && point.z < -3.05 && point.z > -6.15;
+  return Math.abs(point.x) < 4.15 && point.z < -4.15 && point.z > -8.15;
 }
 
 function clamp01(value: number) {
@@ -146,23 +146,23 @@ function clamp01(value: number) {
 }
 
 function getTerrainHeight(point: Point) {
-  const stairLane = Math.abs(point.x) < 2.55 && point.z <= 5.15 && point.z >= -1.45;
+  const stairLane = Math.abs(point.x) < 3.75 && point.z <= 7.55 && point.z >= -2.2;
   if (stairLane) {
-    const stairProgress = clamp01((5.15 - point.z) / 6.6);
-    return SURFACE_Y + stairProgress * 1.04;
+    const stairProgress = clamp01((7.55 - point.z) / 9.75);
+    return SURFACE_Y + stairProgress * 1.46;
   }
 
-  const templeTerrace = Math.abs(point.x) < 5.35 && point.z < -1.45 && point.z > -5.75;
-  if (templeTerrace) return SURFACE_Y + 1.08;
+  const templeTerrace = Math.abs(point.x) < 7.45 && point.z < -2.2 && point.z > -7.6;
+  if (templeTerrace) return SURFACE_Y + 1.48;
 
-  if (isInTempleInterior(point)) return SURFACE_Y + 1.12;
+  if (isInTempleInterior(point)) return SURFACE_Y + 1.52;
 
   const sideTerrace =
-    Math.abs(point.x) > 4.25 && Math.abs(point.x) < 7.15 && point.z > -2.85 && point.z < 2.6;
-  if (sideTerrace) return SURFACE_Y + 0.24;
+    Math.abs(point.x) > 5.95 && Math.abs(point.x) < 11.45 && point.z > -3.75 && point.z < 3.65;
+  if (sideTerrace) return SURFACE_Y + 0.34;
 
-  const springTerrace = Math.abs(point.x) < 5.25 && point.z > 3.45;
-  if (springTerrace) return SURFACE_Y + 0.18;
+  const springTerrace = Math.abs(point.x) < 8.65 && point.z > 4.35;
+  if (springTerrace) return SURFACE_Y + 0.22;
 
   return SURFACE_Y;
 }
