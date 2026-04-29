@@ -1,33 +1,32 @@
-Plan to upgrade the Sanctuary page:
+Plan to refine the Sanctuary page:
 
-1. Make the stair railings coherent
-   - Replace the current flat side rail bars with stair-following marble balustrades.
-   - Align railing height and angle to the 24-step staircase so posts land on individual steps instead of floating or cutting through them.
-   - Add wider lower newel posts, slimmer repeated balusters, and a continuous sloped handrail on both sides for a reference-image temple approach.
+1. Make the stairs and railings match exactly
+   - Replace the current independently-positioned railing math with a shared stair-layout system used by both the stair meshes and railing meshes.
+   - Align rail posts to the actual step centers and widths, so each baluster lands on a tread instead of floating beside or cutting through the steps.
+   - Rebuild the handrails as continuous sloped marble rails whose start/end points match the first and last stair elevations.
+   - Add larger newel posts at the bottom and top landings, plus side stringers/skirt blocks so the whole staircase reads as one coherent structure.
 
-2. Expand temple exterior areas on the side and back
-   - Enlarge the walkable island footprint and add broad side/back terraces around the temple.
-   - Extend marble walkways around the temple perimeter so the avatar can walk along both sides and behind the building.
-   - Update walkable bounds, clamping, terrain-height, and click-to-walk areas so full-island navigation supports the expanded side/back spaces.
+2. Smooth avatar movement and reduce choppiness
+   - Move movement interpolation into the Three.js render loop using refs, so walking no longer triggers React state updates every animation frame.
+   - Keep React state updates throttled only for UI needs, such as nearby-zone detection and panel changes.
+   - Add acceleration/deceleration smoothing instead of instant step changes, so keyboard movement and click-to-walk feel less jittery.
+   - Smooth camera tracking with frame-rate-independent damping to prevent sudden camera catches or lag spikes.
 
-3. Upgrade the graphics toward the provided reference image
-   - Refine the temple silhouette with a more classical Greek facade: stronger front pediment, deeper colonnade, longer side colonnades, decorative gold roof ornaments, and layered marble plinths.
-   - Add more reference-like exterior detail: flower urns, clustered pink/white flower beds, cypress trees, lush greenery on terrace edges, larger cloud banks, and additional waterfalls dropping from the island.
-   - Improve material feel with warmer marble tones, subtle shadow depth, more gold accents, and denser atmospheric sparkle/cloud layering while keeping the scene performant.
+3. Improve performance while raising visual quality
+   - Reduce expensive per-frame/render pressure by lowering unnecessary high-count decorative meshes where they do not affect the main view.
+   - Replace repeated tiny flower/sparkle objects with grouped or lower-cost decorations where possible.
+   - Keep pixel density responsive: sharper on capable screens, but not so high that it causes movement lag.
+   - Reuse shared materials/geometries where practical to reduce GPU/CPU overhead.
 
-4. Improve backside visibility with avatar-locked camera
-   - Rework the camera follow logic so it is always anchored to the avatar position rather than drifting toward the temple/world center.
-   - When the avatar walks behind the temple, shift the camera higher and/or slightly around the building so the avatar remains visible instead of hidden behind the structure.
-   - Keep the interior/near-temple camera usable, but prioritize always seeing the avatar during side and rear navigation.
+4. Upgrade graphics toward a higher-fidelity “4K quality” look
+   - Improve the temple silhouette with more detailed marble layers, deeper shadows, refined columns/capitals, gold trim, and a cleaner reference-like pediment.
+   - Add richer material detail using procedural marble/stone variation, better roughness/metalness values, and stronger shadow definition.
+   - Upgrade exterior landscaping with denser but optimized flower beds, garden borders, cypress clusters, waterfalls, and cloud layering.
+   - Adjust lighting, fog, and tone so the scene looks less washed out and more premium while preserving the bright peaceful temple atmosphere.
 
-Technical scope
-   - Main implementation in `src/components/platform/SanctuaryWorld.tsx`.
-   - No backend or route changes.
-   - CSS changes only if a small overlay/framing adjustment is needed.
-
-Validation
-   - Verify `/sanctuary` loads without runtime errors.
-   - Check that the avatar can walk up the stairs, along side terraces, behind the temple, and back to the front.
-   - Confirm the new railings align with the staircase.
-   - Confirm the camera continues to show the avatar from front, side, inside/near temple, and behind-temple positions.
-   - Confirm the scene visually reads closer to the uploaded reference: grand temple, lush flowers, cypress trees, clouds, waterfalls, and floating island scale.
+5. Validate the result
+   - Load `/sanctuary` and enter the 3D world.
+   - Check the stairs from the front and side to confirm railings match the staircase slope and step positions.
+   - Walk with WASD/arrow keys and click-to-walk to confirm movement is smoother.
+   - Check camera follow near the stairs, side terraces, and temple/backside.
+   - Run a browser performance check after entering the world to confirm the quality upgrade does not worsen lag.

@@ -31,6 +31,7 @@ type ZoneKey = "overview" | "herbs" | "energy" | "movement" | "touch" | "spirit"
 type Point = { x: number; z: number };
 type Quest = (typeof allQuests)[number];
 type Celebration = { id: number; xp: number; leveledUp: boolean };
+type SanctuaryWorldApi = { getPosition: () => Point; setTarget: (point: Point | null) => void };
 
 type Zone = {
   key: Exclude<ZoneKey, "overview">;
@@ -52,6 +53,10 @@ const STAIR_COUNT = 24;
 const STAIR_START_Z = 7.62;
 const STAIR_STEP_DEPTH = 0.38;
 const STAIR_STEP_RISE = 0.064;
+const STAIR_GROUP_Z = 1.42;
+const STAIR_BASE_Y = 0.58;
+const STAIR_WIDTH = 7.55;
+const STAIR_RAIL_INSET = 0.34;
 const WALKABLE_RECTS = [
   { x: 0, z: 6.25, hx: 8.55, hz: 3.55 },
   { x: 0, z: 1.42, hx: 4.75, hz: 6.95 },
@@ -150,6 +155,18 @@ function clamp01(value: number) {
   return Math.min(1, Math.max(0, value));
 }
 
+function getStairStep(index: number) {
+  return {
+    y: STAIR_BASE_Y + index * STAIR_STEP_RISE,
+    z: STAIR_GROUP_Z + STAIR_START_Z - index * STAIR_STEP_DEPTH,
+    width: STAIR_WIDTH,
+  };
+}
+
+function damp(current: number, target: number, lambda: number, delta: number) {
+  return THREE.MathUtils.lerp(current, target, 1 - Math.exp(-lambda * delta));
+}
+
 function getTerrainHeight(point: Point) {
   const stairLane = Math.abs(point.x) < 4.7 && point.z <= STAIR_START_Z && point.z >= -2.25;
   if (stairLane) {
@@ -197,6 +214,15 @@ export function SanctuaryWorld() {
   const keysPressed = useRef(new Set<string>());
   const lastAvatarPosition = useRef<Point>(START_POSITION);
   const avatarDirection = useRef(0);
+  const worldApiRef = useRef<SanctuaryWorldApi | null>(null);
+  const avatarPositionRef = useRef<Point>(START_POSITION);
+  const handleSceneReady = useMemo(
+    () => (api: SanctuaryWorldApi) => {
+      worldApiRef.current = api;
+    },
+    [],
+  );
+  const handleTargetReached = useMemo(() => () => setTargetPosition(null), []);
 
   useEffect(() => setIsMounted(true), []);
 
@@ -220,6 +246,7 @@ export function SanctuaryWorld() {
         event.preventDefault();
         keysPressed.current.add(key);
         setTargetPosition(null);
+        worldApiRef.current?.setTarget(null);
         setManualZone("overview");
         setIsArrivalMenuOpen(false);
       }
@@ -239,66 +266,20 @@ export function SanctuaryWorld() {
 
   useEffect(() => {
     if (!hasEntered) return;
-
     let frame = 0;
-    let lastTime = performance.now();
-
-    function tick(now: number) {
-      const delta = Math.min(32, now - lastTime) / 16.67;
-      lastTime = now;
-
-      setAvatarPosition((current) => {
-        const keys = keysPressed.current;
-        const velocity = { x: 0, z: 0 };
-
-        if (keys.has("arrowleft") || keys.has("a")) velocity.x -= 1;
-        if (keys.has("arrowright") || keys.has("d")) velocity.x += 1;
-        if (keys.has("arrowup") || keys.has("w")) velocity.z -= 1;
-        if (keys.has("arrowdown") || keys.has("s")) velocity.z += 1;
-
-        if (velocity.x || velocity.z) {
-          const magnitude = Math.hypot(velocity.x, velocity.z) || 1;
-          const nextPosition = clampPosition({
-            x: current.x + (velocity.x / magnitude) * 0.105 * delta,
-            z: current.z + (velocity.z / magnitude) * 0.105 * delta,
-          });
-          lastAvatarPosition.current = current;
-          avatarDirection.current = Math.atan2(
-            nextPosition.x - current.x,
-            nextPosition.z - current.z,
-          );
-          return nextPosition;
-        }
-
-        if (targetPosition) {
-          const dx = targetPosition.x - current.x;
-          const dz = targetPosition.z - current.z;
-          const remaining = Math.hypot(dx, dz);
-          if (remaining < 0.08) {
-            setTargetPosition(null);
-            return current;
-          }
-          const nextPosition = clampPosition({
-            x: current.x + (dx / remaining) * Math.min(remaining, 0.075 * delta),
-            z: current.z + (dz / remaining) * Math.min(remaining, 0.075 * delta),
-          });
-          lastAvatarPosition.current = current;
-          avatarDirection.current = Math.atan2(
-            nextPosition.x - current.x,
-            nextPosition.z - current.z,
-          );
-          return nextPosition;
-        }
-
-        return current;
-      });
-
-      frame = requestAnimationFrame(tick);
+    let lastSync = 0;
+    function sync(now: number) {
+      const livePosition = worldApiRef.current?.getPosition() ?? avatarPositionRef.current;
+      if (now - lastSync > 90 && distance(livePosition, avatarPositionRef.current) > 0.035) {
+        avatarPositionRef.current = livePosition;
+        setAvatarPosition(livePosition);
+        lastSync = now;
+      }
+      frame = requestAnimationFrame(sync);
     }
-
-    frame = requestAnimationFrame(tick);
+    frame = requestAnimationFrame(sync);
     return () => cancelAnimationFrame(frame);
-  }, [hasEntered, targetPosition]);
+  }, [hasEntered]);
 
   function playAscensionCue(leveledUp: boolean) {
     if (isMuted || typeof window === "undefined") return;
@@ -345,12 +326,14 @@ export function SanctuaryWorld() {
   function walkTo(zone: Zone) {
     setManualZone(zone.key);
     setTargetPosition(zone.position);
+    worldApiRef.current?.setTarget(zone.position);
     setIsArrivalMenuOpen(false);
   }
 
   function resetView() {
     setManualZone("overview");
     setTargetPosition(START_POSITION);
+    worldApiRef.current?.setTarget(START_POSITION);
     setIsArrivalMenuOpen(false);
   }
 
@@ -395,29 +378,39 @@ export function SanctuaryWorld() {
           <img
             src={floatingTempleSanctuary}
             alt="Floating marble temple sanctuary above luminous clouds"
-            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-105 opacity-32 blur-[1px]" : "scale-100 opacity-100 blur-0"}`}
+            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-105 opacity-15 blur-[1px]" : "scale-100 opacity-100 blur-0"}`}
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--background)_10%,transparent)_42%,color-mix(in_oklab,var(--background)_22%,transparent))]" />
           {isMounted ? (
             <Canvas
               className="sanctuary-canvas"
               shadows
-              dpr={[1, 1.65]}
+              dpr={[1, 1.9]}
               camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 120 }}
-              style={{ opacity: hasEntered ? 0.94 : 0.2 }}
+              style={{ opacity: hasEntered ? 1 : 0.2 }}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+              onCreated={({ gl }) => {
+                gl.shadowMap.enabled = true;
+                gl.shadowMap.type = THREE.PCFSoftShadowMap;
+                gl.toneMapping = THREE.ACESFilmicToneMapping;
+                gl.toneMappingExposure = 1.08;
+              }}
             >
               <Suspense fallback={null}>
                 <SanctuaryScene
                   hasEntered={hasEntered}
                   avatarPosition={avatarPosition}
                   avatarDirection={avatarDirection.current}
-                  isInsideTemple={isInsideTemple}
                   activeZone={activeZone}
+                  keysPressed={keysPressed}
+                  targetPosition={targetPosition}
+                  onReady={handleSceneReady}
+                  onTargetReached={handleTargetReached}
                   onWalkTo={walkTo}
                   onMoveTo={(point) => {
                     setManualZone("overview");
                     setTargetPosition(point);
+                    worldApiRef.current?.setTarget(point);
                   }}
                 />
               </Suspense>
@@ -498,39 +491,108 @@ function SanctuaryScene({
   hasEntered,
   avatarPosition,
   avatarDirection,
-  isInsideTemple,
   activeZone,
+  keysPressed,
+  targetPosition,
+  onReady,
+  onTargetReached,
   onWalkTo,
   onMoveTo,
 }: {
   hasEntered: boolean;
   avatarPosition: Point;
   avatarDirection: number;
-  isInsideTemple: boolean;
   activeZone: ZoneKey;
+  keysPressed: RefObject<Set<string>>;
+  targetPosition: Point | null;
+  onReady: (api: SanctuaryWorldApi) => void;
+  onTargetReached: () => void;
   onWalkTo: (zone: Zone) => void;
   onMoveTo: (point: Point) => void;
 }) {
   const avatarRef = useRef<THREE.Group>(null);
   const clockRef = useRef(0);
+  const livePosition = useRef<Point>(avatarPosition);
+  const targetRef = useRef<Point | null>(targetPosition);
+  const velocityRef = useRef<Point>({ x: 0, z: 0 });
+  const directionRef = useRef(avatarDirection);
 
-  useFrame(({ camera, clock }) => {
+  useEffect(() => {
+    targetRef.current = targetPosition;
+  }, [targetPosition]);
+
+  useEffect(() => {
+    onReady({
+      getPosition: () => livePosition.current,
+      setTarget: (point) => {
+        targetRef.current = point;
+      },
+    });
+  }, [onReady]);
+
+  useFrame(({ camera, clock }, frameDelta) => {
+    const delta = Math.min(frameDelta, 0.05);
     const elapsed = clock.getElapsedTime();
     clockRef.current = elapsed;
 
-    const avatar = getAvatarWorldPosition(avatarPosition);
+    if (hasEntered) {
+      const keys = keysPressed.current;
+      const input = { x: 0, z: 0 };
+      if (keys.has("arrowleft") || keys.has("a")) input.x -= 1;
+      if (keys.has("arrowright") || keys.has("d")) input.x += 1;
+      if (keys.has("arrowup") || keys.has("w")) input.z -= 1;
+      if (keys.has("arrowdown") || keys.has("s")) input.z += 1;
+
+      let desiredVelocity = { x: 0, z: 0 };
+      const inputMagnitude = Math.hypot(input.x, input.z);
+      if (inputMagnitude > 0) {
+        targetRef.current = null;
+        desiredVelocity = { x: (input.x / inputMagnitude) * 4.15, z: (input.z / inputMagnitude) * 4.15 };
+      } else if (targetRef.current) {
+        const dx = targetRef.current.x - livePosition.current.x;
+        const dz = targetRef.current.z - livePosition.current.z;
+        const remaining = Math.hypot(dx, dz);
+        if (remaining < 0.08) {
+          targetRef.current = null;
+          onTargetReached();
+        } else {
+          desiredVelocity = { x: (dx / remaining) * 3.05, z: (dz / remaining) * 3.05 };
+        }
+      }
+
+      velocityRef.current = {
+        x: damp(velocityRef.current.x, desiredVelocity.x, 11, delta),
+        z: damp(velocityRef.current.z, desiredVelocity.z, 11, delta),
+      };
+      const nextPosition = clampPosition({
+        x: livePosition.current.x + velocityRef.current.x * delta,
+        z: livePosition.current.z + velocityRef.current.z * delta,
+      });
+      const moved = distance(nextPosition, livePosition.current);
+      if (moved > 0.0008) {
+        directionRef.current = Math.atan2(
+          nextPosition.x - livePosition.current.x,
+          nextPosition.z - livePosition.current.z,
+        );
+      }
+      livePosition.current = nextPosition;
+    }
+
+    const currentPosition = livePosition.current;
+    const currentInsideTemple = isInTempleInterior(currentPosition);
+    const avatar = getAvatarWorldPosition(currentPosition);
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
     const introCamera = new THREE.Vector3(0, 15.5 - eased * 6.6, 29 - eased * 11.2);
-    const behindTemple = avatarPosition.z < -8.45;
-    const sideOfTemple = Math.abs(avatarPosition.x) > 7.25 && avatarPosition.z < -2.6;
+    const behindTemple = currentPosition.z < -8.45;
+    const sideOfTemple = Math.abs(currentPosition.x) > 7.25 && currentPosition.z < -2.6;
     const exteriorCameraOffset = behindTemple
-      ? new THREE.Vector3(avatarPosition.x * 0.12, 8.2, -8.6)
+      ? new THREE.Vector3(currentPosition.x * 0.12, 8.2, -8.6)
       : sideOfTemple
-        ? new THREE.Vector3(-Math.sign(avatarPosition.x) * 4.8, 6.6, 9.2)
+        ? new THREE.Vector3(-Math.sign(currentPosition.x) * 4.8, 6.6, 9.2)
         : new THREE.Vector3(0, 5.85, 10.8);
-    const followCamera = isInsideTemple
-      ? new THREE.Vector3(avatarPosition.x * 0.58, avatar.y + 3.15, avatarPosition.z + 5.25)
+    const followCamera = currentInsideTemple
+      ? new THREE.Vector3(currentPosition.x * 0.58, avatar.y + 3.15, currentPosition.z + 5.25)
       : avatar.clone().add(exteriorCameraOffset);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
@@ -539,21 +601,21 @@ function SanctuaryScene({
           .add(
             new THREE.Vector3(
               0,
-              isInsideTemple ? 0.95 : 1.55,
+              currentInsideTemple ? 0.95 : 1.55,
               behindTemple ? 1.1 : sideOfTemple ? -2.2 : -4.2,
             ),
           )
       : new THREE.Vector3(0, 2.8, -3.4);
 
-    camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
+    camera.position.lerp(desiredCamera, 1 - Math.exp(-(hasEntered ? 4.2 : 2.2) * delta));
     camera.lookAt(lookTarget);
 
     if (avatarRef.current) {
-      avatarRef.current.position.lerp(avatar, 0.34);
+      avatarRef.current.position.lerp(avatar, 1 - Math.exp(-18 * delta));
       avatarRef.current.rotation.y = THREE.MathUtils.lerp(
         avatarRef.current.rotation.y,
-        avatarDirection,
-        0.16,
+        directionRef.current,
+        1 - Math.exp(-10 * delta),
       );
     }
   });
@@ -566,19 +628,25 @@ function SanctuaryScene({
 
   return (
     <>
-      <color attach="background" args={["#d7e8fb"]} />
-      <fog attach="fog" args={["#d7e8fb", 24, 72]} />
-      <ambientLight intensity={1.38} />
+      <color attach="background" args={["#dcecff"]} />
+      <fog attach="fog" args={["#dcecff", 28, 82]} />
+      <ambientLight intensity={1.05} />
       <directionalLight
         position={[7, 11, 7]}
-        intensity={3.05}
+        intensity={3.45}
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[4096, 4096]}
+        shadow-camera-near={0.5}
+        shadow-camera-far={48}
+        shadow-camera-left={-18}
+        shadow-camera-right={18}
+        shadow-camera-top={18}
+        shadow-camera-bottom={-18}
       />
-      <pointLight position={[0, 5, -4]} intensity={11.5} color="#ffe5a6" distance={16} />
+      <pointLight position={[0, 5, -4]} intensity={8.4} color="#ffe5a6" distance={16} />
       <Environment preset="sunset" />
       <SceneSparkles
-        count={120}
+        count={78}
         scale={[25, 8, 25]}
         size={2.2}
         speed={0.18}
@@ -616,8 +684,8 @@ function FloatingTempleIsland({
         <meshStandardMaterial color="#615b51" roughness={0.94} metalness={0.01} />
       </mesh>
       <mesh position={[0, 0, -0.1]} receiveShadow onClick={onGroundClick}>
-        <cylinderGeometry args={[14.9, 13.85, 0.84, 128]} />
-        <meshStandardMaterial color="#8eaf78" roughness={0.78} />
+        <cylinderGeometry args={[14.9, 13.85, 0.84, 160]} />
+        <meshStandardMaterial color="#91b982" roughness={0.72} />
       </mesh>
       <mesh
         position={[0, 0.42, -0.1]}
@@ -625,8 +693,8 @@ function FloatingTempleIsland({
         receiveShadow
         onClick={onGroundClick}
       >
-        <circleGeometry args={[14.42, 128]} />
-        <meshStandardMaterial color="#a9bf91" roughness={0.74} />
+        <circleGeometry args={[14.42, 160]} />
+        <meshStandardMaterial color="#b2c99b" roughness={0.68} />
       </mesh>
 
       <GardenTerraces onGroundClick={onGroundClick} />
@@ -693,36 +761,37 @@ function MarbleWalkways({
 
 function TempleBalustrades() {
   const rails = [-1, 1];
-  const railLength = STAIR_STEP_DEPTH * (STAIR_COUNT - 1) + 0.62;
-  const railAngle = Math.atan2(STAIR_STEP_RISE * (STAIR_COUNT - 1), railLength);
-  const stairStartZ = 1.42 + STAIR_START_Z - 0.25;
-  const handrailCenterZ = stairStartZ - railLength / 2;
-  const handrailCenterY = 0.58 + 0.46 + (STAIR_STEP_RISE * (STAIR_COUNT - 1)) / 2;
+  const firstStep = getStairStep(0);
+  const lastStep = getStairStep(STAIR_COUNT - 1);
+  const railLength = Math.hypot(firstStep.z - lastStep.z, lastStep.y - firstStep.y) + 0.72;
+  const railAngle = Math.atan2(lastStep.y - firstStep.y, firstStep.z - lastStep.z);
+  const handrailCenterZ = (firstStep.z + lastStep.z) / 2;
+  const handrailCenterY = (firstStep.y + lastStep.y) / 2 + 0.66;
+  const railX = STAIR_WIDTH / 2 - STAIR_RAIL_INSET;
 
   return (
     <group>
       {rails.map((side) => (
-        <group key={side} position={[side * 3.35, 0, 0]}>
+        <group key={side} position={[side * railX, 0, 0]}>
           <mesh
             position={[0, handrailCenterY, handrailCenterZ]}
             rotation={[railAngle, 0, 0]}
             castShadow
           >
-            <boxGeometry args={[0.22, 0.22, railLength]} />
-            <meshStandardMaterial color="#fff3dc" roughness={0.34} metalness={0.08} />
+            <boxGeometry args={[0.28, 0.2, railLength]} />
+            <meshStandardMaterial color="#fff7e8" roughness={0.28} metalness={0.1} />
           </mesh>
-          {Array.from({ length: 13 }).map((_, index) => {
-            const stepIndex = Math.min(STAIR_COUNT - 1, index * 2);
-            const z = 1.42 + STAIR_START_Z - stepIndex * STAIR_STEP_DEPTH;
-            const y = 0.58 + stepIndex * STAIR_STEP_RISE + 0.24;
+          {Array.from({ length: 16 }).map((_, index) => {
+            const stepIndex = Math.min(STAIR_COUNT - 1, Math.round(index * ((STAIR_COUNT - 1) / 15)));
+            const step = getStairStep(stepIndex);
             return (
-              <group key={index} position={[0, y, z]}>
+              <group key={index} position={[0, step.y + 0.3, step.z]}>
                 <mesh castShadow>
-                  <cylinderGeometry args={[0.06, 0.085, 0.58, 16]} />
-                  <meshStandardMaterial color="#f1dec4" roughness={0.42} metalness={0.05} />
+                  <cylinderGeometry args={[0.065, 0.095, 0.66, 20]} />
+                  <meshStandardMaterial color="#f3dfc4" roughness={0.36} metalness={0.07} />
                 </mesh>
-                <mesh position={[0, -0.33, 0]} castShadow>
-                  <cylinderGeometry args={[0.12, 0.15, 0.12, 18]} />
+                <mesh position={[0, -0.38, 0]} castShadow>
+                  <cylinderGeometry args={[0.14, 0.17, 0.12, 20]} />
                   <meshStandardMaterial color="#e5d0b5" roughness={0.46} />
                 </mesh>
               </group>
@@ -731,18 +800,14 @@ function TempleBalustrades() {
           {[0, STAIR_COUNT - 1].map((stepIndex) => (
             <group
               key={`newel-${stepIndex}`}
-              position={[
-                0,
-                0.58 + stepIndex * STAIR_STEP_RISE + 0.3,
-                1.42 + STAIR_START_Z - stepIndex * STAIR_STEP_DEPTH,
-              ]}
+              position={[0, getStairStep(stepIndex).y + 0.36, getStairStep(stepIndex).z]}
             >
               <mesh castShadow>
-                <cylinderGeometry args={[0.16, 0.2, 0.84, 20]} />
+                <cylinderGeometry args={[0.22, 0.28, 0.98, 28]} />
                 <meshStandardMaterial color="#f8ead2" roughness={0.38} metalness={0.06} />
               </mesh>
-              <mesh position={[0, 0.48, 0]} castShadow>
-                <sphereGeometry args={[0.17, 18, 12]} />
+              <mesh position={[0, 0.56, 0]} castShadow>
+                <sphereGeometry args={[0.2, 24, 16]} />
                 <meshStandardMaterial color="#ffe6a8" emissive="#d8a840" emissiveIntensity={0.2} />
               </mesh>
             </group>
@@ -809,11 +874,15 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
     <group position={[0, 1.62, -5.45]} scale={[1.42, 1.24, 1.28]}>
       <mesh position={[0, -0.18, -0.08]} receiveShadow castShadow onClick={onGroundClick}>
         <boxGeometry args={[13.2, 0.42, 7.25]} />
-        <meshStandardMaterial color="#f9efd9" roughness={0.38} metalness={0.07} />
+        <meshStandardMaterial color="#fff0d8" roughness={0.3} metalness={0.1} />
       </mesh>
       <mesh position={[0, 0.08, -0.12]} receiveShadow castShadow onClick={onGroundClick}>
         <boxGeometry args={[12.1, 0.28, 6.36]} />
-        <meshStandardMaterial color="#fff8ea" roughness={0.33} metalness={0.1} />
+        <meshStandardMaterial color="#fff9ef" roughness={0.24} metalness={0.13} />
+      </mesh>
+      <mesh position={[0, 0.34, 1.84]} castShadow receiveShadow>
+        <boxGeometry args={[12.8, 0.18, 0.32]} />
+        <meshStandardMaterial color="#d8b86b" roughness={0.22} metalness={0.58} />
       </mesh>
       <mesh position={[0, 1.7, -2.65]} receiveShadow castShadow onClick={onGroundClick}>
         <boxGeometry args={[8.45, 0.1, 4.95]} />
@@ -854,8 +923,8 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
       {columns.map((x) => (
         <group key={x} position={[x, 1.86, 1.65]}>
           <mesh castShadow receiveShadow>
-            <cylinderGeometry args={[0.24, 0.32, 3.95, 36]} />
-            <meshStandardMaterial color="#fff7ea" roughness={0.34} metalness={0.08} />
+            <cylinderGeometry args={[0.24, 0.32, 3.95, 48]} />
+            <meshStandardMaterial color="#fffaf0" roughness={0.26} metalness={0.12} />
           </mesh>
           <mesh position={[0, -1.75, 0]} castShadow>
             <cylinderGeometry args={[0.38, 0.42, 0.22, 28]} />
@@ -901,6 +970,12 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
           roughness={0.2}
         />
       </mesh>
+      {[-1, 1].map((side) => (
+        <mesh key={`gold-line-${side}`} position={[side * 5.55, 4.82, 1.9]} castShadow>
+          <boxGeometry args={[0.12, 0.2, 4.8]} />
+          <meshStandardMaterial color="#d8b86b" emissive="#b8872e" emissiveIntensity={0.12} metalness={0.6} roughness={0.2} />
+        </mesh>
+      ))}
       <mesh position={[0, 6.44, 1.88]}>
         <sphereGeometry args={[0.12, 18, 12]} />
         <meshStandardMaterial color="#fff4bd" emissive="#ffd86b" emissiveIntensity={1.2} />
@@ -932,19 +1007,32 @@ function Staircase({
   onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
 }) {
   return (
-    <group position={[0, 0.58, 1.42]}>
-      {Array.from({ length: STAIR_COUNT }).map((_, index) => (
+    <group>
+      {Array.from({ length: STAIR_COUNT }).map((_, index) => {
+        const step = getStairStep(index);
+        return (
+          <mesh key={index} position={[0, step.y, step.z]} receiveShadow castShadow onClick={onGroundClick}>
+            <boxGeometry args={[step.width, 0.12, STAIR_STEP_DEPTH]} />
+            <meshStandardMaterial
+              color={index % 2 ? "#ece2d1" : "#fff4df"}
+              roughness={0.38}
+              metalness={0.07}
+            />
+          </mesh>
+        );
+      })}
+      {[-1, 1].map((side) => (
         <mesh
-          key={index}
-          position={[0, index * STAIR_STEP_RISE, STAIR_START_Z - index * STAIR_STEP_DEPTH]}
+          key={side}
+          position={[side * (STAIR_WIDTH / 2 + 0.09), STAIR_BASE_Y + 0.2 + (STAIR_COUNT * STAIR_STEP_RISE) / 2, STAIR_GROUP_Z + STAIR_START_Z - (STAIR_COUNT * STAIR_STEP_DEPTH) / 2]}
+          rotation={[Math.atan2(STAIR_STEP_RISE, STAIR_STEP_DEPTH), 0, 0]}
           receiveShadow
           castShadow
-          onClick={onGroundClick}
         >
-          <boxGeometry args={[4.55 + index * 0.17, 0.12, STAIR_STEP_DEPTH]} />
+          <boxGeometry args={[0.18, 0.42, STAIR_STEP_DEPTH * STAIR_COUNT + 0.4]} />
           <meshStandardMaterial
-            color={index % 2 ? "#ece2d1" : "#fff4df"}
-            roughness={0.44}
+            color="#ead7bb"
+            roughness={0.42}
             metalness={0.05}
           />
         </mesh>
@@ -952,14 +1040,14 @@ function Staircase({
       <mesh
         position={[
           0,
-          STAIR_COUNT * STAIR_STEP_RISE + 0.02,
-          STAIR_START_Z - STAIR_COUNT * STAIR_STEP_DEPTH - 0.42,
+          STAIR_BASE_Y + STAIR_COUNT * STAIR_STEP_RISE + 0.02,
+          STAIR_GROUP_Z + STAIR_START_Z - STAIR_COUNT * STAIR_STEP_DEPTH - 0.42,
         ]}
         receiveShadow
         castShadow
         onClick={onGroundClick}
       >
-        <boxGeometry args={[8.5, 0.14, 1.2]} />
+        <boxGeometry args={[9.1, 0.14, 1.2]} />
         <meshStandardMaterial color="#fff2dc" roughness={0.38} metalness={0.06} />
       </mesh>
     </group>
