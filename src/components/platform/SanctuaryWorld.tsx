@@ -152,6 +152,7 @@ export function SanctuaryWorld() {
               selectedTree={selectedTree}
               zoneQuests={zoneQuests}
               onBack={() => setActiveZone("overview")}
+              onSelect={setActiveZone}
             />
           ) : null}
         </div>
@@ -226,12 +227,14 @@ function WorldPanel({
   selectedTree,
   zoneQuests,
   onBack,
+  onSelect,
 }: {
   activeZone: ZoneKey;
   selectedZone?: (typeof zones)[number];
   selectedTree: (typeof skillTrees)[number];
   zoneQuests: typeof allQuests;
   onBack: () => void;
+  onSelect: (zone: ZoneKey) => void;
 }) {
   if (activeZone === "overview" || !selectedZone) {
     return (
@@ -245,10 +248,12 @@ function WorldPanel({
           {zones.map((zone) => (
             <button
               key={zone.key}
-              onClick={() => onBack() || undefined}
-              className="hidden"
-              aria-hidden="true"
-            />
+              onClick={() => onSelect(zone.key)}
+              className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/35 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-secondary/60"
+            >
+              <span>{zone.label}</span>
+              <zone.Icon className="h-4 w-4 text-primary" />
+            </button>
           ))}
         </div>
       </aside>
