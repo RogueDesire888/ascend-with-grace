@@ -511,16 +511,16 @@ function SanctuaryScene({
     const avatar = getAvatarWorldPosition(avatarPosition);
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
-    const introCamera = new THREE.Vector3(0, 13.5 - eased * 6.1, 24 - eased * 10.2);
+    const introCamera = new THREE.Vector3(0, 15.5 - eased * 6.6, 29 - eased * 11.2);
     const followCamera = isInsideTemple
-      ? new THREE.Vector3(avatarPosition.x * 0.45, avatar.y + 2.35, avatarPosition.z + 4.15)
-      : new THREE.Vector3(avatarPosition.x, avatar.y + 4.25, avatarPosition.z + 8.25);
+      ? new THREE.Vector3(avatarPosition.x * 0.42, avatar.y + 2.7, avatarPosition.z + 4.9)
+      : new THREE.Vector3(avatarPosition.x, avatar.y + 5.35, avatarPosition.z + 10.6);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
       ? avatar
           .clone()
-          .add(new THREE.Vector3(0, isInsideTemple ? 0.8 : 1.25, isInsideTemple ? -1.35 : -3.8))
-      : new THREE.Vector3(0, 2.2, -2.4);
+          .add(new THREE.Vector3(0, isInsideTemple ? 0.95 : 1.45, isInsideTemple ? -1.75 : -4.9))
+      : new THREE.Vector3(0, 2.8, -3.4);
 
     camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
     camera.lookAt(lookTarget);
@@ -555,8 +555,8 @@ function SanctuaryScene({
       <pointLight position={[0, 5, -4]} intensity={18} color="#ffe5a6" distance={16} />
       <Environment preset="sunset" />
       <SceneSparkles
-        count={90}
-        scale={[18, 7, 18]}
+        count={120}
+        scale={[25, 8, 25]}
         size={2.2}
         speed={0.18}
         opacity={0.42}
