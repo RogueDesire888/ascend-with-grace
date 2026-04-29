@@ -1,65 +1,69 @@
-Plan to transform the Sanctuary page into an interactive floating sanctuary world:
+Build a more faithful, professional version of the Sanctuary page as a third-person explorable floating temple world inspired by the reference image.
 
-1. Replace the current dashboard-style Sanctuary page
-   - Turn `/sanctuary` into a full-screen, immersive experience instead of a card/grid dashboard.
-   - Keep the app navigation available, but make the sanctuary itself feel like the main “game world.”
-   - Use the uploaded image as the creative reference: floating island, temple, clouds, gardens, waterfalls, soft sky light, and sacred architecture.
+1. Replace the current 2.5D island map with an interactive third-person world
+   - Convert `/sanctuary` from a flat click-to-pan scene into a game-like floating sanctuary viewport.
+   - Add a visible player avatar in third-person view near the center/lower center of the screen.
+   - Let the user move the avatar around the sanctuary with keyboard controls on desktop and tap/click destination movement on mobile/desktop.
+   - Keep this first pass performant and reliable in React/CSS, while visually simulating depth, camera tracking, and 3D world space.
 
-2. Add an interactive landing sequence
-   - First visit/click starts a cinematic camera approach: the view begins high in the clouds, then glides toward the floating island as if the user is landing.
-   - Add a refined “Enter Sanctuary” opening state so the animation begins intentionally after interaction.
-   - Include graceful reduced-motion behavior so users who prefer less motion still get a polished static transition.
+2. Make the world look much closer to the image reference
+   - Rebuild the sanctuary composition around a floating marble island with:
+     - central white/gold temple
+     - stepped stairs and platform terraces
+     - floating gardens and pink/green botanical zones
+     - waterfalls falling through clouds
+     - soft cloud sea below the island
+     - luminous celestial sky and sunlit mist
+     - glowing portals placed around the temple grounds
+   - Increase visual fidelity with layered perspective, shadows, atmospheric haze, and foreground/background parallax.
+   - Keep the style premium, cinematic, and professional rather than cartoonish.
 
-3. Build the floating sanctuary world UI
-   - Create a layered 2.5D interactive scene using React/CSS rather than a heavy 3D engine for this first version, to keep it fast and reliable.
-   - Scene elements will include:
-     - floating cloud ocean and sky depth
-     - central marble temple/sanctuary
-     - garden terraces and rose/greenery zones
-     - waterfall streams flowing from the island
-     - glowing portals/markers for different areas
-     - subtle parallax movement based on pointer/mouse movement
-   - The island will feel explorable with camera/viewport shifts, atmospheric depth, and clickable zones.
+3. Add a third-person camera feel
+   - Implement a camera/world transform driven by the avatar position.
+   - Keep the avatar fixed near the lower-middle of the viewport while the sanctuary world moves behind it.
+   - Add a smooth cinematic landing state: after clicking Enter, the camera flies down from the clouds, approaches the island, then places the avatar at the arrival terrace.
+   - After landing, switch into free movement mode.
 
-4. Add free movement between sanctuary areas
-   - Create interactive destination nodes around the island:
-     - Herbal Garden for Herbal Wisdom
-     - Energy Temple for Energy Mastery
-     - Movement Terrace for Movement Arts
-     - Healing Springs for Healing Touch
-     - Spirit Observatory for Mind & Spirit
-   - Clicking or tapping a location smoothly pans/zooms the “camera” to that area.
-   - Add controls to return to the full island view and move between zones.
-   - On mobile, use large tap targets and a bottom zone selector so the experience remains easy to use.
+4. Add movement and interaction zones
+   - Define walkable coordinates for key sanctuary destinations:
+     - Herbal Garden
+     - Energy Temple
+     - Movement Terrace
+     - Healing Springs
+     - Spirit Observatory
+   - Add glowing world markers that become active when the avatar is near them.
+   - Clicking/tapping a marker can auto-walk the avatar to that destination.
+   - Desktop controls will support WASD/arrow-key movement.
+   - Add a small on-screen movement hint/control cluster that does not overwhelm the scene.
 
-5. Connect each sanctuary area to quests and skill-tree growth
-   - Each zone opens an elegant information panel with:
-     - the related skill tree
-     - current level/progress
-     - short guidance for what that sanctuary area teaches
-     - active quests pulled from existing quest/skill data where possible
-     - clear calls to continue a quest or view the full skill tree
-   - The information should feel like part of the world, not a plain dashboard.
+5. Connect world locations to skill growth content
+   - When the avatar reaches a location, open a polished in-world information panel for that zone.
+   - Reuse the existing `skillTrees`, `dailyQuests`, `weeklyQuests`, and `mainQuests` data.
+   - Each zone panel will show:
+     - related skill tree
+     - level and progress
+     - active quests for that tree
+     - buttons to view Quests or Skill Tree
+   - Make the panel feel like a sanctuary interface overlay, not a generic dashboard card.
 
-6. Preserve the premium “10 million dollar” visual system
-   - Extend `src/styles.css` with dedicated world-scene utilities for clouds, waterfalls, marble glow, camera motion, and sanctuary markers.
-   - Use semantic design tokens already in the project; no raw one-off color styling.
-   - Keep the tone peaceful, magical, professional, and futuristic zen garden rather than cartoonish.
+6. Improve responsive behavior
+   - Desktop: third-person camera with keyboard movement and click-to-move markers.
+   - Mobile/tablet: larger touch targets, tap-to-walk zone controls, and a compact bottom panel.
+   - Ensure text and controls do not overlap the world, avatar, or navigation at the current preview size.
 
-7. Keep implementation scoped to frontend presentation
-   - No backend, account system, subscriptions, database, or payment logic will be added in this pass.
-   - Quest completion will remain presentational/mock, matching the current app state.
-   - The goal is to make the Sanctuary page feel like the main interactive world hub.
+7. Technical implementation
+   - Update `src/components/platform/SanctuaryWorld.tsx` substantially.
+   - Extend `src/styles.css` with dedicated utilities/keyframes for:
+     - third-person camera motion
+     - cloud sea
+     - waterfalls
+     - floating island depth
+     - avatar aura and idle animation
+     - glowing interaction portals
+   - Keep route metadata in `src/routes/sanctuary.tsx` aligned with the new experience.
+   - No backend, persistence, account logic, or real quest completion logic will be added in this pass.
 
-Technical details:
-- Main files to change: `src/routes/sanctuary.tsx`, `src/styles.css`.
-- Likely add one focused component file: `src/components/platform/SanctuaryWorld.tsx`.
-- Reuse existing data from `src/components/platform/data.ts` for skill trees and quests.
-- Use React state for selected sanctuary zone and landing state.
-- Use CSS transforms, transitions, keyframes, responsive layout, and pointer-driven parallax for the interactive world.
-- Avoid adding a heavy 3D dependency unless a later iteration needs true WebGL/free-flight navigation.
-
-Validation:
-- Verify the Sanctuary page renders without console/runtime errors.
-- Check desktop at the current preview size and mobile responsiveness.
-- Confirm the landing interaction, zone selection, information panels, and navigation links are usable.
+Validation
+   - Verify `/sanctuary` renders without runtime errors.
+   - Check the landing sequence, keyboard movement, click/tap movement, proximity panels, and navigation links.
+   - Check desktop and mobile layout, especially the current 1000x648 preview size.
