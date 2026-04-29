@@ -1009,10 +1009,10 @@ function FlowerBeds() {
   const flowers = useMemo(() => {
     const points: Array<[number, number, string, number]> = [];
     const palette = ["#f4a6bd", "#ffd2dc", "#f7c56b", "#f7f0ca", "#c6e6a4"];
-    for (let i = 0; i < 92; i += 1) {
+    for (let i = 0; i < 138; i += 1) {
       const side = i % 4;
-      const baseX = side < 2 ? -5.8 + Math.random() * 2.2 : 3.8 + Math.random() * 2.6;
-      const baseZ = side % 2 ? -2.8 + Math.random() * 2.1 : 1.1 + Math.random() * 4;
+      const baseX = side < 2 ? -9.6 + Math.random() * 3.8 : 6.0 + Math.random() * 4.4;
+      const baseZ = side % 2 ? -3.5 + Math.random() * 2.8 : 1.1 + Math.random() * 5.8;
       points.push([baseX, baseZ, palette[i % palette.length], 0.07 + Math.random() * 0.06]);
     }
     return points;
@@ -1021,7 +1021,7 @@ function FlowerBeds() {
   return (
     <group>
       {flowers.map(([x, z, color, radius], index) => (
-        <mesh key={index} position={[x, 0.95 + radius, z]} castShadow>
+        <mesh key={index} position={[x, 1.02 + radius, z]} castShadow>
           <sphereGeometry args={[radius, 10, 8]} />
           <meshStandardMaterial
             color={color}
