@@ -668,6 +668,39 @@ function TempleBalustrades() {
   );
 }
 
+function TempleInterior() {
+  const innerColumns = [-2.25, -1.15, 1.15, 2.25];
+  return (
+    <group position={[0, 1.78, -2.05]}>
+      <mesh position={[0, 0.04, -0.18]} receiveShadow>
+        <boxGeometry args={[4.75, 0.08, 2.62]} />
+        <meshStandardMaterial color="#fff8ea" roughness={0.22} metalness={0.14} />
+      </mesh>
+      <mesh position={[0, 0.18, -1.16]} castShadow>
+        <cylinderGeometry args={[0.72, 0.88, 0.34, 48]} />
+        <meshStandardMaterial color="#ead7b8" roughness={0.32} metalness={0.12} />
+      </mesh>
+      <mesh position={[0, 0.46, -1.16]} castShadow>
+        <sphereGeometry args={[0.38, 32, 20]} />
+        <meshStandardMaterial color="#fff2ae" emissive="#ffd76b" emissiveIntensity={1.35} roughness={0.16} />
+      </mesh>
+      <pointLight position={[0, 1.12, -1.16]} intensity={8.5} color="#ffe28f" distance={5.4} />
+      {innerColumns.map((x) => (
+        <mesh key={x} position={[x, 1.25, -0.34]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.14, 0.2, 2.55, 30]} />
+          <meshStandardMaterial color="#fff1d9" roughness={0.3} metalness={0.1} />
+        </mesh>
+      ))}
+      {[-1, 1].map((side) => (
+        <mesh key={side} position={[side * 2.95, 1.1, -1.1]} castShadow>
+          <torusGeometry args={[0.38, 0.026, 10, 44]} />
+          <meshStandardMaterial color="#d8b86b" emissive="#d29d32" emissiveIntensity={0.32} metalness={0.52} roughness={0.22} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
   const columns = Array.from({ length: 10 }, (_, index) => -4.05 + index * 0.9);
   const sideColumns = [-4.55, 4.55];
