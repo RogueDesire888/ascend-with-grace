@@ -4,20 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -59,77 +45,105 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-spirit: var(--spirit);
+  --color-water: var(--water);
+  --color-fire: var(--fire);
+  --color-earth: var(--earth);
+  --color-air: var(--air);
+  --color-coral-glow: var(--coral-glow);
+  --color-cyan-glow: var(--cyan-glow);
+  --color-sun-glow: var(--sun-glow);
+  --color-orchid-glow: var(--orchid-glow);
+  --color-leaf-glow: var(--leaf-glow);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --radius: 0.875rem;
+  --background: oklch(0.145 0.065 278);
+  --foreground: oklch(0.975 0.018 83);
+  --card: oklch(0.205 0.07 281 / 82%);
+  --card-foreground: oklch(0.975 0.018 83);
+  --popover: oklch(0.18 0.07 281);
+  --popover-foreground: oklch(0.975 0.018 83);
+  --primary: oklch(0.78 0.19 52);
+  --primary-foreground: oklch(0.145 0.065 278);
+  --secondary: oklch(0.27 0.09 285 / 82%);
+  --secondary-foreground: oklch(0.955 0.03 88);
+  --muted: oklch(0.255 0.058 279 / 78%);
+  --muted-foreground: oklch(0.78 0.055 292);
+  --accent: oklch(0.28 0.12 214 / 74%);
+  --accent-foreground: oklch(0.94 0.055 194);
+  --destructive: oklch(0.68 0.22 25);
+  --destructive-foreground: oklch(0.98 0.01 80);
+  --border: oklch(0.72 0.12 296 / 22%);
+  --input: oklch(0.72 0.12 296 / 26%);
+  --ring: oklch(0.82 0.17 190);
+  --chart-1: oklch(0.78 0.19 52);
+  --chart-2: oklch(0.82 0.17 190);
+  --chart-3: oklch(0.73 0.2 343);
+  --chart-4: oklch(0.75 0.17 143);
+  --chart-5: oklch(0.72 0.18 305);
+  --sidebar: oklch(0.18 0.07 281);
+  --sidebar-foreground: oklch(0.975 0.018 83);
+  --sidebar-primary: oklch(0.78 0.19 52);
+  --sidebar-primary-foreground: oklch(0.145 0.065 278);
+  --sidebar-accent: oklch(0.28 0.12 214 / 74%);
+  --sidebar-accent-foreground: oklch(0.94 0.055 194);
+  --sidebar-border: oklch(0.72 0.12 296 / 22%);
+  --sidebar-ring: oklch(0.82 0.17 190);
+  --spirit: oklch(0.76 0.2 315);
+  --water: oklch(0.81 0.16 199);
+  --fire: oklch(0.72 0.23 25);
+  --earth: oklch(0.78 0.17 145);
+  --air: oklch(0.83 0.12 235);
+  --coral-glow: oklch(0.74 0.21 12);
+  --cyan-glow: oklch(0.86 0.16 190);
+  --sun-glow: oklch(0.88 0.18 85);
+  --orchid-glow: oklch(0.7 0.22 300);
+  --leaf-glow: oklch(0.82 0.18 136);
+  --gradient-cosmos:
+    radial-gradient(
+      circle at 20% 15%,
+      color-mix(in oklab, var(--spirit) 24%, transparent),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      color-mix(in oklab, var(--water) 18%, transparent),
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 50% 90%,
+      color-mix(in oklab, var(--fire) 12%, transparent),
+      transparent 34%
+    ),
+    linear-gradient(135deg, oklch(0.12 0.08 276), oklch(0.18 0.08 292) 45%, oklch(0.13 0.07 250));
+  --gradient-panel: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--card) 88%, var(--spirit) 12%),
+    color-mix(in oklab, var(--card) 88%, var(--water) 12%)
+  );
+  --gradient-avatar: conic-gradient(
+    from 140deg,
+    var(--water),
+    var(--spirit),
+    var(--fire),
+    var(--sun-glow),
+    var(--earth),
+    var(--water)
+  );
+  --shadow-soft: 0 20px 60px -36px color-mix(in oklab, var(--water) 42%, transparent);
+  --shadow-glow:
+    0 0 32px color-mix(in oklab, var(--primary) 35%, transparent),
+    0 0 64px color-mix(in oklab, var(--spirit) 18%, transparent);
+  --shadow-aura:
+    0 0 42px color-mix(in oklab, var(--spirit) 28%, transparent),
+    0 24px 80px -42px color-mix(in oklab, var(--water) 45%, transparent);
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --background: oklch(0.145 0.065 278);
+  --foreground: oklch(0.975 0.018 83);
 }
 
 @layer base {
@@ -137,8 +151,64 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
+    margin: 0;
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+    letter-spacing: 0;
+  }
+
+  button,
+  a {
+    letter-spacing: 0;
+  }
+}
+
+@layer utilities {
+  .star-field {
+    background-image:
+      radial-gradient(
+        circle,
+        color-mix(in oklab, var(--foreground) 88%, transparent) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle,
+        color-mix(in oklab, var(--sun-glow) 90%, transparent) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle,
+        color-mix(in oklab, var(--water) 90%, transparent) 0 1px,
+        transparent 1.5px
+      );
+    background-position:
+      0 0,
+      42px 64px,
+      92px 24px;
+    background-size:
+      140px 140px,
+      180px 180px,
+      220px 220px;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
   }
 }

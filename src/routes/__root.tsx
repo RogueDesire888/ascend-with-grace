@@ -1,4 +1,5 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { AppShell } from "@/components/platform/AppShell";
 
 import appCss from "../styles.css?url";
 
@@ -9,7 +10,7 @@ function NotFoundComponent() {
         <h1 className="text-7xl font-bold text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          This portal has not opened yet. Return to the sanctuary path.
         </p>
         <div className="mt-6">
           <Link
@@ -29,14 +30,21 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Ascend Healing Platform" },
+      {
+        name: "description",
+        content:
+          "A calming spiritual game for quests, skill trees, avatars, and holistic healing growth.",
+      },
+      { name: "author", content: "Ascend" },
+      { property: "og:title", content: "Ascend Healing Platform" },
+      {
+        property: "og:description",
+        content:
+          "Create an elemental avatar, complete healing quests, and grow through serene skill trees.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -65,5 +73,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <AppShell>
+      <Outlet />
+    </AppShell>
+  );
 }
