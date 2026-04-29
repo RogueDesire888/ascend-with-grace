@@ -1241,7 +1241,7 @@ function WorldPanel({
   }
 
   return (
-    <aside className="sanctuary-panel absolute bottom-4 left-4 right-4 z-30 max-h-[72%] overflow-y-auto rounded-[2rem] border border-border/60 p-5 shadow-[var(--shadow-aura)] lg:bottom-6 lg:left-auto lg:right-6 lg:w-[25rem]">
+    <aside className="sanctuary-panel absolute right-3 top-3 z-30 max-h-[calc(100%-1.5rem)] w-[min(22rem,calc(100%-1.5rem))] overflow-y-auto rounded-[1.35rem] border border-border/60 p-4 shadow-[var(--shadow-aura)] sm:right-4 sm:top-4 lg:right-5 lg:top-5 lg:w-[23rem]">
       <button
         onClick={onBack}
         className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
@@ -1258,10 +1258,10 @@ function WorldPanel({
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
             {selectedTree.name}
           </p>
-          <h2 className="mt-1 text-2xl font-bold text-foreground">{selectedZone.label}</h2>
+          <h2 className="mt-1 text-xl font-bold text-foreground">{selectedZone.label}</h2>
         </div>
       </div>
-      <p className="mt-4 text-sm text-muted-foreground">{selectedZone.copy}</p>
+      <p className="mt-3 text-sm text-muted-foreground">{selectedZone.copy}</p>
       <div className="mt-5">
         <div className="flex items-center justify-between text-sm font-semibold text-foreground">
           <span>Level {selectedTree.level}</span>
@@ -1274,13 +1274,13 @@ function WorldPanel({
           />
         </div>
       </div>
-      <div className="mt-5 grid gap-3">
+      <div className="mt-4 grid gap-2">
         {(zoneQuests.length ? zoneQuests : allQuests.slice(0, 2)).map((quest) => {
           const isComplete = completedQuests.has(quest.title);
           return (
             <div
               key={quest.title}
-              className={`rounded-2xl border p-4 transition-all ${isComplete ? "border-primary/55 bg-primary/15 shadow-[var(--shadow-glow)]" : "border-border/60 bg-background/42"}`}
+                className={`rounded-2xl border p-3 transition-all ${isComplete ? "border-primary/55 bg-primary/15 shadow-[var(--shadow-glow)]" : "border-border/60 bg-background/42"}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <p className="font-semibold text-foreground">{quest.title}</p>
