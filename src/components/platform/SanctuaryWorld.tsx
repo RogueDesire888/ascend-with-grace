@@ -726,26 +726,26 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
   const sideColumns = [-4.55, 4.55];
 
   return (
-    <group position={[0, 1.32, -4.05]} scale={[1.12, 1.08, 1.04]}>
+    <group position={[0, 1.62, -5.2]} scale={[1.34, 1.2, 1.18]}>
       <mesh position={[0, -0.18, 0.1]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[10.7, 0.36, 5.35]} />
+        <boxGeometry args={[12.4, 0.42, 6.15]} />
         <meshStandardMaterial color="#f9efd9" roughness={0.38} metalness={0.07} />
       </mesh>
       <mesh position={[0, 0.08, 0.06]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[9.7, 0.24, 4.62]} />
+        <boxGeometry args={[11.25, 0.28, 5.36]} />
         <meshStandardMaterial color="#fff8ea" roughness={0.33} metalness={0.1} />
       </mesh>
       <mesh position={[0, 1.7, -2.2]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[5.95, 0.08, 3.35]} />
+        <boxGeometry args={[7.6, 0.1, 4.15]} />
         <meshStandardMaterial color="#fff6e5" roughness={0.28} metalness={0.12} />
       </mesh>
       <mesh position={[0, 2.28, -2.95]} castShadow receiveShadow>
-        <boxGeometry args={[7.55, 3.75, 0.36]} />
+        <boxGeometry args={[9.4, 4.25, 0.42]} />
         <meshStandardMaterial color="#d9cbb8" roughness={0.52} metalness={0.04} />
       </mesh>
       {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * 3.93, 2.2, -0.65]} castShadow receiveShadow>
-          <boxGeometry args={[0.34, 3.42, 3.45]} />
+        <mesh key={side} position={[side * 4.75, 2.42, -0.65]} castShadow receiveShadow>
+          <boxGeometry args={[0.42, 3.95, 4.05]} />
           <meshStandardMaterial color="#eadfcd" roughness={0.48} metalness={0.05} />
         </mesh>
       ))}
