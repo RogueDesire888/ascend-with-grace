@@ -515,7 +515,9 @@ function SanctuaryScene({
       : new THREE.Vector3(avatarPosition.x, avatar.y + 4.25, avatarPosition.z + 8.25);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
-      ? avatar.clone().add(new THREE.Vector3(0, isInsideTemple ? 0.8 : 1.25, isInsideTemple ? -1.35 : -3.8))
+      ? avatar
+          .clone()
+          .add(new THREE.Vector3(0, isInsideTemple ? 0.8 : 1.25, isInsideTemple ? -1.35 : -3.8))
       : new THREE.Vector3(0, 2.2, -2.4);
 
     camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
@@ -668,7 +670,11 @@ function TempleBalustrades() {
   );
 }
 
-function TempleInterior({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
+function TempleInterior({
+  onGroundClick,
+}: {
+  onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
+}) {
   const innerColumns = [-2.25, -1.15, 1.15, 2.25];
   return (
     <group position={[0, 1.78, -2.05]}>
@@ -682,7 +688,12 @@ function TempleInterior({ onGroundClick }: { onGroundClick: (event: ThreeEvent<P
       </mesh>
       <mesh position={[0, 0.46, -1.16]} castShadow>
         <sphereGeometry args={[0.38, 32, 20]} />
-        <meshStandardMaterial color="#fff2ae" emissive="#ffd76b" emissiveIntensity={1.35} roughness={0.16} />
+        <meshStandardMaterial
+          color="#fff2ae"
+          emissive="#ffd76b"
+          emissiveIntensity={1.35}
+          roughness={0.16}
+        />
       </mesh>
       <pointLight position={[0, 1.12, -1.16]} intensity={8.5} color="#ffe28f" distance={5.4} />
       {innerColumns.map((x) => (
@@ -694,7 +705,13 @@ function TempleInterior({ onGroundClick }: { onGroundClick: (event: ThreeEvent<P
       {[-1, 1].map((side) => (
         <mesh key={side} position={[side * 2.95, 1.1, -1.1]} castShadow>
           <torusGeometry args={[0.38, 0.026, 10, 44]} />
-          <meshStandardMaterial color="#d8b86b" emissive="#d29d32" emissiveIntensity={0.32} metalness={0.52} roughness={0.22} />
+          <meshStandardMaterial
+            color="#d8b86b"
+            emissive="#d29d32"
+            emissiveIntensity={0.32}
+            metalness={0.52}
+            roughness={0.22}
+          />
         </mesh>
       ))}
     </group>
@@ -1280,7 +1297,7 @@ function WorldPanel({
           return (
             <div
               key={quest.title}
-                className={`rounded-2xl border p-3 transition-all ${isComplete ? "border-primary/55 bg-primary/15 shadow-[var(--shadow-glow)]" : "border-border/60 bg-background/42"}`}
+              className={`rounded-2xl border p-3 transition-all ${isComplete ? "border-primary/55 bg-primary/15 shadow-[var(--shadow-glow)]" : "border-border/60 bg-background/42"}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <p className="font-semibold text-foreground">{quest.title}</p>
