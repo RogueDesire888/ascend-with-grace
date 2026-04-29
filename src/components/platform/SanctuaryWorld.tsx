@@ -12,7 +12,7 @@ import {
   Sparkles,
   Wind,
 } from "lucide-react";
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import * as THREE from "three";
 import { dailyQuests, mainQuests, skillTrees, weeklyQuests } from "./data";
 
@@ -626,7 +626,7 @@ function CloudSea() {
   );
 }
 
-function PlayerAvatar({ refObject }: { refObject: React.RefObject<THREE.Group | null> }) {
+function PlayerAvatar({ refObject }: { refObject: RefObject<THREE.Group | null> }) {
   return (
     <group ref={refObject} position={[START_POSITION.x, 0.52, START_POSITION.z]}>
       <mesh position={[0, 0.18, 0]} castShadow>
