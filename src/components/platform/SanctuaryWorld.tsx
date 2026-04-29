@@ -43,18 +43,20 @@ type Zone = {
 };
 
 const allQuests = [...dailyQuests, ...weeklyQuests, ...mainQuests];
-const START_POSITION: Point = { x: 0, z: 5.8 };
-const WALK_RADIUS_X = 8.85;
-const WALK_RADIUS_Z = 7.05;
-const WALK_CENTER_Z = 0.45;
+const START_POSITION: Point = { x: 0, z: 8.2 };
+const WALK_RADIUS_X = 12.6;
+const WALK_RADIUS_Z = 10.2;
+const WALK_CENTER_Z = 0.4;
 const SURFACE_Y = 0.44;
 const WALKABLE_RECTS = [
-  { x: 0, z: 4.35, hx: 5.4, hz: 2.65 },
-  { x: 0, z: 1.3, hx: 2.9, hz: 4.35 },
-  { x: 0, z: -2.5, hx: 5.85, hz: 1.8 },
-  { x: 0, z: -4.65, hx: 3.55, hz: 1.85 },
-  { x: -5.75, z: 0.15, hx: 2.45, hz: 3.35 },
-  { x: 5.75, z: 0.15, hx: 2.45, hz: 3.35 },
+  { x: 0, z: 6.2, hx: 7.45, hz: 3.35 },
+  { x: 0, z: 1.6, hx: 4.15, hz: 6.7 },
+  { x: 0, z: -3.35, hx: 8.15, hz: 2.5 },
+  { x: 0, z: -6.25, hx: 5.4, hz: 2.45 },
+  { x: -8.55, z: -0.15, hx: 3.75, hz: 4.75 },
+  { x: 8.55, z: -0.05, hx: 3.75, hz: 4.65 },
+  { x: -8.15, z: 5.25, hx: 3.35, hz: 2.45 },
+  { x: 8.15, z: 5.2, hx: 3.35, hz: 2.35 },
 ] as const;
 
 const zones: Zone[] = [
@@ -63,7 +65,7 @@ const zones: Zone[] = [
     label: "Herbal Garden",
     tree: "Herbal Wisdom",
     Icon: Leaf,
-    position: { x: -6.2, z: 1.2 },
+    position: { x: -9.35, z: -0.1 },
     aura: "bg-earth/20 text-earth border-earth/45",
     copy: "Living terraces for plant allies, tea rituals, and grounded daily nourishment.",
   },
@@ -72,7 +74,7 @@ const zones: Zone[] = [
     label: "Energy Temple",
     tree: "Energy Mastery",
     Icon: MoonStar,
-    position: { x: 0, z: -3.8 },
+    position: { x: 0, z: -6.55 },
     aura: "bg-spirit/20 text-spirit border-spirit/45",
     copy: "A marble chamber for breathwork, subtle energy, meditation, and inner radiance.",
   },
@@ -81,7 +83,7 @@ const zones: Zone[] = [
     label: "Movement Terrace",
     tree: "Movement Arts",
     Icon: Wind,
-    position: { x: 6.3, z: 1.1 },
+    position: { x: 9.55, z: 0.35 },
     aura: "bg-air/20 text-air border-air/45",
     copy: "Open-air paths for qigong, yoga, mobility, posture, and graceful strength.",
   },
@@ -90,7 +92,7 @@ const zones: Zone[] = [
     label: "Healing Springs",
     tree: "Healing Touch",
     Icon: HandHeart,
-    position: { x: -3.3, z: 4.1 },
+    position: { x: -6.85, z: 5.75 },
     aura: "bg-fire/20 text-fire border-fire/45",
     copy: "Warm waters and stone basins for acupressure, massage, and hands of light.",
   },
@@ -99,7 +101,7 @@ const zones: Zone[] = [
     label: "Spirit Observatory",
     tree: "Mind & Spirit",
     Icon: Flower2,
-    position: { x: 3.5, z: 4.1 },
+    position: { x: 6.95, z: 5.7 },
     aura: "bg-water/20 text-water border-water/45",
     copy: "A sky-facing sanctuary for shadow work, emotional clarity, and higher guidance.",
   },
@@ -136,7 +138,7 @@ function isWalkable(point: Point) {
 }
 
 function isInTempleInterior(point: Point) {
-  return Math.abs(point.x) < 2.85 && point.z < -3.05 && point.z > -6.15;
+  return Math.abs(point.x) < 4.15 && point.z < -4.15 && point.z > -8.15;
 }
 
 function clamp01(value: number) {
@@ -144,23 +146,23 @@ function clamp01(value: number) {
 }
 
 function getTerrainHeight(point: Point) {
-  const stairLane = Math.abs(point.x) < 2.55 && point.z <= 5.15 && point.z >= -1.45;
+  const stairLane = Math.abs(point.x) < 3.75 && point.z <= 7.55 && point.z >= -2.2;
   if (stairLane) {
-    const stairProgress = clamp01((5.15 - point.z) / 6.6);
-    return SURFACE_Y + stairProgress * 1.04;
+    const stairProgress = clamp01((7.55 - point.z) / 9.75);
+    return SURFACE_Y + stairProgress * 1.46;
   }
 
-  const templeTerrace = Math.abs(point.x) < 5.35 && point.z < -1.45 && point.z > -5.75;
-  if (templeTerrace) return SURFACE_Y + 1.08;
+  const templeTerrace = Math.abs(point.x) < 7.45 && point.z < -2.2 && point.z > -7.6;
+  if (templeTerrace) return SURFACE_Y + 1.48;
 
-  if (isInTempleInterior(point)) return SURFACE_Y + 1.12;
+  if (isInTempleInterior(point)) return SURFACE_Y + 1.52;
 
   const sideTerrace =
-    Math.abs(point.x) > 4.25 && Math.abs(point.x) < 7.15 && point.z > -2.85 && point.z < 2.6;
-  if (sideTerrace) return SURFACE_Y + 0.24;
+    Math.abs(point.x) > 5.95 && Math.abs(point.x) < 11.45 && point.z > -3.75 && point.z < 3.65;
+  if (sideTerrace) return SURFACE_Y + 0.34;
 
-  const springTerrace = Math.abs(point.x) < 5.25 && point.z > 3.45;
-  if (springTerrace) return SURFACE_Y + 0.18;
+  const springTerrace = Math.abs(point.x) < 8.65 && point.z > 4.35;
+  if (springTerrace) return SURFACE_Y + 0.22;
 
   return SURFACE_Y;
 }
@@ -509,16 +511,16 @@ function SanctuaryScene({
     const avatar = getAvatarWorldPosition(avatarPosition);
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
-    const introCamera = new THREE.Vector3(0, 13.5 - eased * 6.1, 24 - eased * 10.2);
+    const introCamera = new THREE.Vector3(0, 15.5 - eased * 6.6, 29 - eased * 11.2);
     const followCamera = isInsideTemple
-      ? new THREE.Vector3(avatarPosition.x * 0.45, avatar.y + 2.35, avatarPosition.z + 4.15)
-      : new THREE.Vector3(avatarPosition.x, avatar.y + 4.25, avatarPosition.z + 8.25);
+      ? new THREE.Vector3(avatarPosition.x * 0.42, avatar.y + 2.7, avatarPosition.z + 4.9)
+      : new THREE.Vector3(avatarPosition.x, avatar.y + 5.35, avatarPosition.z + 10.6);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
       ? avatar
           .clone()
-          .add(new THREE.Vector3(0, isInsideTemple ? 0.8 : 1.25, isInsideTemple ? -1.35 : -3.8))
-      : new THREE.Vector3(0, 2.2, -2.4);
+          .add(new THREE.Vector3(0, isInsideTemple ? 0.95 : 1.45, isInsideTemple ? -1.75 : -4.9))
+      : new THREE.Vector3(0, 2.8, -3.4);
 
     camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
     camera.lookAt(lookTarget);
@@ -553,8 +555,8 @@ function SanctuaryScene({
       <pointLight position={[0, 5, -4]} intensity={18} color="#ffe5a6" distance={16} />
       <Environment preset="sunset" />
       <SceneSparkles
-        count={90}
-        scale={[18, 7, 18]}
+        count={120}
+        scale={[25, 8, 25]}
         size={2.2}
         speed={0.18}
         opacity={0.42}
@@ -582,16 +584,16 @@ function FloatingTempleIsland({
 }) {
   return (
     <group>
-      <mesh position={[0, -1.78, 0]} rotation={[0, 0, 0]} castShadow receiveShadow>
-        <coneGeometry args={[9.15, 5.55, 28, 7]} />
+      <mesh position={[0, -2.08, 0]} rotation={[0, 0, 0]} castShadow receiveShadow>
+        <coneGeometry args={[12.8, 6.4, 32, 7]} />
         <meshStandardMaterial color="#80776d" roughness={0.88} metalness={0.01} />
       </mesh>
-      <mesh position={[0, -1.36, 0.1]} castShadow receiveShadow>
-        <coneGeometry args={[7.55, 4.9, 22, 4]} />
+      <mesh position={[0, -1.55, 0.1]} castShadow receiveShadow>
+        <coneGeometry args={[10.7, 5.35, 24, 4]} />
         <meshStandardMaterial color="#5f594f" roughness={0.92} metalness={0.01} />
       </mesh>
       <mesh position={[0, 0, 0]} receiveShadow onClick={onGroundClick}>
-        <cylinderGeometry args={[8.7, 8.1, 0.72, 96]} />
+        <cylinderGeometry args={[12.25, 11.55, 0.78, 112]} />
         <meshStandardMaterial color="#8cae77" roughness={0.78} />
       </mesh>
       <mesh
@@ -600,11 +602,12 @@ function FloatingTempleIsland({
         receiveShadow
         onClick={onGroundClick}
       >
-        <circleGeometry args={[8.25, 96]} />
+        <circleGeometry args={[11.85, 112]} />
         <meshStandardMaterial color="#a9bf91" roughness={0.74} />
       </mesh>
 
       <GardenTerraces onGroundClick={onGroundClick} />
+      <ZenGarden onGroundClick={onGroundClick} />
       <MarbleWalkways onGroundClick={onGroundClick} />
       <Temple onGroundClick={onGroundClick} />
       <Staircase onGroundClick={onGroundClick} />
@@ -623,24 +626,24 @@ function MarbleWalkways({
   onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
 }) {
   return (
-    <group position={[0, 0.73, 0]}>
-      <mesh position={[0, 0, 1.95]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[2.95, 0.08, 6.95]} />
+    <group position={[0, 0.82, 0]}>
+      <mesh position={[0, 0, 2.7]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[4.25, 0.08, 9.8]} />
         <meshStandardMaterial color="#f8ecd6" roughness={0.42} metalness={0.05} />
       </mesh>
-      <mesh position={[0, 0.03, -2.25]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[6.8, 0.09, 1.65]} />
+      <mesh position={[0, 0.03, -3.05]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[10.3, 0.1, 2.15]} />
         <meshStandardMaterial color="#fff4df" roughness={0.36} metalness={0.07} />
       </mesh>
       {[-1, 1].map((side) => (
         <mesh
           key={side}
-          position={[side * 4.85, 0.04, -0.12]}
+          position={[side * 7.45, 0.04, -0.12]}
           receiveShadow
           castShadow
           onClick={onGroundClick}
         >
-          <boxGeometry args={[2.75, 0.08, 5.45]} />
+          <boxGeometry args={[3.85, 0.08, 7.25]} />
           <meshStandardMaterial color="#f3e5cf" roughness={0.48} metalness={0.04} />
         </mesh>
       ))}
@@ -651,15 +654,15 @@ function MarbleWalkways({
 function TempleBalustrades() {
   const rails = [-1, 1];
   return (
-    <group position={[0, 1.08, 1.58]}>
+    <group position={[0, 1.2, 2.08]}>
       {rails.map((side) => (
-        <group key={side} position={[side * 2.12, 0, 0]}>
+        <group key={side} position={[side * 2.95, 0, 0]}>
           <mesh position={[0, 0.36, 0]} castShadow>
-            <boxGeometry args={[0.14, 0.24, 5.9]} />
+            <boxGeometry args={[0.16, 0.28, 8.2]} />
             <meshStandardMaterial color="#fff4df" roughness={0.34} metalness={0.08} />
           </mesh>
-          {Array.from({ length: 8 }).map((_, index) => (
-            <mesh key={index} position={[0, 0.13, 2.65 - index * 0.74]} castShadow>
+          {Array.from({ length: 11 }).map((_, index) => (
+            <mesh key={index} position={[0, 0.13, 3.75 - index * 0.74]} castShadow>
               <cylinderGeometry args={[0.055, 0.07, 0.5, 14]} />
               <meshStandardMaterial color="#f3e4cd" roughness={0.42} metalness={0.05} />
             </mesh>
@@ -675,19 +678,19 @@ function TempleInterior({
 }: {
   onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
 }) {
-  const innerColumns = [-2.25, -1.15, 1.15, 2.25];
+  const innerColumns = [-3.15, -1.65, 1.65, 3.15];
   return (
-    <group position={[0, 1.78, -2.05]}>
+    <group position={[0, 2.18, -2.6]}>
       <mesh position={[0, 0.04, -0.18]} receiveShadow onClick={onGroundClick}>
-        <boxGeometry args={[4.75, 0.08, 2.62]} />
+        <boxGeometry args={[7.2, 0.09, 3.8]} />
         <meshStandardMaterial color="#fff8ea" roughness={0.22} metalness={0.14} />
       </mesh>
-      <mesh position={[0, 0.18, -1.16]} castShadow>
-        <cylinderGeometry args={[0.72, 0.88, 0.34, 48]} />
+      <mesh position={[0, 0.2, -1.58]} castShadow>
+        <cylinderGeometry args={[0.9, 1.08, 0.38, 56]} />
         <meshStandardMaterial color="#ead7b8" roughness={0.32} metalness={0.12} />
       </mesh>
-      <mesh position={[0, 0.46, -1.16]} castShadow>
-        <sphereGeometry args={[0.38, 32, 20]} />
+      <mesh position={[0, 0.56, -1.58]} castShadow>
+        <sphereGeometry args={[0.48, 32, 20]} />
         <meshStandardMaterial
           color="#fff2ae"
           emissive="#ffd76b"
@@ -695,16 +698,16 @@ function TempleInterior({
           roughness={0.16}
         />
       </mesh>
-      <pointLight position={[0, 1.12, -1.16]} intensity={8.5} color="#ffe28f" distance={5.4} />
+      <pointLight position={[0, 1.35, -1.58]} intensity={10.5} color="#ffe28f" distance={7.4} />
       {innerColumns.map((x) => (
-        <mesh key={x} position={[x, 1.25, -0.34]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.14, 0.2, 2.55, 30]} />
+        <mesh key={x} position={[x, 1.55, -0.45]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.18, 0.25, 3.15, 30]} />
           <meshStandardMaterial color="#fff1d9" roughness={0.3} metalness={0.1} />
         </mesh>
       ))}
       {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * 2.95, 1.1, -1.1]} castShadow>
-          <torusGeometry args={[0.38, 0.026, 10, 44]} />
+        <mesh key={side} position={[side * 4.05, 1.36, -1.48]} castShadow>
+          <torusGeometry args={[0.48, 0.032, 10, 44]} />
           <meshStandardMaterial
             color="#d8b86b"
             emissive="#d29d32"
@@ -723,55 +726,55 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
   const sideColumns = [-4.55, 4.55];
 
   return (
-    <group position={[0, 1.32, -4.05]} scale={[1.12, 1.08, 1.04]}>
+    <group position={[0, 1.62, -5.2]} scale={[1.34, 1.2, 1.18]}>
       <mesh position={[0, -0.18, 0.1]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[10.7, 0.36, 5.35]} />
+        <boxGeometry args={[12.4, 0.42, 6.15]} />
         <meshStandardMaterial color="#f9efd9" roughness={0.38} metalness={0.07} />
       </mesh>
       <mesh position={[0, 0.08, 0.06]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[9.7, 0.24, 4.62]} />
+        <boxGeometry args={[11.25, 0.28, 5.36]} />
         <meshStandardMaterial color="#fff8ea" roughness={0.33} metalness={0.1} />
       </mesh>
       <mesh position={[0, 1.7, -2.2]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[5.95, 0.08, 3.35]} />
+        <boxGeometry args={[7.6, 0.1, 4.15]} />
         <meshStandardMaterial color="#fff6e5" roughness={0.28} metalness={0.12} />
       </mesh>
       <mesh position={[0, 2.28, -2.95]} castShadow receiveShadow>
-        <boxGeometry args={[7.55, 3.75, 0.36]} />
+        <boxGeometry args={[9.4, 4.25, 0.42]} />
         <meshStandardMaterial color="#d9cbb8" roughness={0.52} metalness={0.04} />
       </mesh>
       {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * 3.93, 2.2, -0.65]} castShadow receiveShadow>
-          <boxGeometry args={[0.34, 3.42, 3.45]} />
+        <mesh key={side} position={[side * 4.75, 2.42, -0.65]} castShadow receiveShadow>
+          <boxGeometry args={[0.42, 3.95, 4.05]} />
           <meshStandardMaterial color="#eadfcd" roughness={0.48} metalness={0.05} />
         </mesh>
       ))}
       {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * 2.75, 2.18, 1.08]} castShadow receiveShadow>
-          <boxGeometry args={[2.75, 3.3, 0.38]} />
+        <mesh key={side} position={[side * 3.45, 2.36, 1.08]} castShadow receiveShadow>
+          <boxGeometry args={[3.35, 3.75, 0.42]} />
           <meshStandardMaterial color="#f7ecd8" roughness={0.4} metalness={0.08} />
         </mesh>
       ))}
-      <mesh position={[0, 3.54, 1.08]} castShadow receiveShadow>
-        <boxGeometry args={[2.45, 0.78, 0.38]} />
+      <mesh position={[0, 3.95, 1.08]} castShadow receiveShadow>
+        <boxGeometry args={[3.05, 0.92, 0.42]} />
         <meshStandardMaterial color="#f7ecd8" roughness={0.38} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 4.08, 0.05]} castShadow>
-        <boxGeometry args={[9.2, 0.42, 4.95]} />
+      <mesh position={[0, 4.54, 0.05]} castShadow>
+        <boxGeometry args={[10.95, 0.48, 5.75]} />
         <meshStandardMaterial color="#fff4df" roughness={0.32} metalness={0.1} />
       </mesh>
-      <mesh position={[0, 4.62, 0.08]} rotation={[0, Math.PI / 4, 0]} castShadow>
-        <cylinderGeometry args={[3.95, 4.55, 1.04, 4]} />
+      <mesh position={[0, 5.18, 0.08]} rotation={[0, Math.PI / 4, 0]} castShadow>
+        <cylinderGeometry args={[4.75, 5.35, 1.18, 4]} />
         <meshStandardMaterial color="#ead9bf" roughness={0.38} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 4.96, 1.72]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <cylinderGeometry args={[0, 1.12, 8.85, 3]} />
+      <mesh position={[0, 5.58, 1.85]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0, 1.32, 10.8, 3]} />
         <meshStandardMaterial color="#fff0d5" roughness={0.36} metalness={0.08} />
       </mesh>
       {columns.map((x) => (
         <group key={x} position={[x, 1.86, 1.65]}>
           <mesh castShadow receiveShadow>
-            <cylinderGeometry args={[0.2, 0.27, 3.32, 36]} />
+            <cylinderGeometry args={[0.24, 0.32, 3.95, 36]} />
             <meshStandardMaterial color="#fff7ea" roughness={0.34} metalness={0.08} />
           </mesh>
           <mesh position={[0, -1.75, 0]} castShadow>
@@ -802,8 +805,8 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
         <meshStandardMaterial color="#231d1b" roughness={0.58} transparent opacity={0.26} />
       </mesh>
       <pointLight position={[0, 2.25, 1.38]} intensity={5.6} color="#ffd982" distance={6.5} />
-      <mesh position={[0, 5.38, 1.58]}>
-        <torusGeometry args={[0.58, 0.045, 14, 72]} />
+      <mesh position={[0, 6.25, 1.72]}>
+        <torusGeometry args={[0.78, 0.055, 14, 72]} />
         <meshStandardMaterial
           color="#d8b86b"
           emissive="#f2bd4b"
@@ -812,8 +815,8 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
           roughness={0.2}
         />
       </mesh>
-      <mesh position={[0, 5.4, 1.58]}>
-        <sphereGeometry args={[0.09, 18, 12]} />
+      <mesh position={[0, 6.27, 1.72]}>
+        <sphereGeometry args={[0.12, 18, 12]} />
         <meshStandardMaterial color="#fff4bd" emissive="#ffd86b" emissiveIntensity={1.2} />
       </mesh>
     </group>
@@ -826,16 +829,16 @@ function Staircase({
   onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
 }) {
   return (
-    <group position={[0, 0.58, 0.85]}>
-      {Array.from({ length: 14 }).map((_, index) => (
+    <group position={[0, 0.58, 1.42]}>
+      {Array.from({ length: 24 }).map((_, index) => (
         <mesh
           key={index}
-          position={[0, index * 0.08, 4.15 - index * 0.46]}
+          position={[0, index * 0.064, 6.2 - index * 0.38]}
           receiveShadow
           castShadow
           onClick={onGroundClick}
         >
-          <boxGeometry args={[2.9 + index * 0.18, 0.13, 0.42]} />
+          <boxGeometry args={[4.25 + index * 0.16, 0.12, 0.38]} />
           <meshStandardMaterial
             color={index % 2 ? "#ece2d1" : "#fff4df"}
             roughness={0.46}
@@ -855,12 +858,12 @@ function GardenTerraces({
   return (
     <group position={[0, 0.62, 0]}>
       {[
-        [-5.8, 1.2, 2.6, 1.1],
-        [5.7, 1.1, 2.7, 1.1],
-        [-3.6, 4.1, 2.2, 0.9],
-        [3.8, 4.1, 2.3, 0.9],
-        [-5.1, -2.2, 1.7, 0.8],
-        [5.2, -2.25, 1.7, 0.8],
+        [-8.5, 0.75, 3.7, 1.55],
+        [8.55, 0.75, 3.75, 1.5],
+        [-6.9, 5.35, 3.15, 1.2],
+        [7.05, 5.3, 3.2, 1.2],
+        [-6.9, -2.75, 2.45, 1.0],
+        [7.0, -2.75, 2.45, 1.0],
       ].map(([x, z, sx, sz], index) => (
         <mesh
           key={index}
@@ -878,12 +881,72 @@ function GardenTerraces({
   );
 }
 
+function ZenGarden({
+  onGroundClick,
+}: {
+  onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
+}) {
+  const rakedLines = Array.from({ length: 11 }, (_, index) => -1.95 + index * 0.39);
+  const stones = [
+    [-1.35, -0.95, 0.36],
+    [-0.35, 0.62, 0.28],
+    [0.75, -0.35, 0.32],
+    [1.55, 0.92, 0.24],
+  ];
+
+  return (
+    <group position={[-8.55, 0.9, -0.2]}>
+      <mesh receiveShadow castShadow onClick={onGroundClick}>
+        <cylinderGeometry args={[2.85, 3.05, 0.18, 72]} />
+        <meshStandardMaterial color="#e8dcc4" roughness={0.7} metalness={0.02} />
+      </mesh>
+      {rakedLines.map((z, index) => (
+        <mesh key={index} position={[0, 0.12, z]} rotation={[0, 0, Math.sin(index) * 0.035]}>
+          <boxGeometry args={[4.7 - Math.abs(z) * 0.42, 0.018, 0.035]} />
+          <meshStandardMaterial color="#fff4df" roughness={0.62} />
+        </mesh>
+      ))}
+      {stones.map(([x, z, scale], index) => (
+        <mesh
+          key={index}
+          position={[x, 0.22, z]}
+          scale={[scale * 1.55, scale * 0.34, scale]}
+          castShadow
+        >
+          <sphereGeometry args={[1, 18, 10]} />
+          <meshStandardMaterial color="#b7b0a4" roughness={0.86} />
+        </mesh>
+      ))}
+      <mesh position={[1.85, 0.16, -1.48]} receiveShadow castShadow onClick={onGroundClick}>
+        <cylinderGeometry args={[0.62, 0.72, 0.18, 42]} />
+        <meshStandardMaterial color="#d9c5a6" roughness={0.52} />
+      </mesh>
+      <mesh position={[1.85, 0.28, -1.48]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.5, 42]} />
+        <meshStandardMaterial color="#bfeeff" emissive="#8ed6ed" emissiveIntensity={0.18} />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <group key={side} position={[side * 2.48, 0.52, 1.55]} scale={[0.82, 0.82, 0.82]}>
+          <mesh position={[0, 0.62, 0]} castShadow>
+            <coneGeometry args={[0.38, 1.85, 12]} />
+            <meshStandardMaterial color="#476f53" roughness={0.82} />
+          </mesh>
+          <mesh position={[0, -0.2, 0]} castShadow>
+            <cylinderGeometry args={[0.07, 0.1, 0.55, 10]} />
+            <meshStandardMaterial color="#735c42" roughness={0.72} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
 function Waterfalls() {
   const falls = [
-    [-5.9, 0.6, 5.9, 0.5, 3.8],
-    [-2.2, 0.45, 7.1, 0.62, 4.7],
-    [2.2, 0.45, 7.1, 0.62, 4.9],
-    [5.9, 0.58, 5.9, 0.5, 3.9],
+    [-8.7, 0.62, 7.4, 0.58, 4.2],
+    [-3.1, 0.48, 9.5, 0.72, 5.2],
+    [3.1, 0.48, 9.5, 0.72, 5.3],
+    [8.7, 0.62, 7.35, 0.58, 4.3],
   ];
 
   return (
@@ -918,14 +981,15 @@ function Waterfalls() {
 
 function CypressGrove() {
   const trees = [
-    [-7.2, -2.5, 1.8],
-    [-6.8, 2.8, 1.55],
-    [-4.9, -3.4, 1.35],
-    [7.1, -2.5, 1.85],
-    [6.8, 2.9, 1.5],
-    [4.9, -3.4, 1.38],
-    [-1.8, -5.4, 1.25],
-    [1.8, -5.4, 1.25],
+    [-10.5, -3.1, 1.95],
+    [-10.1, 3.8, 1.65],
+    [-7.2, -4.6, 1.45],
+    [-8.8, 2.05, 1.32],
+    [10.5, -3.0, 2.0],
+    [10.1, 3.9, 1.62],
+    [7.2, -4.55, 1.48],
+    [-2.55, -7.45, 1.32],
+    [2.55, -7.45, 1.32],
   ];
 
   return (
@@ -950,10 +1014,10 @@ function FlowerBeds() {
   const flowers = useMemo(() => {
     const points: Array<[number, number, string, number]> = [];
     const palette = ["#f4a6bd", "#ffd2dc", "#f7c56b", "#f7f0ca", "#c6e6a4"];
-    for (let i = 0; i < 92; i += 1) {
+    for (let i = 0; i < 138; i += 1) {
       const side = i % 4;
-      const baseX = side < 2 ? -5.8 + Math.random() * 2.2 : 3.8 + Math.random() * 2.6;
-      const baseZ = side % 2 ? -2.8 + Math.random() * 2.1 : 1.1 + Math.random() * 4;
+      const baseX = side < 2 ? -9.6 + Math.random() * 3.8 : 6.0 + Math.random() * 4.4;
+      const baseZ = side % 2 ? -3.5 + Math.random() * 2.8 : 1.1 + Math.random() * 5.8;
       points.push([baseX, baseZ, palette[i % palette.length], 0.07 + Math.random() * 0.06]);
     }
     return points;
@@ -962,7 +1026,7 @@ function FlowerBeds() {
   return (
     <group>
       {flowers.map(([x, z, color, radius], index) => (
-        <mesh key={index} position={[x, 0.95 + radius, z]} castShadow>
+        <mesh key={index} position={[x, 1.02 + radius, z]} castShadow>
           <sphereGeometry args={[radius, 10, 8]} />
           <meshStandardMaterial
             color={color}
@@ -1038,7 +1102,7 @@ function CloudSea() {
     const positions: Array<[number, number, number, number]> = [];
     for (let i = 0; i < 36; i += 1) {
       const angle = (i / 36) * Math.PI * 2;
-      const radius = 12 + (i % 7) * 1.8;
+      const radius = 17 + (i % 7) * 2.1;
       positions.push([
         Math.cos(angle) * radius,
         -3.4 - (i % 4) * 0.28,
@@ -1064,7 +1128,7 @@ function CloudSea() {
         </mesh>
       ))}
       <mesh position={[0, -4.2, 3]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[28, 96]} />
+        <circleGeometry args={[36, 112]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.22} depthWrite={false} />
       </mesh>
     </group>
