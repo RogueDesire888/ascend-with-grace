@@ -744,36 +744,37 @@ function MarbleWalkways({
 
 function TempleBalustrades() {
   const rails = [-1, 1];
-  const railLength = STAIR_STEP_DEPTH * (STAIR_COUNT - 1) + 0.62;
-  const railAngle = Math.atan2(STAIR_STEP_RISE * (STAIR_COUNT - 1), railLength);
-  const stairStartZ = 1.42 + STAIR_START_Z - 0.25;
-  const handrailCenterZ = stairStartZ - railLength / 2;
-  const handrailCenterY = 0.58 + 0.46 + (STAIR_STEP_RISE * (STAIR_COUNT - 1)) / 2;
+  const firstStep = getStairStep(0);
+  const lastStep = getStairStep(STAIR_COUNT - 1);
+  const railLength = Math.hypot(firstStep.z - lastStep.z, lastStep.y - firstStep.y) + 0.72;
+  const railAngle = Math.atan2(lastStep.y - firstStep.y, firstStep.z - lastStep.z);
+  const handrailCenterZ = (firstStep.z + lastStep.z) / 2;
+  const handrailCenterY = (firstStep.y + lastStep.y) / 2 + 0.66;
+  const railX = STAIR_WIDTH / 2 - STAIR_RAIL_INSET;
 
   return (
     <group>
       {rails.map((side) => (
-        <group key={side} position={[side * 3.35, 0, 0]}>
+        <group key={side} position={[side * railX, 0, 0]}>
           <mesh
             position={[0, handrailCenterY, handrailCenterZ]}
             rotation={[railAngle, 0, 0]}
             castShadow
           >
-            <boxGeometry args={[0.22, 0.22, railLength]} />
-            <meshStandardMaterial color="#fff3dc" roughness={0.34} metalness={0.08} />
+            <boxGeometry args={[0.28, 0.2, railLength]} />
+            <meshStandardMaterial color="#fff7e8" roughness={0.28} metalness={0.1} />
           </mesh>
-          {Array.from({ length: 13 }).map((_, index) => {
-            const stepIndex = Math.min(STAIR_COUNT - 1, index * 2);
-            const z = 1.42 + STAIR_START_Z - stepIndex * STAIR_STEP_DEPTH;
-            const y = 0.58 + stepIndex * STAIR_STEP_RISE + 0.24;
+          {Array.from({ length: 16 }).map((_, index) => {
+            const stepIndex = Math.min(STAIR_COUNT - 1, Math.round(index * ((STAIR_COUNT - 1) / 15)));
+            const step = getStairStep(stepIndex);
             return (
-              <group key={index} position={[0, y, z]}>
+              <group key={index} position={[0, step.y + 0.3, step.z]}>
                 <mesh castShadow>
-                  <cylinderGeometry args={[0.06, 0.085, 0.58, 16]} />
-                  <meshStandardMaterial color="#f1dec4" roughness={0.42} metalness={0.05} />
+                  <cylinderGeometry args={[0.065, 0.095, 0.66, 20]} />
+                  <meshStandardMaterial color="#f3dfc4" roughness={0.36} metalness={0.07} />
                 </mesh>
-                <mesh position={[0, -0.33, 0]} castShadow>
-                  <cylinderGeometry args={[0.12, 0.15, 0.12, 18]} />
+                <mesh position={[0, -0.38, 0]} castShadow>
+                  <cylinderGeometry args={[0.14, 0.17, 0.12, 20]} />
                   <meshStandardMaterial color="#e5d0b5" roughness={0.46} />
                 </mesh>
               </group>
@@ -782,18 +783,14 @@ function TempleBalustrades() {
           {[0, STAIR_COUNT - 1].map((stepIndex) => (
             <group
               key={`newel-${stepIndex}`}
-              position={[
-                0,
-                0.58 + stepIndex * STAIR_STEP_RISE + 0.3,
-                1.42 + STAIR_START_Z - stepIndex * STAIR_STEP_DEPTH,
-              ]}
+              position={[0, getStairStep(stepIndex).y + 0.36, getStairStep(stepIndex).z]}
             >
               <mesh castShadow>
-                <cylinderGeometry args={[0.16, 0.2, 0.84, 20]} />
+                <cylinderGeometry args={[0.22, 0.28, 0.98, 28]} />
                 <meshStandardMaterial color="#f8ead2" roughness={0.38} metalness={0.06} />
               </mesh>
-              <mesh position={[0, 0.48, 0]} castShadow>
-                <sphereGeometry args={[0.17, 18, 12]} />
+              <mesh position={[0, 0.56, 0]} castShadow>
+                <sphereGeometry args={[0.2, 24, 16]} />
                 <meshStandardMaterial color="#ffe6a8" emissive="#d8a840" emissiveIntensity={0.2} />
               </mesh>
             </group>
