@@ -599,25 +599,25 @@ function FloatingTempleIsland({
 }) {
   return (
     <group>
-      <mesh position={[0, -2.08, 0]} rotation={[0, 0, 0]} castShadow receiveShadow>
-        <coneGeometry args={[12.8, 6.4, 32, 7]} />
-        <meshStandardMaterial color="#80776d" roughness={0.88} metalness={0.01} />
+      <mesh position={[0, -2.32, -0.25]} rotation={[0, 0, 0]} castShadow receiveShadow>
+        <coneGeometry args={[15.6, 7.1, 40, 8]} />
+        <meshStandardMaterial color="#81786e" roughness={0.9} metalness={0.01} />
       </mesh>
-      <mesh position={[0, -1.55, 0.1]} castShadow receiveShadow>
-        <coneGeometry args={[10.7, 5.35, 24, 4]} />
-        <meshStandardMaterial color="#5f594f" roughness={0.92} metalness={0.01} />
+      <mesh position={[0, -1.66, -0.2]} castShadow receiveShadow>
+        <coneGeometry args={[12.9, 5.85, 32, 5]} />
+        <meshStandardMaterial color="#615b51" roughness={0.94} metalness={0.01} />
       </mesh>
-      <mesh position={[0, 0, 0]} receiveShadow onClick={onGroundClick}>
-        <cylinderGeometry args={[12.25, 11.55, 0.78, 112]} />
-        <meshStandardMaterial color="#8cae77" roughness={0.78} />
+      <mesh position={[0, 0, -0.1]} receiveShadow onClick={onGroundClick}>
+        <cylinderGeometry args={[14.9, 13.85, 0.84, 128]} />
+        <meshStandardMaterial color="#8eaf78" roughness={0.78} />
       </mesh>
       <mesh
-        position={[0, 0.39, 0]}
+        position={[0, 0.42, -0.1]}
         rotation={[-Math.PI / 2, 0, 0]}
         receiveShadow
         onClick={onGroundClick}
       >
-        <circleGeometry args={[11.85, 112]} />
+        <circleGeometry args={[14.42, 128]} />
         <meshStandardMaterial color="#a9bf91" roughness={0.74} />
       </mesh>
 
@@ -630,6 +630,7 @@ function FloatingTempleIsland({
       <Waterfalls />
       <CypressGrove />
       <FlowerBeds />
+      <FlowerUrns />
       <QuestPortals activeZone={activeZone} onWalkTo={onWalkTo} />
     </group>
   );
