@@ -15,6 +15,7 @@ import {
 import { Suspense, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import * as THREE from "three";
 import { dailyQuests, mainQuests, skillTrees, weeklyQuests } from "./data";
+import floatingTempleSanctuary from "@/assets/floating-temple-sanctuary.png";
 
 type ZoneKey = "overview" | "herbs" | "energy" | "movement" | "touch" | "spirit";
 type Point = { x: number; z: number };
@@ -225,6 +226,12 @@ export function SanctuaryWorld() {
         </div>
 
         <div className="relative mt-3 min-h-[35rem] flex-1 overflow-hidden rounded-[2rem] border border-border/35 bg-background/20 shadow-[var(--shadow-aura)] lg:min-h-[40rem]">
+          <img
+            src={floatingTempleSanctuary}
+            alt="Floating marble temple sanctuary above luminous clouds"
+            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-110 opacity-45 blur-[2px]" : "scale-100 opacity-95 blur-0"}`}
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_12%,transparent),color-mix(in_oklab,var(--background)_42%,transparent))]" />
           {isMounted ? (
             <Canvas
               className="sanctuary-canvas"
