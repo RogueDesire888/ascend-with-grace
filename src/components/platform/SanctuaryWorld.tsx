@@ -1159,6 +1159,72 @@ function ZenGarden({
   );
 }
 
+function LeftTempleZenGarden({
+  onGroundClick,
+}: {
+  onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
+}) {
+  const rakeLines = Array.from({ length: 19 }, (_, index) => -3.15 + index * 0.35);
+  const borderStones = Array.from({ length: 22 }, (_, index) => (index / 22) * Math.PI * 2);
+
+  return (
+    <group position={[-10.55, 0.96, -3.35]}>
+      <mesh receiveShadow castShadow onClick={onGroundClick}>
+        <cylinderGeometry args={[4.65, 4.95, 0.2, 96]} />
+        <meshStandardMaterial color="#eadfc9" roughness={0.66} metalness={0.02} />
+      </mesh>
+      {rakeLines.map((z, index) => (
+        <mesh key={index} position={[-0.35, 0.13, z]} rotation={[0, 0, Math.sin(index * 0.7) * 0.09]}>
+          <boxGeometry args={[7.25 - Math.abs(z) * 0.52, 0.016, 0.032]} />
+          <meshStandardMaterial color="#fff6e2" roughness={0.6} />
+        </mesh>
+      ))}
+      <mesh position={[1.65, 0.16, -0.55]} receiveShadow castShadow onClick={onGroundClick}>
+        <cylinderGeometry args={[1.35, 1.52, 0.16, 72]} />
+        <meshStandardMaterial color="#99d7e8" emissive="#7fc4da" emissiveIntensity={0.18} roughness={0.16} metalness={0.04} />
+      </mesh>
+      <mesh position={[1.65, 0.255, -0.55]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[1.22, 72]} />
+        <meshStandardMaterial color="#c8f4ff" emissive="#8fd9ec" emissiveIntensity={0.22} transparent opacity={0.8} roughness={0.1} />
+      </mesh>
+      <group position={[0.68, 0.54, -2.08]} rotation={[0.2, 0, -0.2]}>
+        <mesh castShadow>
+          <boxGeometry args={[0.46, 0.18, 1.36]} />
+          <meshStandardMaterial color="#b8b0a4" roughness={0.82} />
+        </mesh>
+        <mesh position={[0.08, -0.56, 0.22]} rotation={[0, 0, 0.1]}>
+          <cylinderGeometry args={[0.18, 0.1, 1.35, 14, 1, true]} />
+          <meshStandardMaterial color="#ddf8ff" emissive="#aeefff" emissiveIntensity={0.38} transparent opacity={0.66} roughness={0.08} />
+        </mesh>
+      </group>
+      {[-2.4, -1.12, 0.22].map((x, index) => (
+        <mesh key={index} position={[x, 0.24, 1.18 + index * 0.42]} scale={[0.48, 0.18, 0.34]} castShadow>
+          <sphereGeometry args={[1, 22, 12]} />
+          <meshStandardMaterial color="#aaa59c" roughness={0.86} />
+        </mesh>
+      ))}
+      {borderStones.map((angle, index) => (
+        <mesh key={index} position={[Math.cos(angle) * 4.35, 0.22, Math.sin(angle) * 3.72]} scale={[0.18, 0.12, 0.26]} castShadow>
+          <sphereGeometry args={[1, 12, 8]} />
+          <meshStandardMaterial color={index % 2 ? "#d4c8b6" : "#bbb3a6"} roughness={0.78} />
+        </mesh>
+      ))}
+      {[-1, 1].map((side) => (
+        <group key={side} position={[side * 3.75, 0.66, -2.65]} scale={[1.12, 1.12, 1.12]}>
+          <mesh position={[0, 0.74, 0]} castShadow>
+            <coneGeometry args={[0.46, 2.2, 14]} />
+            <meshStandardMaterial color="#416c50" roughness={0.78} />
+          </mesh>
+          <mesh position={[0, -0.22, 0]} castShadow>
+            <cylinderGeometry args={[0.08, 0.12, 0.62, 12]} />
+            <meshStandardMaterial color="#735c42" roughness={0.72} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
 function Waterfalls() {
   const falls = [
     [-10.6, 0.62, 7.9, 0.62, 4.8],
