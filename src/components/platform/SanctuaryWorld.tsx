@@ -447,12 +447,14 @@ export function SanctuaryWorld() {
 function SanctuaryScene({
   hasEntered,
   avatarPosition,
+  avatarDirection,
   activeZone,
   onWalkTo,
   onMoveTo,
 }: {
   hasEntered: boolean;
   avatarPosition: Point;
+  avatarDirection: number;
   activeZone: ZoneKey;
   onWalkTo: (zone: Zone) => void;
   onMoveTo: (point: Point) => void;
@@ -464,11 +466,11 @@ function SanctuaryScene({
     const elapsed = clock.getElapsedTime();
     clockRef.current = elapsed;
 
-    const avatar = new THREE.Vector3(avatarPosition.x, 0.52, avatarPosition.z);
+    const avatar = getAvatarWorldPosition(avatarPosition);
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
     const introCamera = new THREE.Vector3(0, 13.5 - eased * 6.1, 24 - eased * 10.2);
-    const followCamera = new THREE.Vector3(avatarPosition.x, 4.9, avatarPosition.z + 9.2);
+    const followCamera = new THREE.Vector3(avatarPosition.x, avatar.y + 4.25, avatarPosition.z + 8.25);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
       ? avatar.clone().add(new THREE.Vector3(0, 1.25, -3.8))
@@ -479,7 +481,11 @@ function SanctuaryScene({
 
     if (avatarRef.current) {
       avatarRef.current.position.lerp(avatar, 0.34);
-      avatarRef.current.rotation.y = Math.sin(elapsed * 1.1) * 0.05;
+      avatarRef.current.rotation.y = THREE.MathUtils.lerp(
+        avatarRef.current.rotation.y,
+        avatarDirection,
+        0.16,
+      );
     }
   });
 
