@@ -709,6 +709,7 @@ function FloatingTempleIsland({
 
       <GardenTerraces onGroundClick={onGroundClick} />
       <ZenGarden onGroundClick={onGroundClick} />
+      <LeftTempleZenGarden onGroundClick={onGroundClick} />
       <MarbleWalkways onGroundClick={onGroundClick} />
       <Temple onGroundClick={onGroundClick} />
       <Staircase onGroundClick={onGroundClick} />
