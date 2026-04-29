@@ -103,47 +103,48 @@
   --leaf-glow: oklch(0.84 0.17 141);
   --gradient-cosmos:
     radial-gradient(
-      circle at 20% 15%,
-      color-mix(in oklab, var(--spirit) 24%, transparent),
+      ellipse at 18% 18%,
+      color-mix(in oklab, var(--leaf-glow) 24%, transparent),
+      transparent 30%
+    ),
+    radial-gradient(
+      ellipse at 82% 12%,
+      color-mix(in oklab, var(--cyan-glow) 18%, transparent),
       transparent 28%
     ),
     radial-gradient(
-      circle at 80% 20%,
-      color-mix(in oklab, var(--water) 18%, transparent),
-      transparent 26%
+      ellipse at 54% 92%,
+      color-mix(in oklab, var(--orchid-glow) 18%, transparent),
+      transparent 36%
     ),
-    radial-gradient(
-      circle at 50% 90%,
-      color-mix(in oklab, var(--fire) 12%, transparent),
-      transparent 34%
-    ),
-    linear-gradient(135deg, oklch(0.12 0.08 276), oklch(0.18 0.08 292) 45%, oklch(0.13 0.07 250));
+    linear-gradient(135deg, oklch(0.1 0.055 246), oklch(0.155 0.06 218) 48%, oklch(0.12 0.05 170));
   --gradient-panel: linear-gradient(
     135deg,
-    color-mix(in oklab, var(--card) 88%, var(--spirit) 12%),
-    color-mix(in oklab, var(--card) 88%, var(--water) 12%)
+    color-mix(in oklab, var(--card) 84%, var(--leaf-glow) 16%),
+    color-mix(in oklab, var(--card) 86%, var(--water) 14%),
+    color-mix(in oklab, var(--card) 88%, var(--spirit) 12%)
   );
   --gradient-avatar: conic-gradient(
     from 140deg,
+    var(--leaf-glow),
     var(--water),
     var(--spirit),
-    var(--fire),
     var(--sun-glow),
     var(--earth),
-    var(--water)
+    var(--leaf-glow)
   );
-  --shadow-soft: 0 20px 60px -36px color-mix(in oklab, var(--water) 42%, transparent);
+  --shadow-soft: 0 24px 70px -42px color-mix(in oklab, var(--leaf-glow) 45%, transparent);
   --shadow-glow:
-    0 0 32px color-mix(in oklab, var(--primary) 35%, transparent),
-    0 0 64px color-mix(in oklab, var(--spirit) 18%, transparent);
+    0 0 30px color-mix(in oklab, var(--primary) 34%, transparent),
+    0 0 70px color-mix(in oklab, var(--cyan-glow) 18%, transparent);
   --shadow-aura:
-    0 0 42px color-mix(in oklab, var(--spirit) 28%, transparent),
-    0 24px 80px -42px color-mix(in oklab, var(--water) 45%, transparent);
+    0 0 46px color-mix(in oklab, var(--leaf-glow) 24%, transparent),
+    0 24px 84px -44px color-mix(in oklab, var(--water) 45%, transparent);
 }
 
 .dark {
-  --background: oklch(0.145 0.065 278);
-  --foreground: oklch(0.975 0.018 83);
+  --background: oklch(0.13 0.055 246);
+  --foreground: oklch(0.97 0.022 114);
 }
 
 @layer base {
