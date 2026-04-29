@@ -654,15 +654,15 @@ function MarbleWalkways({
 function TempleBalustrades() {
   const rails = [-1, 1];
   return (
-    <group position={[0, 1.08, 1.58]}>
+    <group position={[0, 1.2, 2.08]}>
       {rails.map((side) => (
-        <group key={side} position={[side * 2.12, 0, 0]}>
+        <group key={side} position={[side * 2.95, 0, 0]}>
           <mesh position={[0, 0.36, 0]} castShadow>
-            <boxGeometry args={[0.14, 0.24, 5.9]} />
+            <boxGeometry args={[0.16, 0.28, 8.2]} />
             <meshStandardMaterial color="#fff4df" roughness={0.34} metalness={0.08} />
           </mesh>
-          {Array.from({ length: 8 }).map((_, index) => (
-            <mesh key={index} position={[0, 0.13, 2.65 - index * 0.74]} castShadow>
+          {Array.from({ length: 11 }).map((_, index) => (
+            <mesh key={index} position={[0, 0.13, 3.75 - index * 0.74]} castShadow>
               <cylinderGeometry args={[0.055, 0.07, 0.5, 14]} />
               <meshStandardMaterial color="#f3e4cd" roughness={0.42} metalness={0.05} />
             </mesh>
