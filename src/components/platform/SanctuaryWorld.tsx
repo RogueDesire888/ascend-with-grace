@@ -239,6 +239,7 @@ export function SanctuaryWorld() {
         event.preventDefault();
         keysPressed.current.add(key);
         setTargetPosition(null);
+        worldApiRef.current?.setTarget(null);
         setManualZone("overview");
         setIsArrivalMenuOpen(false);
       }
