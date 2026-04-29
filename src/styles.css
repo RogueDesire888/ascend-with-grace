@@ -271,6 +271,58 @@
     mask-image: linear-gradient(to bottom, black 0%, transparent 78%);
   }
 
+  .sanctuary-world {
+    isolation: isolate;
+  }
+
+  .sanctuary-clouds {
+    background-image:
+      radial-gradient(ellipse at 12% 55%, color-mix(in oklab, var(--foreground) 72%, transparent) 0 18%, transparent 38%),
+      radial-gradient(ellipse at 34% 44%, color-mix(in oklab, var(--foreground) 58%, transparent) 0 20%, transparent 42%),
+      radial-gradient(ellipse at 58% 56%, color-mix(in oklab, var(--foreground) 64%, transparent) 0 18%, transparent 40%),
+      radial-gradient(ellipse at 84% 46%, color-mix(in oklab, var(--foreground) 58%, transparent) 0 19%, transparent 42%);
+    filter: blur(10px);
+    opacity: 0.86;
+  }
+
+  .sanctuary-camera {
+    transform-origin: 50% 50%;
+    will-change: transform, opacity, filter;
+  }
+
+  .floating-island {
+    animation: island-drift 8s ease-in-out infinite;
+    transform-origin: 50% 40%;
+  }
+
+  .waterfall {
+    background:
+      linear-gradient(180deg, color-mix(in oklab, var(--foreground) 60%, transparent), color-mix(in oklab, var(--water) 40%, transparent), transparent),
+      repeating-linear-gradient(90deg, transparent 0 5px, color-mix(in oklab, var(--foreground) 30%, transparent) 6px 8px);
+    filter: blur(2px);
+    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  }
+
+  @keyframes island-drift {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-0.2deg);
+    }
+    50% {
+      transform: translateY(-12px) rotate(0.2deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .floating-island {
+      animation: none;
+    }
+
+    .sanctuary-camera {
+      transition-duration: 200ms;
+    }
+  }
+
   .scrollbar-none {
     scrollbar-width: none;
   }
