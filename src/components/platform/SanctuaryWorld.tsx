@@ -486,6 +486,7 @@ function SanctuaryScene({
   hasEntered,
   avatarPosition,
   avatarDirection,
+  isInsideTemple,
   activeZone,
   onWalkTo,
   onMoveTo,
@@ -493,6 +494,7 @@ function SanctuaryScene({
   hasEntered: boolean;
   avatarPosition: Point;
   avatarDirection: number;
+  isInsideTemple: boolean;
   activeZone: ZoneKey;
   onWalkTo: (zone: Zone) => void;
   onMoveTo: (point: Point) => void;
@@ -508,14 +510,12 @@ function SanctuaryScene({
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
     const introCamera = new THREE.Vector3(0, 13.5 - eased * 6.1, 24 - eased * 10.2);
-    const followCamera = new THREE.Vector3(
-      avatarPosition.x,
-      avatar.y + 4.25,
-      avatarPosition.z + 8.25,
-    );
+    const followCamera = isInsideTemple
+      ? new THREE.Vector3(avatarPosition.x * 0.45, avatar.y + 2.35, avatarPosition.z + 4.15)
+      : new THREE.Vector3(avatarPosition.x, avatar.y + 4.25, avatarPosition.z + 8.25);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
-      ? avatar.clone().add(new THREE.Vector3(0, 1.25, -3.8))
+      ? avatar.clone().add(new THREE.Vector3(0, isInsideTemple ? 0.8 : 1.25, isInsideTemple ? -1.35 : -3.8))
       : new THREE.Vector3(0, 2.2, -2.4);
 
     camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
