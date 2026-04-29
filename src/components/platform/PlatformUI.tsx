@@ -171,7 +171,7 @@ export function ElementCards() {
       {elements.map((element) => (
         <article
           key={element.name}
-          className={`rounded-3xl border border-border/70 bg-gradient-to-br p-5 shadow-[var(--shadow-soft)] ${element.className}`}
+          className={`rounded-[1.75rem] border border-border/60 bg-gradient-to-br p-5 shadow-[var(--shadow-soft)] ${element.className}`}
         >
           <element.Icon className="h-8 w-8" />
           <h3 className="mt-4 text-lg font-semibold text-foreground">{element.name}</h3>
@@ -189,9 +189,9 @@ export function ResourceGrid() {
       {resources.map((resource) => (
         <article
           key={resource.title}
-          className="rounded-3xl border border-border/70 bg-card/75 p-5 shadow-[var(--shadow-soft)]"
+          className="rounded-[1.75rem] border border-border/60 bg-card/70 p-5 shadow-[var(--shadow-soft)]"
         >
-          <div className="grid h-12 w-12 place-items-center rounded-2xl bg-accent text-accent-foreground">
+          <div className="grid h-12 w-12 place-items-center rounded-[40%] bg-accent text-accent-foreground">
             <resource.Icon className="h-5 w-5" />
           </div>
           <p className="mt-5 text-sm font-semibold uppercase tracking-[0.18em] text-spirit">
@@ -207,7 +207,7 @@ export function ResourceGrid() {
 
 export function SearchBarMock() {
   return (
-    <div className="flex min-h-14 items-center gap-3 rounded-full border border-border/70 bg-card/75 px-5 shadow-[var(--shadow-soft)]">
+    <div className="flex min-h-14 items-center gap-3 rounded-full border border-border/60 bg-card/70 px-5 shadow-[var(--shadow-soft)]">
       <Search className="h-5 w-5 text-muted-foreground" />
       <span className="text-sm text-muted-foreground">
         Search herbs, breathwork, audio tracks, shadow prompts...
@@ -222,10 +222,10 @@ export function CommunityFeed() {
       {communityPosts.map((post) => (
         <article
           key={post.name}
-          className="rounded-3xl border border-border/70 bg-card/75 p-6 shadow-[var(--shadow-soft)]"
+          className="rounded-[1.75rem] border border-border/60 bg-card/70 p-6 shadow-[var(--shadow-soft)]"
         >
           <div className="flex items-center gap-4">
-            <div className="grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground">
+            <div className="grid h-12 w-12 place-items-center rounded-[40%] bg-primary text-primary-foreground">
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
@@ -252,7 +252,7 @@ export function MembershipCTA() {
             Membership
           </p>
           <h2 className="mt-4 text-3xl font-bold text-foreground sm:text-4xl">
-            A full healing game for $5 a month.
+            A full healing garden game for $5 a month.
           </h2>
           <p className="mt-4 max-w-2xl text-muted-foreground">
             Weekly guided sessions, daily five-minute practices, a growing resource vault,
