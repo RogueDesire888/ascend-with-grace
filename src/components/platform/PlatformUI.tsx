@@ -91,10 +91,7 @@ export function StatsStrip() {
   return (
     <div className="grid gap-4 sm:grid-cols-3">
       {stats.map((stat) => (
-        <div
-          key={stat.label}
-          className="rounded-[1.75rem] border border-border/60 bg-card/65 p-5 shadow-[var(--shadow-soft)]"
-        >
+        <div key={stat.label} className="sanctuary-panel rounded-[1.75rem] border border-border/60 p-5">
           <p className="text-sm text-muted-foreground">{stat.label}</p>
           <p className="mt-2 text-4xl font-bold text-foreground">{stat.value}</p>
           <p className="mt-1 text-sm text-muted-foreground">{stat.helper}</p>
@@ -113,7 +110,7 @@ export function QuestCard({
 }) {
   const Icon = variant === "main" ? LockKeyhole : variant === "weekly" ? Circle : CheckCircle2;
   return (
-    <article className="group rounded-[1.75rem] border border-border/60 bg-card/70 p-5 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-1">
+    <article className="sanctuary-panel group rounded-[1.75rem] border border-border/60 p-5 transition-transform hover:-translate-y-1">
       <div className="flex items-start justify-between gap-4">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[40%] bg-accent text-accent-foreground">
           <Icon className="h-5 w-5" />
@@ -138,7 +135,7 @@ export function QuestCard({
 
 export function SkillProgressCard({ tree }: { tree: SkillTree }) {
   return (
-    <article className="rounded-[1.75rem] border border-border/60 bg-card/70 p-6 shadow-[var(--shadow-soft)]">
+    <article className="sanctuary-panel rounded-[1.75rem] border border-border/60 p-6">
       <div className="flex items-start gap-4">
         <div className={`grid h-14 w-14 place-items-center rounded-[38%] border ${tree.className}`}>
           <tree.Icon className="h-7 w-7" />
@@ -172,7 +169,7 @@ export function ElementCards() {
       {elements.map((element) => (
         <article
           key={element.name}
-          className={`rounded-[1.75rem] border border-border/60 bg-gradient-to-br p-5 shadow-[var(--shadow-soft)] ${element.className}`}
+          className={`sanctuary-panel rounded-[1.75rem] border border-border/60 bg-gradient-to-br p-5 ${element.className}`}
         >
           <element.Icon className="h-8 w-8" />
           <h3 className="mt-4 text-lg font-semibold text-foreground">{element.name}</h3>
@@ -190,7 +187,7 @@ export function ResourceGrid() {
       {resources.map((resource) => (
         <article
           key={resource.title}
-          className="rounded-[1.75rem] border border-border/60 bg-card/70 p-5 shadow-[var(--shadow-soft)]"
+          className="sanctuary-panel rounded-[1.75rem] border border-border/60 p-5"
         >
           <div className="grid h-12 w-12 place-items-center rounded-[40%] bg-accent text-accent-foreground">
             <resource.Icon className="h-5 w-5" />
@@ -208,7 +205,7 @@ export function ResourceGrid() {
 
 export function SearchBarMock() {
   return (
-    <div className="flex min-h-14 items-center gap-3 rounded-full border border-border/60 bg-card/70 px-5 shadow-[var(--shadow-soft)]">
+    <div className="sanctuary-panel flex min-h-14 items-center gap-3 rounded-full border border-border/60 px-5">
       <Search className="h-5 w-5 text-muted-foreground" />
       <span className="text-sm text-muted-foreground">
         Search herbs, breathwork, audio tracks, shadow prompts...
@@ -223,7 +220,7 @@ export function CommunityFeed() {
       {communityPosts.map((post) => (
         <article
           key={post.name}
-          className="rounded-[1.75rem] border border-border/60 bg-card/70 p-6 shadow-[var(--shadow-soft)]"
+          className="sanctuary-panel rounded-[1.75rem] border border-border/60 p-6"
         >
           <div className="flex items-center gap-4">
             <div className="grid h-12 w-12 place-items-center rounded-[40%] bg-primary text-primary-foreground">
@@ -246,7 +243,7 @@ export function CommunityFeed() {
 
 export function MembershipCTA() {
   return (
-    <section className="rounded-[2rem] border border-primary/30 bg-[var(--gradient-panel)] p-8 shadow-[var(--shadow-aura)] lg:p-10">
+    <section className="rounded-[2rem] border border-primary/40 bg-[var(--gradient-panel)] p-8 shadow-[var(--shadow-aura)] lg:p-10">
       <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
