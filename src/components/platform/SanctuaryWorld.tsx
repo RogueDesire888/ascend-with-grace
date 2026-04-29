@@ -378,10 +378,16 @@ export function SanctuaryWorld() {
             <Canvas
               className="sanctuary-canvas"
               shadows
-              dpr={[1, 1.65]}
+              dpr={[1, 1.9]}
               camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 120 }}
               style={{ opacity: hasEntered ? 0.94 : 0.2 }}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+              onCreated={({ gl }) => {
+                gl.shadowMap.enabled = true;
+                gl.shadowMap.type = THREE.PCFSoftShadowMap;
+                gl.toneMapping = THREE.ACESFilmicToneMapping;
+                gl.toneMappingExposure = 1.08;
+              }}
             >
               <Suspense fallback={null}>
                 <SanctuaryScene
