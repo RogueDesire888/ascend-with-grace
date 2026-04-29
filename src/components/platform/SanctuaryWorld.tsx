@@ -809,14 +809,14 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
         <meshStandardMaterial color="#d9cbb8" roughness={0.52} metalness={0.04} />
       </mesh>
       {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * 4.75, 2.42, -0.65]} castShadow receiveShadow>
-          <boxGeometry args={[0.42, 3.95, 4.05]} />
+        <mesh key={side} position={[side * 5.25, 2.42, -0.95]} castShadow receiveShadow>
+          <boxGeometry args={[0.42, 3.95, 5.1]} />
           <meshStandardMaterial color="#eadfcd" roughness={0.48} metalness={0.05} />
         </mesh>
       ))}
       {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * 3.45, 2.36, 1.08]} castShadow receiveShadow>
-          <boxGeometry args={[3.35, 3.75, 0.42]} />
+        <mesh key={side} position={[side * 3.9, 2.36, 1.08]} castShadow receiveShadow>
+          <boxGeometry args={[3.65, 3.75, 0.42]} />
           <meshStandardMaterial color="#f7ecd8" roughness={0.4} metalness={0.08} />
         </mesh>
       ))}
