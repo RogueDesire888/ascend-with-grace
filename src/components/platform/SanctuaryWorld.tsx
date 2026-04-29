@@ -216,6 +216,13 @@ export function SanctuaryWorld() {
   const avatarDirection = useRef(0);
   const worldApiRef = useRef<SanctuaryWorldApi | null>(null);
   const avatarPositionRef = useRef<Point>(START_POSITION);
+  const handleSceneReady = useMemo(
+    () => (api: SanctuaryWorldApi) => {
+      worldApiRef.current = api;
+    },
+    [],
+  );
+  const handleTargetReached = useMemo(() => () => setTargetPosition(null), []);
 
   useEffect(() => setIsMounted(true), []);
 
@@ -397,10 +404,8 @@ export function SanctuaryWorld() {
                   activeZone={activeZone}
                   keysPressed={keysPressed}
                   targetPosition={targetPosition}
-                  onReady={(api) => {
-                    worldApiRef.current = api;
-                  }}
-                  onTargetReached={() => setTargetPosition(null)}
+                  onReady={handleSceneReady}
+                  onTargetReached={handleTargetReached}
                   onWalkTo={walkTo}
                   onMoveTo={(point) => {
                     setManualZone("overview");
