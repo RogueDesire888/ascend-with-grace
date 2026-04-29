@@ -640,15 +640,15 @@ function PlayerAvatar({ refObject }: { refObject: RefObject<THREE.Group | null> 
   return (
     <group ref={refObject} position={[START_POSITION.x, 0.52, START_POSITION.z]}>
       <mesh position={[0, 0.18, 0]} castShadow>
-        <cylinderGeometry args={[0.24, 0.3, 0.62, 24]} />
+        <cylinderGeometry args={[0.18, 0.22, 0.54, 24]} />
         <meshStandardMaterial color="#f1d37b" emissive="#d3a842" emissiveIntensity={0.16} roughness={0.38} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 0.72, 0]} castShadow>
-        <sphereGeometry args={[0.22, 24, 16]} />
+      <mesh position={[0, 0.64, 0]} castShadow>
+        <sphereGeometry args={[0.17, 24, 16]} />
         <meshStandardMaterial color="#fff0c6" roughness={0.32} metalness={0.08} />
       </mesh>
       <mesh position={[0, 0.42, 0.04]}>
-        <torusGeometry args={[0.45, 0.018, 8, 48]} />
+        <torusGeometry args={[0.34, 0.014, 8, 48]} />
         <meshStandardMaterial color="#fff1a6" emissive="#ffd36b" emissiveIntensity={0.65} transparent opacity={0.64} />
       </mesh>
       <pointLight position={[0, 0.8, 0]} intensity={1.4} color="#ffe7a6" distance={3} />
