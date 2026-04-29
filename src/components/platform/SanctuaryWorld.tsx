@@ -750,31 +750,31 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
         </mesh>
       ))}
       {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * 2.75, 2.18, 1.08]} castShadow receiveShadow>
-          <boxGeometry args={[2.75, 3.3, 0.38]} />
+        <mesh key={side} position={[side * 3.45, 2.36, 1.08]} castShadow receiveShadow>
+          <boxGeometry args={[3.35, 3.75, 0.42]} />
           <meshStandardMaterial color="#f7ecd8" roughness={0.4} metalness={0.08} />
         </mesh>
       ))}
-      <mesh position={[0, 3.54, 1.08]} castShadow receiveShadow>
-        <boxGeometry args={[2.45, 0.78, 0.38]} />
+      <mesh position={[0, 3.95, 1.08]} castShadow receiveShadow>
+        <boxGeometry args={[3.05, 0.92, 0.42]} />
         <meshStandardMaterial color="#f7ecd8" roughness={0.38} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 4.08, 0.05]} castShadow>
-        <boxGeometry args={[9.2, 0.42, 4.95]} />
+      <mesh position={[0, 4.54, 0.05]} castShadow>
+        <boxGeometry args={[10.95, 0.48, 5.75]} />
         <meshStandardMaterial color="#fff4df" roughness={0.32} metalness={0.1} />
       </mesh>
-      <mesh position={[0, 4.62, 0.08]} rotation={[0, Math.PI / 4, 0]} castShadow>
-        <cylinderGeometry args={[3.95, 4.55, 1.04, 4]} />
+      <mesh position={[0, 5.18, 0.08]} rotation={[0, Math.PI / 4, 0]} castShadow>
+        <cylinderGeometry args={[4.75, 5.35, 1.18, 4]} />
         <meshStandardMaterial color="#ead9bf" roughness={0.38} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 4.96, 1.72]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <cylinderGeometry args={[0, 1.12, 8.85, 3]} />
+      <mesh position={[0, 5.58, 1.85]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0, 1.32, 10.8, 3]} />
         <meshStandardMaterial color="#fff0d5" roughness={0.36} metalness={0.08} />
       </mesh>
       {columns.map((x) => (
         <group key={x} position={[x, 1.86, 1.65]}>
           <mesh castShadow receiveShadow>
-            <cylinderGeometry args={[0.2, 0.27, 3.32, 36]} />
+            <cylinderGeometry args={[0.24, 0.32, 3.95, 36]} />
             <meshStandardMaterial color="#fff7ea" roughness={0.34} metalness={0.08} />
           </mesh>
           <mesh position={[0, -1.75, 0]} castShadow>
@@ -805,8 +805,8 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
         <meshStandardMaterial color="#231d1b" roughness={0.58} transparent opacity={0.26} />
       </mesh>
       <pointLight position={[0, 2.25, 1.38]} intensity={5.6} color="#ffd982" distance={6.5} />
-      <mesh position={[0, 5.38, 1.58]}>
-        <torusGeometry args={[0.58, 0.045, 14, 72]} />
+      <mesh position={[0, 6.25, 1.72]}>
+        <torusGeometry args={[0.78, 0.055, 14, 72]} />
         <meshStandardMaterial
           color="#d8b86b"
           emissive="#f2bd4b"
@@ -815,8 +815,8 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
           roughness={0.2}
         />
       </mesh>
-      <mesh position={[0, 5.4, 1.58]}>
-        <sphereGeometry args={[0.09, 18, 12]} />
+      <mesh position={[0, 6.27, 1.72]}>
+        <sphereGeometry args={[0.12, 18, 12]} />
         <meshStandardMaterial color="#fff4bd" emissive="#ffd86b" emissiveIntensity={1.2} />
       </mesh>
     </group>
