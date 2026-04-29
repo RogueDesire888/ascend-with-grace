@@ -44,8 +44,10 @@ type Zone = {
 
 const allQuests = [...dailyQuests, ...weeklyQuests, ...mainQuests];
 const START_POSITION: Point = { x: 0, z: 5.8 };
-const WALK_RADIUS_X = 8.4;
-const WALK_RADIUS_Z = 6.2;
+const WALK_RADIUS_X = 8.85;
+const WALK_RADIUS_Z = 7.05;
+const WALK_CENTER_Z = 0.45;
+const SURFACE_Y = 0.44;
 
 const zones: Zone[] = [
   {
@@ -100,14 +102,41 @@ function distance(a: Point, b: Point) {
 }
 
 function clampPosition(point: Point): Point {
-  const normalized = point.x ** 2 / WALK_RADIUS_X ** 2 + (point.z - 0.8) ** 2 / WALK_RADIUS_Z ** 2;
+  const normalized = point.x ** 2 / WALK_RADIUS_X ** 2 + (point.z - WALK_CENTER_Z) ** 2 / WALK_RADIUS_Z ** 2;
   if (normalized <= 1) return point;
 
-  const angle = Math.atan2((point.z - 0.8) / WALK_RADIUS_Z, point.x / WALK_RADIUS_X);
+  const angle = Math.atan2((point.z - WALK_CENTER_Z) / WALK_RADIUS_Z, point.x / WALK_RADIUS_X);
   return {
     x: Math.cos(angle) * WALK_RADIUS_X,
-    z: 0.8 + Math.sin(angle) * WALK_RADIUS_Z,
+    z: WALK_CENTER_Z + Math.sin(angle) * WALK_RADIUS_Z,
   };
+}
+
+function clamp01(value: number) {
+  return Math.min(1, Math.max(0, value));
+}
+
+function getTerrainHeight(point: Point) {
+  const stairLane = Math.abs(point.x) < 2.55 && point.z <= 5.15 && point.z >= -1.45;
+  if (stairLane) {
+    const stairProgress = clamp01((5.15 - point.z) / 6.6);
+    return SURFACE_Y + stairProgress * 1.04;
+  }
+
+  const templeTerrace = Math.abs(point.x) < 5.35 && point.z < -1.45 && point.z > -5.75;
+  if (templeTerrace) return SURFACE_Y + 1.08;
+
+  const sideTerrace = Math.abs(point.x) > 4.25 && Math.abs(point.x) < 7.15 && point.z > -2.85 && point.z < 2.6;
+  if (sideTerrace) return SURFACE_Y + 0.24;
+
+  const springTerrace = Math.abs(point.x) < 5.25 && point.z > 3.45;
+  if (springTerrace) return SURFACE_Y + 0.18;
+
+  return SURFACE_Y;
+}
+
+function getAvatarWorldPosition(point: Point) {
+  return new THREE.Vector3(point.x, getTerrainHeight(point) + 0.13, point.z);
 }
 
 export function SanctuaryWorld() {
