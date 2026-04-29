@@ -80,23 +80,27 @@ function Index() {
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <ElementCards />
       </section>
 
-      <section className="mx-auto grid w-full max-w-7xl gap-8 px-4 pb-16 sm:px-6 lg:grid-cols-2 lg:px-8">
-        <div>
+      <section className="mx-auto grid w-full max-w-7xl gap-8 px-4 pb-20 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8">
+        <div className="sanctuary-panel rounded-[2.25rem] border border-border/70 p-7 lg:p-9">
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-spirit">
-            Interconnected growth
+            Interconnected ascension
           </p>
           <h2 className="mt-4 text-3xl font-bold text-foreground sm:text-4xl">
-            Five luminous skill trees, one Ascension Level.
+            Five luminous paths, one radiant soul level.
           </h2>
+          <p className="mt-4 text-muted-foreground">
+            Every ritual feeds the whole sanctuary. Balance earns more glow than intensity,
+            turning healing into a calm and beautiful game you can return to daily.
+          </p>
           <div className="mt-6 grid gap-3">
             {skillTrees.slice(0, 3).map((tree) => (
               <div
                 key={tree.name}
-                className="rounded-[1.75rem] border border-border/60 bg-card/65 p-4"
+                className="rounded-[1.75rem] border border-border/60 bg-background/38 p-4 backdrop-blur-xl"
               >
                 <p className="font-semibold text-foreground">{tree.name}</p>
                 <p className="text-sm text-muted-foreground">{tree.nextQuest}</p>
@@ -107,19 +111,19 @@ function Index() {
         <SkillWheel />
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.28em] text-spirit">
               Today’s path
             </p>
             <h2 className="mt-3 text-3xl font-bold text-foreground">
-              Tiny rituals, visible blooming.
+              Tiny rituals, visible ascension.
             </h2>
           </div>
           <Link
             to="/quests"
-            className="hidden rounded-full border border-border/70 bg-card/70 px-5 py-3 text-sm font-semibold text-foreground sm:inline-flex"
+            className="hidden rounded-full border border-border/70 bg-card/70 px-5 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground sm:inline-flex"
           >
             See all quests
           </Link>
