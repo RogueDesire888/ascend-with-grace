@@ -1097,7 +1097,7 @@ function CloudSea() {
     const positions: Array<[number, number, number, number]> = [];
     for (let i = 0; i < 36; i += 1) {
       const angle = (i / 36) * Math.PI * 2;
-      const radius = 12 + (i % 7) * 1.8;
+        const radius = 17 + (i % 7) * 2.1;
       positions.push([
         Math.cos(angle) * radius,
         -3.4 - (i % 4) * 0.28,
@@ -1123,7 +1123,7 @@ function CloudSea() {
         </mesh>
       ))}
       <mesh position={[0, -4.2, 3]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[28, 96]} />
+        <circleGeometry args={[36, 112]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.22} depthWrite={false} />
       </mesh>
     </group>
