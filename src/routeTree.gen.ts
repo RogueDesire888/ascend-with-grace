@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SkillTreesRouteImport } from './routes/skill-trees'
+import { Route as SanctuaryRouteImport } from './routes/sanctuary'
+import { Route as QuestsRouteImport } from './routes/quests'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SkillTreesRoute = SkillTreesRouteImport.update({
+  id: '/skill-trees',
+  path: '/skill-trees',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SanctuaryRoute = SanctuaryRouteImport.update({
+  id: '/sanctuary',
+  path: '/sanctuary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuestsRoute = QuestsRouteImport.update({
+  id: '/quests',
+  path: '/quests',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/quests': typeof QuestsRoute
+  '/sanctuary': typeof SanctuaryRoute
+  '/skill-trees': typeof SkillTreesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/quests': typeof QuestsRoute
+  '/sanctuary': typeof SanctuaryRoute
+  '/skill-trees': typeof SkillTreesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/quests': typeof QuestsRoute
+  '/sanctuary': typeof SanctuaryRoute
+  '/skill-trees': typeof SkillTreesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/quests' | '/sanctuary' | '/skill-trees'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/quests' | '/sanctuary' | '/skill-trees'
+  id: '__root__' | '/' | '/quests' | '/sanctuary' | '/skill-trees'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  QuestsRoute: typeof QuestsRoute
+  SanctuaryRoute: typeof SanctuaryRoute
+  SkillTreesRoute: typeof SkillTreesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/skill-trees': {
+      id: '/skill-trees'
+      path: '/skill-trees'
+      fullPath: '/skill-trees'
+      preLoaderRoute: typeof SkillTreesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sanctuary': {
+      id: '/sanctuary'
+      path: '/sanctuary'
+      fullPath: '/sanctuary'
+      preLoaderRoute: typeof SanctuaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quests': {
+      id: '/quests'
+      path: '/quests'
+      fullPath: '/quests'
+      preLoaderRoute: typeof QuestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +104,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  QuestsRoute: QuestsRoute,
+  SanctuaryRoute: SanctuaryRoute,
+  SkillTreesRoute: SkillTreesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
