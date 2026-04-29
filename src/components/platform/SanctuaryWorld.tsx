@@ -52,6 +52,10 @@ const STAIR_COUNT = 24;
 const STAIR_START_Z = 7.62;
 const STAIR_STEP_DEPTH = 0.38;
 const STAIR_STEP_RISE = 0.064;
+const STAIR_GROUP_Z = 1.42;
+const STAIR_BASE_Y = 0.58;
+const STAIR_WIDTH = 7.55;
+const STAIR_RAIL_INSET = 0.34;
 const WALKABLE_RECTS = [
   { x: 0, z: 6.25, hx: 8.55, hz: 3.55 },
   { x: 0, z: 1.42, hx: 4.75, hz: 6.95 },
@@ -148,6 +152,18 @@ function isInTempleInterior(point: Point) {
 
 function clamp01(value: number) {
   return Math.min(1, Math.max(0, value));
+}
+
+function getStairStep(index: number) {
+  return {
+    y: STAIR_BASE_Y + index * STAIR_STEP_RISE,
+    z: STAIR_GROUP_Z + STAIR_START_Z - index * STAIR_STEP_DEPTH,
+    width: STAIR_WIDTH,
+  };
+}
+
+function damp(current: number, target: number, lambda: number, delta: number) {
+  return THREE.MathUtils.lerp(current, target, 1 - Math.exp(-lambda * delta));
 }
 
 function getTerrainHeight(point: Point) {
