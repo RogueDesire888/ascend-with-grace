@@ -967,7 +967,7 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
       <TempleInterior onGroundClick={onGroundClick} />
       <mesh position={[0, 2.05, 1.9]} castShadow receiveShadow>
         <boxGeometry args={[1.62, 2.7, 0.08]} />
-        <meshStandardMaterial color="#231d1b" roughness={0.58} transparent opacity={0.26} />
+        <meshStandardMaterial color="#231d1b" roughness={0.58} transparent opacity={0.14} />
       </mesh>
       <pointLight position={[0, 2.25, 1.38]} intensity={5.6} color="#ffd982" distance={6.5} />
       <mesh position={[0, 6.42, 1.88]}>
