@@ -601,7 +601,7 @@ function SanctuaryScene({
       ? new THREE.Vector3(
           currentPosition.x * 0.45,
           avatar.y + 4.25,
-          Math.min(currentPosition.z + 2.15, -2.15),
+          Math.min(currentPosition.z + 1.35, -4.65),
         )
       : avatar.clone().add(exteriorCameraOffset);
     const desiredCamera = hasEntered ? followCamera : introCamera;
