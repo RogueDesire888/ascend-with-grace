@@ -1,24 +1,37 @@
-Plan to retheme the site into a galactic garden oasis with a futuristic zen garden feel:
+Plan to make the site feel like a polished, “10 million dollar” celestial garden oasis:
 
-1. Refresh the design system
-   - Update `src/styles.css` tokens from a mostly cosmic-indigo magic palette into a softer living-galaxy palette: deep night garden backgrounds, luminous jade, lotus pink, moon-gold, misty cyan, and orchid accents.
-   - Replace the current star-only atmosphere with layered garden-cosmos utilities: subtle constellation dust, aurora mist, petal/light particle effects, and softer glow shadows.
-   - Keep contrast high and preserve the existing peaceful, premium feel.
+1. Create a premium visual direction from the reference image
+   - Shift the current look from abstract galactic garden UI into a grand, luminous sanctuary: marble temple architecture, rose gardens, soft divine sunlight, fountains, statues, and subtle cosmic/futuristic energy.
+   - Use the uploaded image as the main visual reference for color, mood, lighting, and composition.
+   - Keep the platform magical and game-like, but make it feel more cinematic, expensive, calm, and refined.
 
-2. Restyle the app shell
-   - Make the fixed background feel like a serene galactic greenhouse: cosmic depth plus botanical light blooms, less “space dashboard,” more “oasis sanctuary.”
-   - Adjust the header/nav styling to feel more glassy, calm, and organic-futuristic while keeping navigation clear and user-friendly.
+2. Rebuild the homepage hero into a cinematic sanctuary experience
+   - Replace the current split “text plus avatar orb” hero with a full-viewport immersive garden-temple scene.
+   - Use the uploaded image as a large atmospheric hero background or hero visual treatment, with graceful overlays so the text remains readable.
+   - Make the first screen instantly communicate: sacred garden, ascension, premium healing game, and peaceful transformation.
+   - Keep the CTA clear and elegant: start journey, view skill trees, $5/month.
 
-3. Update reusable platform components
-   - Restyle `AvatarOrb` into a floating ascension bloom/lotus-energy avatar rather than a pure cosmic orb.
-   - Restyle `SkillWheel` into a futuristic zen garden mandala with softer circular rings and botanical glow nodes.
-   - Update cards, quest panels, progress bars, search, community posts, resource tiles, and CTA surfaces to feel like garden pathways, shrine panels, and glowing oasis modules.
+3. Upgrade the design system
+   - Adjust `src/styles.css` tokens toward ivory marble, rose quartz, soft gold, garden green, celestial blue, and deep twilight accents.
+   - Add refined glow, light-ray, marble-glass, rose-mist, and sanctuary-depth effects.
+   - Reduce the “dashboard neon” feeling and increase premium architectural atmosphere.
 
-4. Tune copy where it supports the vibe
-   - Lightly adjust headings/labels where needed to reinforce the “galactic garden oasis” direction without changing the product structure or adding new features.
-   - Keep the existing routes and user flow intact.
+4. Restyle core UI components
+   - Transform cards into elegant glass-and-marble sanctuary panels with subtle borders, soft highlights, and layered depth.
+   - Make the avatar feel like a sacred ascension bloom or radiant soul relic, not just an orb.
+   - Make the skill wheel feel like a carved celestial garden mandala with polished nodes and gentle bloom effects.
+   - Refine buttons, pills, progress bars, quest cards, and navigation to feel more luxurious and intentional.
+
+5. Improve homepage composition and perceived quality
+   - Rework sections below the hero so each area feels like a curated premium product experience rather than a simple grid.
+   - Add more breathing room, stronger visual hierarchy, smoother section transitions, and more dramatic “garden sanctuary” moments.
+   - Keep the existing app structure and routes intact; this is a frontend visual elevation only.
+
+6. Verify the result visually
+   - Check the home route at the current preview size for readability, spacing, and impact.
+   - Ensure text does not overlap the background or controls, the hero feels professional, and the site still works responsively.
 
 Technical details:
-- Primary changes will be in `src/styles.css`, `src/components/platform/AppShell.tsx`, and `src/components/platform/PlatformUI.tsx`.
-- I will avoid backend changes and keep this frontend-only.
-- I will use semantic tokens and existing Tailwind token patterns rather than hardcoded one-off colors.
+- Main files to update: `src/styles.css`, `src/components/platform/AppShell.tsx`, `src/components/platform/PlatformUI.tsx`, and `src/routes/index.tsx`.
+- The uploaded image will be treated as a premium visual reference and may be copied into the project as a hero/background asset if it supports the strongest result.
+- No backend, auth, database, or payment changes will be made.
