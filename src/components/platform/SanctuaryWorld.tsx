@@ -239,6 +239,10 @@ export function SanctuaryWorld() {
                   avatarPosition={avatarPosition}
                   activeZone={activeZone}
                   onWalkTo={walkTo}
+                  onMoveTo={(point) => {
+                    setManualZone("overview");
+                    setTargetPosition(point);
+                  }}
                 />
               </Suspense>
             </Canvas>
@@ -307,11 +311,13 @@ function SanctuaryScene({
   avatarPosition,
   activeZone,
   onWalkTo,
+  onMoveTo,
 }: {
   hasEntered: boolean;
   avatarPosition: Point;
   activeZone: ZoneKey;
   onWalkTo: (zone: Zone) => void;
+  onMoveTo: (point: Point) => void;
 }) {
   const avatarRef = useRef<THREE.Group>(null);
   const clockRef = useRef(0);
@@ -340,7 +346,7 @@ function SanctuaryScene({
   function handleGroundClick(event: ThreeEvent<PointerEvent>) {
     event.stopPropagation();
     if (!hasEntered) return;
-    onWalkTo({ ...zones[0], position: clampPosition({ x: event.point.x, z: event.point.z }) });
+    onMoveTo(clampPosition({ x: event.point.x, z: event.point.z }));
   }
 
   return (
