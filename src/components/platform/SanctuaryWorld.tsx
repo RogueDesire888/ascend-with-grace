@@ -682,13 +682,29 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
         <boxGeometry args={[9.7, 0.24, 4.62]} />
         <meshStandardMaterial color="#fff8ea" roughness={0.33} metalness={0.1} />
       </mesh>
-      <mesh position={[0, 2.18, -0.62]} castShadow receiveShadow>
-        <boxGeometry args={[7.55, 3.55, 3.15]} />
-        <meshStandardMaterial color="#eadfcd" roughness={0.5} metalness={0.04} />
+      <mesh position={[0, 1.7, -2.2]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[5.95, 0.08, 3.35]} />
+        <meshStandardMaterial color="#fff6e5" roughness={0.28} metalness={0.12} />
       </mesh>
-      <mesh position={[0, 2.18, 1.08]} castShadow receiveShadow>
-        <boxGeometry args={[8.35, 3.3, 0.38]} />
-        <meshStandardMaterial color="#f7ecd8" roughness={0.4} metalness={0.08} />
+      <mesh position={[0, 2.28, -2.95]} castShadow receiveShadow>
+        <boxGeometry args={[7.55, 3.75, 0.36]} />
+        <meshStandardMaterial color="#d9cbb8" roughness={0.52} metalness={0.04} />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <mesh key={side} position={[side * 3.93, 2.2, -0.65]} castShadow receiveShadow>
+          <boxGeometry args={[0.34, 3.42, 3.45]} />
+          <meshStandardMaterial color="#eadfcd" roughness={0.48} metalness={0.05} />
+        </mesh>
+      ))}
+      {[-1, 1].map((side) => (
+        <mesh key={side} position={[side * 2.75, 2.18, 1.08]} castShadow receiveShadow>
+          <boxGeometry args={[2.75, 3.3, 0.38]} />
+          <meshStandardMaterial color="#f7ecd8" roughness={0.4} metalness={0.08} />
+        </mesh>
+      ))}
+      <mesh position={[0, 3.54, 1.08]} castShadow receiveShadow>
+        <boxGeometry args={[2.45, 0.78, 0.38]} />
+        <meshStandardMaterial color="#f7ecd8" roughness={0.38} metalness={0.08} />
       </mesh>
       <mesh position={[0, 4.08, 0.05]} castShadow>
         <boxGeometry args={[9.2, 0.42, 4.95]} />
@@ -730,11 +746,12 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
           </mesh>
         </group>
       ))}
-      <mesh position={[0, 1.98, 1.9]} castShadow receiveShadow>
-        <boxGeometry args={[1.28, 2.45, 0.2]} />
-        <meshStandardMaterial color="#211b1a" roughness={0.58} transparent opacity={0.74} />
+      <TempleInterior />
+      <mesh position={[0, 2.05, 1.9]} castShadow receiveShadow>
+        <boxGeometry args={[1.62, 2.7, 0.08]} />
+        <meshStandardMaterial color="#231d1b" roughness={0.58} transparent opacity={0.26} />
       </mesh>
-      <pointLight position={[0, 2.25, 1.76]} intensity={4.2} color="#ffd982" distance={5.6} />
+      <pointLight position={[0, 2.25, 1.38]} intensity={5.6} color="#ffd982" distance={6.5} />
       <mesh position={[0, 5.38, 1.58]}>
         <torusGeometry args={[0.58, 0.045, 14, 72]} />
         <meshStandardMaterial
