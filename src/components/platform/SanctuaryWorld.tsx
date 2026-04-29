@@ -566,41 +566,44 @@ function FloatingTempleIsland({
   );
 }
 
-function Temple() {
-  const columns = Array.from({ length: 8 }, (_, index) => -3.5 + index);
+function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
+  const columns = Array.from({ length: 10 }, (_, index) => -4.05 + index * 0.9);
+  const sideColumns = [-4.55, 4.55];
 
   return (
-    <group position={[0, 0.7, -4.45]} scale={[1.16, 1.14, 1.08]}>
-      <mesh position={[0, 0.13, 0]} receiveShadow castShadow>
-        <boxGeometry args={[8.6, 0.28, 4.6]} />
-        <meshStandardMaterial color="#f2eadc" roughness={0.42} metalness={0.08} />
+    <group position={[0, 1.32, -4.05]} scale={[1.12, 1.08, 1.04]}>
+      <mesh position={[0, -0.18, 0.1]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[10.7, 0.36, 5.35]} />
+        <meshStandardMaterial color="#f9efd9" roughness={0.38} metalness={0.07} />
       </mesh>
-      <mesh position={[0, 2.25, -0.15]} castShadow receiveShadow>
-        <boxGeometry args={[8.2, 3.8, 3.55]} />
-        <meshStandardMaterial
-          color="#d9d0c1"
-          roughness={0.52}
-          metalness={0.04}
-          transparent
-          opacity={0.58}
-        />
+      <mesh position={[0, 0.08, 0.06]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[9.7, 0.24, 4.62]} />
+        <meshStandardMaterial color="#fff8ea" roughness={0.33} metalness={0.1} />
       </mesh>
-      <mesh position={[0, 4.3, 0.04]} castShadow>
-        <boxGeometry args={[9.1, 0.42, 4.8]} />
-        <meshStandardMaterial color="#fff3df" roughness={0.38} metalness={0.08} />
+      <mesh position={[0, 2.18, -0.62]} castShadow receiveShadow>
+        <boxGeometry args={[7.55, 3.55, 3.15]} />
+        <meshStandardMaterial color="#eadfcd" roughness={0.5} metalness={0.04} />
       </mesh>
-      <mesh position={[0, 4.78, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
-        <cylinderGeometry args={[3.75, 4.35, 1.15, 4]} />
-        <meshStandardMaterial color="#eadcc7" roughness={0.42} metalness={0.08} />
+      <mesh position={[0, 2.18, 1.08]} castShadow receiveShadow>
+        <boxGeometry args={[8.35, 3.3, 0.38]} />
+        <meshStandardMaterial color="#f7ecd8" roughness={0.4} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 4.95, 2.5]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <cylinderGeometry args={[0, 1.25, 8.4, 3]} />
-        <meshStandardMaterial color="#f8ecd7" roughness={0.4} metalness={0.08} />
+      <mesh position={[0, 4.08, 0.05]} castShadow>
+        <boxGeometry args={[9.2, 0.42, 4.95]} />
+        <meshStandardMaterial color="#fff4df" roughness={0.32} metalness={0.1} />
+      </mesh>
+      <mesh position={[0, 4.62, 0.08]} rotation={[0, Math.PI / 4, 0]} castShadow>
+        <cylinderGeometry args={[3.95, 4.55, 1.04, 4]} />
+        <meshStandardMaterial color="#ead9bf" roughness={0.38} metalness={0.08} />
+      </mesh>
+      <mesh position={[0, 4.96, 1.72]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0, 1.12, 8.85, 3]} />
+        <meshStandardMaterial color="#fff0d5" roughness={0.36} metalness={0.08} />
       </mesh>
       {columns.map((x) => (
-        <group key={x} position={[x, 1.96, 2.32]}>
+        <group key={x} position={[x, 1.86, 1.65]}>
           <mesh castShadow receiveShadow>
-            <cylinderGeometry args={[0.24, 0.29, 3.45, 32]} />
+            <cylinderGeometry args={[0.2, 0.27, 3.32, 36]} />
             <meshStandardMaterial color="#fff7ea" roughness={0.34} metalness={0.08} />
           </mesh>
           <mesh position={[0, -1.75, 0]} castShadow>
@@ -613,19 +616,30 @@ function Temple() {
           </mesh>
         </group>
       ))}
-      <mesh position={[0, 2.1, 2.06]} castShadow receiveShadow>
-        <boxGeometry args={[1.1, 2.3, 0.18]} />
-        <meshStandardMaterial color="#352b28" roughness={0.55} transparent opacity={0.52} />
+      {sideColumns.map((x) => (
+        <group key={x} position={[x, 1.46, -0.2]}>
+          <mesh castShadow receiveShadow>
+            <cylinderGeometry args={[0.16, 0.22, 2.45, 28]} />
+            <meshStandardMaterial color="#f8eedb" roughness={0.38} metalness={0.08} />
+          </mesh>
+          <mesh position={[0, 1.42, 0]} castShadow>
+            <sphereGeometry args={[0.22, 18, 12]} />
+            <meshStandardMaterial color="#ffe8a8" emissive="#f1bb45" emissiveIntensity={0.22} />
+          </mesh>
+        </group>
+      ))}
+      <mesh position={[0, 1.98, 1.9]} castShadow receiveShadow>
+        <boxGeometry args={[1.28, 2.45, 0.2]} />
+        <meshStandardMaterial color="#211b1a" roughness={0.58} transparent opacity={0.74} />
       </mesh>
-      <mesh position={[0, 5.52, 2.45]}>
-        <torusGeometry args={[0.42, 0.035, 12, 48]} />
-        <meshStandardMaterial
-          color="#d8b86b"
-          emissive="#8f6a25"
-          emissiveIntensity={0.25}
-          metalness={0.55}
-          roughness={0.22}
-        />
+      <pointLight position={[0, 2.25, 1.76]} intensity={4.2} color="#ffd982" distance={5.6} />
+      <mesh position={[0, 5.38, 1.58]}>
+        <torusGeometry args={[0.58, 0.045, 14, 72]} />
+        <meshStandardMaterial color="#d8b86b" emissive="#f2bd4b" emissiveIntensity={0.55} metalness={0.58} roughness={0.2} />
+      </mesh>
+      <mesh position={[0, 5.4, 1.58]}>
+        <sphereGeometry args={[0.09, 18, 12]} />
+        <meshStandardMaterial color="#fff4bd" emissive="#ffd86b" emissiveIntensity={1.2} />
       </mesh>
     </group>
   );
