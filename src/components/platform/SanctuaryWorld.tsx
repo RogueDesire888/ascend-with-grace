@@ -408,14 +408,14 @@ function Temple() {
   const columns = Array.from({ length: 8 }, (_, index) => -3.5 + index);
 
   return (
-    <group position={[0, 0.7, -4.2]}>
+    <group position={[0, 0.7, -4.45]} scale={[1.16, 1.14, 1.08]}>
       <mesh position={[0, 0.13, 0]} receiveShadow castShadow>
         <boxGeometry args={[8.6, 0.28, 4.6]} />
         <meshStandardMaterial color="#f2eadc" roughness={0.42} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 2.25, 0]} castShadow receiveShadow>
-        <boxGeometry args={[8.2, 3.8, 4.1]} />
-        <meshStandardMaterial color="#efe6d8" roughness={0.48} metalness={0.04} transparent opacity={0.96} />
+      <mesh position={[0, 2.25, -0.15]} castShadow receiveShadow>
+        <boxGeometry args={[8.2, 3.8, 3.55]} />
+        <meshStandardMaterial color="#d9d0c1" roughness={0.52} metalness={0.04} transparent opacity={0.58} />
       </mesh>
       <mesh position={[0, 4.3, 0.04]} castShadow>
         <boxGeometry args={[9.1, 0.42, 4.8]} />
@@ -432,7 +432,7 @@ function Temple() {
       {columns.map((x) => (
         <group key={x} position={[x, 1.96, 2.32]}>
           <mesh castShadow receiveShadow>
-            <cylinderGeometry args={[0.22, 0.26, 3.25, 28]} />
+            <cylinderGeometry args={[0.24, 0.29, 3.45, 32]} />
             <meshStandardMaterial color="#fff7ea" roughness={0.34} metalness={0.08} />
           </mesh>
           <mesh position={[0, -1.75, 0]} castShadow>
