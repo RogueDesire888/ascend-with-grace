@@ -908,22 +908,26 @@ function Staircase({
 }) {
   return (
     <group position={[0, 0.58, 1.42]}>
-      {Array.from({ length: 24 }).map((_, index) => (
+      {Array.from({ length: STAIR_COUNT }).map((_, index) => (
         <mesh
           key={index}
-          position={[0, index * 0.064, 6.2 - index * 0.38]}
+          position={[0, index * STAIR_STEP_RISE, STAIR_START_Z - index * STAIR_STEP_DEPTH]}
           receiveShadow
           castShadow
           onClick={onGroundClick}
         >
-          <boxGeometry args={[4.25 + index * 0.16, 0.12, 0.38]} />
+          <boxGeometry args={[4.55 + index * 0.17, 0.12, STAIR_STEP_DEPTH]} />
           <meshStandardMaterial
             color={index % 2 ? "#ece2d1" : "#fff4df"}
-            roughness={0.46}
-            metalness={0.04}
+            roughness={0.44}
+            metalness={0.05}
           />
         </mesh>
       ))}
+      <mesh position={[0, STAIR_COUNT * STAIR_STEP_RISE + 0.02, STAIR_START_Z - STAIR_COUNT * STAIR_STEP_DEPTH - 0.42]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[8.5, 0.14, 1.2]} />
+        <meshStandardMaterial color="#fff2dc" roughness={0.38} metalness={0.06} />
+      </mesh>
     </group>
   );
 }
