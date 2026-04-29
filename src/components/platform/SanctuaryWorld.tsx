@@ -43,18 +43,20 @@ type Zone = {
 };
 
 const allQuests = [...dailyQuests, ...weeklyQuests, ...mainQuests];
-const START_POSITION: Point = { x: 0, z: 5.8 };
-const WALK_RADIUS_X = 8.85;
-const WALK_RADIUS_Z = 7.05;
-const WALK_CENTER_Z = 0.45;
+const START_POSITION: Point = { x: 0, z: 8.2 };
+const WALK_RADIUS_X = 12.6;
+const WALK_RADIUS_Z = 10.2;
+const WALK_CENTER_Z = 0.4;
 const SURFACE_Y = 0.44;
 const WALKABLE_RECTS = [
-  { x: 0, z: 4.35, hx: 5.4, hz: 2.65 },
-  { x: 0, z: 1.3, hx: 2.9, hz: 4.35 },
-  { x: 0, z: -2.5, hx: 5.85, hz: 1.8 },
-  { x: 0, z: -4.65, hx: 3.55, hz: 1.85 },
-  { x: -5.75, z: 0.15, hx: 2.45, hz: 3.35 },
-  { x: 5.75, z: 0.15, hx: 2.45, hz: 3.35 },
+  { x: 0, z: 6.2, hx: 7.45, hz: 3.35 },
+  { x: 0, z: 1.6, hx: 4.15, hz: 6.7 },
+  { x: 0, z: -3.35, hx: 8.15, hz: 2.5 },
+  { x: 0, z: -6.25, hx: 5.4, hz: 2.45 },
+  { x: -8.55, z: -0.15, hx: 3.75, hz: 4.75 },
+  { x: 8.55, z: -0.05, hx: 3.75, hz: 4.65 },
+  { x: -8.15, z: 5.25, hx: 3.35, hz: 2.45 },
+  { x: 8.15, z: 5.2, hx: 3.35, hz: 2.35 },
 ] as const;
 
 const zones: Zone[] = [
@@ -63,7 +65,7 @@ const zones: Zone[] = [
     label: "Herbal Garden",
     tree: "Herbal Wisdom",
     Icon: Leaf,
-    position: { x: -6.2, z: 1.2 },
+    position: { x: -9.35, z: -0.1 },
     aura: "bg-earth/20 text-earth border-earth/45",
     copy: "Living terraces for plant allies, tea rituals, and grounded daily nourishment.",
   },
@@ -72,7 +74,7 @@ const zones: Zone[] = [
     label: "Energy Temple",
     tree: "Energy Mastery",
     Icon: MoonStar,
-    position: { x: 0, z: -3.8 },
+    position: { x: 0, z: -6.55 },
     aura: "bg-spirit/20 text-spirit border-spirit/45",
     copy: "A marble chamber for breathwork, subtle energy, meditation, and inner radiance.",
   },
@@ -81,7 +83,7 @@ const zones: Zone[] = [
     label: "Movement Terrace",
     tree: "Movement Arts",
     Icon: Wind,
-    position: { x: 6.3, z: 1.1 },
+    position: { x: 9.55, z: 0.35 },
     aura: "bg-air/20 text-air border-air/45",
     copy: "Open-air paths for qigong, yoga, mobility, posture, and graceful strength.",
   },
@@ -90,7 +92,7 @@ const zones: Zone[] = [
     label: "Healing Springs",
     tree: "Healing Touch",
     Icon: HandHeart,
-    position: { x: -3.3, z: 4.1 },
+    position: { x: -6.85, z: 5.75 },
     aura: "bg-fire/20 text-fire border-fire/45",
     copy: "Warm waters and stone basins for acupressure, massage, and hands of light.",
   },
@@ -99,7 +101,7 @@ const zones: Zone[] = [
     label: "Spirit Observatory",
     tree: "Mind & Spirit",
     Icon: Flower2,
-    position: { x: 3.5, z: 4.1 },
+    position: { x: 6.95, z: 5.7 },
     aura: "bg-water/20 text-water border-water/45",
     copy: "A sky-facing sanctuary for shadow work, emotional clarity, and higher guidance.",
   },
