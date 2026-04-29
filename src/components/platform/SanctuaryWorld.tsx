@@ -153,6 +153,8 @@ export function SanctuaryWorld() {
   const [isMuted, setIsMuted] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const keysPressed = useRef(new Set<string>());
+  const lastAvatarPosition = useRef<Point>(START_POSITION);
+  const avatarDirection = useRef(0);
 
   useEffect(() => setIsMounted(true), []);
 
@@ -213,10 +215,13 @@ export function SanctuaryWorld() {
 
         if (velocity.x || velocity.z) {
           const magnitude = Math.hypot(velocity.x, velocity.z) || 1;
-          return clampPosition({
+          const nextPosition = clampPosition({
             x: current.x + (velocity.x / magnitude) * 0.085 * delta,
             z: current.z + (velocity.z / magnitude) * 0.085 * delta,
           });
+          lastAvatarPosition.current = current;
+          avatarDirection.current = Math.atan2(nextPosition.x - current.x, nextPosition.z - current.z);
+          return nextPosition;
         }
 
         if (targetPosition) {
@@ -227,10 +232,13 @@ export function SanctuaryWorld() {
             setTargetPosition(null);
             return current;
           }
-          return clampPosition({
+          const nextPosition = clampPosition({
             x: current.x + (dx / remaining) * Math.min(remaining, 0.075 * delta),
             z: current.z + (dz / remaining) * Math.min(remaining, 0.075 * delta),
           });
+          lastAvatarPosition.current = current;
+          avatarDirection.current = Math.atan2(nextPosition.x - current.x, nextPosition.z - current.z);
+          return nextPosition;
         }
 
         return current;
@@ -354,6 +362,7 @@ export function SanctuaryWorld() {
                 <SanctuaryScene
                   hasEntered={hasEntered}
                   avatarPosition={avatarPosition}
+                  avatarDirection={avatarDirection.current}
                   activeZone={activeZone}
                   onWalkTo={walkTo}
                   onMoveTo={(point) => {
