@@ -230,7 +230,7 @@ export function SanctuaryWorld() {
             style={{
               transform: hasEntered
                 ? `translate3d(calc(50% - ${avatarPosition.x}px), calc(62% - ${avatarPosition.y}px), 0) scale(1.08)`
-                : "translate3d(calc(50% - 600px), calc(72% - 455px), 0) scale(.46)",
+                : "translate3d(calc(50% - 600px), calc(64% - 455px), 0) scale(.64)",
             }}
           >
             <FloatingSanctuaryWorld avatarPosition={avatarPosition} activeZone={activeZone} onWalkTo={walkTo} />
