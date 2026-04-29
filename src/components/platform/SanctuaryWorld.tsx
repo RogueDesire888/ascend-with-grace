@@ -562,7 +562,7 @@ function FloatingTempleIsland({
         <cylinderGeometry args={[8.7, 8.1, 0.72, 96]} />
         <meshStandardMaterial color="#8cae77" roughness={0.78} />
       </mesh>
-      <mesh position={[0, 0.39, 0]} receiveShadow onClick={onGroundClick}>
+      <mesh position={[0, 0.39, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow onClick={onGroundClick}>
         <circleGeometry args={[8.25, 96]} />
         <meshStandardMaterial color="#a9bf91" roughness={0.74} />
       </mesh>
