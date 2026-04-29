@@ -555,9 +555,9 @@ function FloatingTempleIsland({
         <meshStandardMaterial color="#a9bf91" roughness={0.74} />
       </mesh>
 
-      <GardenTerraces />
-      <Temple />
-      <Staircase />
+      <GardenTerraces onGroundClick={onGroundClick} />
+      <Temple onGroundClick={onGroundClick} />
+      <Staircase onGroundClick={onGroundClick} />
       <Waterfalls />
       <CypressGrove />
       <FlowerBeds />
