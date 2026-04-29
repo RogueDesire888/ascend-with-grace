@@ -128,7 +128,12 @@ export const skillTrees: SkillTree[] = [
 
 export const dailyQuests = [
   { title: "Five-minute breath shrine", tree: "Energy Mastery", xp: 20, status: "Ready" },
-  { title: "Drink one mindful herbal infusion", tree: "Herbal Wisdom", xp: 15, status: "In progress" },
+  {
+    title: "Drink one mindful herbal infusion",
+    tree: "Herbal Wisdom",
+    xp: 15,
+    status: "In progress",
+  },
   { title: "Stretch the spine in four directions", tree: "Movement Arts", xp: 15, status: "Ready" },
 ];
 
@@ -140,7 +145,12 @@ export const weeklyQuests = [
 
 export const mainQuests = [
   { title: "Chapter I: Awaken the Inner Grove", tree: "Herbal Wisdom", xp: 220, status: "Active" },
-  { title: "Chapter II: The Radiant Center", tree: "Energy Mastery", xp: 260, status: "Locked soon" },
+  {
+    title: "Chapter II: The Radiant Center",
+    tree: "Energy Mastery",
+    xp: 260,
+    status: "Locked soon",
+  },
   { title: "Chapter III: Hands of Light", tree: "Healing Touch", xp: 300, status: "Preview" },
 ];
 

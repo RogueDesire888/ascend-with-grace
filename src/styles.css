@@ -101,12 +101,44 @@
   --sun-glow: oklch(0.88 0.18 85);
   --orchid-glow: oklch(0.7 0.22 300);
   --leaf-glow: oklch(0.82 0.18 136);
-  --gradient-cosmos: radial-gradient(circle at 20% 15%, color-mix(in oklab, var(--spirit) 24%, transparent), transparent 28%), radial-gradient(circle at 80% 20%, color-mix(in oklab, var(--water) 18%, transparent), transparent 26%), radial-gradient(circle at 50% 90%, color-mix(in oklab, var(--fire) 12%, transparent), transparent 34%), linear-gradient(135deg, oklch(0.12 0.08 276), oklch(0.18 0.08 292) 45%, oklch(0.13 0.07 250));
-  --gradient-panel: linear-gradient(135deg, color-mix(in oklab, var(--card) 88%, var(--spirit) 12%), color-mix(in oklab, var(--card) 88%, var(--water) 12%));
-  --gradient-avatar: conic-gradient(from 140deg, var(--water), var(--spirit), var(--fire), var(--sun-glow), var(--earth), var(--water));
+  --gradient-cosmos:
+    radial-gradient(
+      circle at 20% 15%,
+      color-mix(in oklab, var(--spirit) 24%, transparent),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      color-mix(in oklab, var(--water) 18%, transparent),
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 50% 90%,
+      color-mix(in oklab, var(--fire) 12%, transparent),
+      transparent 34%
+    ),
+    linear-gradient(135deg, oklch(0.12 0.08 276), oklch(0.18 0.08 292) 45%, oklch(0.13 0.07 250));
+  --gradient-panel: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--card) 88%, var(--spirit) 12%),
+    color-mix(in oklab, var(--card) 88%, var(--water) 12%)
+  );
+  --gradient-avatar: conic-gradient(
+    from 140deg,
+    var(--water),
+    var(--spirit),
+    var(--fire),
+    var(--sun-glow),
+    var(--earth),
+    var(--water)
+  );
   --shadow-soft: 0 20px 60px -36px color-mix(in oklab, var(--water) 42%, transparent);
-  --shadow-glow: 0 0 32px color-mix(in oklab, var(--primary) 35%, transparent), 0 0 64px color-mix(in oklab, var(--spirit) 18%, transparent);
-  --shadow-aura: 0 0 42px color-mix(in oklab, var(--spirit) 28%, transparent), 0 24px 80px -42px color-mix(in oklab, var(--water) 45%, transparent);
+  --shadow-glow:
+    0 0 32px color-mix(in oklab, var(--primary) 35%, transparent),
+    0 0 64px color-mix(in oklab, var(--spirit) 18%, transparent);
+  --shadow-aura:
+    0 0 42px color-mix(in oklab, var(--spirit) 28%, transparent),
+    0 24px 80px -42px color-mix(in oklab, var(--water) 45%, transparent);
 }
 
 .dark {
@@ -127,7 +159,14 @@
     margin: 0;
     background-color: var(--color-background);
     color: var(--color-foreground);
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family:
+      Inter,
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
     letter-spacing: 0;
   }
 
@@ -140,11 +179,29 @@
 @layer utilities {
   .star-field {
     background-image:
-      radial-gradient(circle, color-mix(in oklab, var(--foreground) 88%, transparent) 0 1px, transparent 1.5px),
-      radial-gradient(circle, color-mix(in oklab, var(--sun-glow) 90%, transparent) 0 1px, transparent 1.5px),
-      radial-gradient(circle, color-mix(in oklab, var(--water) 90%, transparent) 0 1px, transparent 1.5px);
-    background-position: 0 0, 42px 64px, 92px 24px;
-    background-size: 140px 140px, 180px 180px, 220px 220px;
+      radial-gradient(
+        circle,
+        color-mix(in oklab, var(--foreground) 88%, transparent) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle,
+        color-mix(in oklab, var(--sun-glow) 90%, transparent) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle,
+        color-mix(in oklab, var(--water) 90%, transparent) 0 1px,
+        transparent 1.5px
+      );
+    background-position:
+      0 0,
+      42px 64px,
+      92px 24px;
+    background-size:
+      140px 140px,
+      180px 180px,
+      220px 220px;
   }
 
   .scrollbar-none {

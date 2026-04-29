@@ -17,18 +17,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Sparkles className="h-5 w-5 text-spirit" />
             </span>
             <span className="leading-tight">
-              <span className="block text-base font-semibold tracking-[0.18em] text-foreground">ASCEND</span>
+              <span className="block text-base font-semibold tracking-[0.18em] text-foreground">
+                ASCEND
+              </span>
               <span className="block text-xs text-muted-foreground">healing sanctuary</span>
             </span>
           </Link>
-          <nav className="hidden items-center gap-1 rounded-full border border-border/70 bg-card/60 p-1 md:flex" aria-label="Primary navigation">
+          <nav
+            className="hidden items-center gap-1 rounded-full border border-border/70 bg-card/60 p-1 md:flex"
+            aria-label="Primary navigation"
+          >
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
                 activeOptions={{ exact: item.to === "/" }}
                 className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-                activeProps={{ className: "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]" }}
+                activeProps={{
+                  className: "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]",
+                }}
               >
                 {item.label}
               </Link>
@@ -41,7 +48,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             $5/mo
           </Link>
         </div>
-        <nav className="scrollbar-none flex gap-2 overflow-x-auto px-4 pb-3 md:hidden" aria-label="Mobile navigation">
+        <nav
+          className="scrollbar-none flex gap-2 overflow-x-auto px-4 pb-3 md:hidden"
+          aria-label="Mobile navigation"
+        >
           {navItems.map((item) => (
             <Link
               key={item.to}

@@ -31,10 +31,18 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Ascend Healing Platform" },
-      { name: "description", content: "A calming spiritual game for quests, skill trees, avatars, and holistic healing growth." },
+      {
+        name: "description",
+        content:
+          "A calming spiritual game for quests, skill trees, avatars, and holistic healing growth.",
+      },
       { name: "author", content: "Ascend" },
       { property: "og:title", content: "Ascend Healing Platform" },
-      { property: "og:description", content: "Create an elemental avatar, complete healing quests, and grow through serene skill trees." },
+      {
+        property: "og:description",
+        content:
+          "Create an elemental avatar, complete healing quests, and grow through serene skill trees.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
