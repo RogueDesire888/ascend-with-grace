@@ -108,7 +108,10 @@ export function SanctuaryWorld() {
 
   useEffect(() => setIsMounted(true), []);
 
-  const nearbyZone = useMemo(() => zones.find((zone) => distance(zone.position, avatarPosition) < 1.25), [avatarPosition]);
+  const nearbyZone = useMemo(
+    () => zones.find((zone) => distance(zone.position, avatarPosition) < 1.25),
+    [avatarPosition],
+  );
   const activeZone = nearbyZone?.key ?? manualZone;
   const selectedZone = zones.find((zone) => zone.key === activeZone);
   const selectedTree = skillTrees.find((tree) => tree.name === selectedZone?.tree) ?? skillTrees[1];
@@ -210,7 +213,9 @@ export function SanctuaryWorld() {
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] w-full max-w-7xl flex-col px-4 pb-5 pt-5 sm:px-6 lg:px-8">
         <div className="flex items-start justify-between gap-4">
           <div className="max-w-[34rem]">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">3D Floating Sanctuary</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+              3D Floating Sanctuary
+            </p>
             <h1 className="mt-2 text-3xl font-bold leading-tight text-foreground sm:text-5xl lg:text-6xl">
               Walk the temple above the clouds.
             </h1>
@@ -255,7 +260,9 @@ export function SanctuaryWorld() {
               </Suspense>
             </Canvas>
           ) : (
-            <div className="absolute inset-0 grid place-items-center text-muted-foreground">Preparing sanctuary...</div>
+            <div className="absolute inset-0 grid place-items-center text-muted-foreground">
+              Preparing sanctuary...
+            </div>
           )}
 
           {!hasEntered ? (
@@ -264,9 +271,12 @@ export function SanctuaryWorld() {
                 <div className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-primary/45 bg-primary/15 shadow-[var(--shadow-glow)]">
                   <Sparkles className="h-7 w-7 text-primary" />
                 </div>
-                <h2 className="mt-5 text-3xl font-bold text-foreground">Enter the Floating Temple</h2>
+                <h2 className="mt-5 text-3xl font-bold text-foreground">
+                  Enter the Floating Temple
+                </h2>
                 <p className="mt-3 text-muted-foreground">
-                  Descend through the cloud sea, land at the marble stairs, then explore the sanctuary in third person.
+                  Descend through the cloud sea, land at the marble stairs, then explore the
+                  sanctuary in third person.
                 </p>
                 <button
                   onClick={() => setHasEntered(true)}
@@ -340,7 +350,9 @@ function SanctuaryScene({
     const introCamera = new THREE.Vector3(0, 13.5 - eased * 6.1, 24 - eased * 10.2);
     const followCamera = new THREE.Vector3(avatarPosition.x, 5.8, avatarPosition.z + 11.4);
     const desiredCamera = hasEntered ? followCamera : introCamera;
-    const lookTarget = hasEntered ? avatar.clone().add(new THREE.Vector3(0, 1.7, -4.4)) : new THREE.Vector3(0, 2.2, -2.4);
+    const lookTarget = hasEntered
+      ? avatar.clone().add(new THREE.Vector3(0, 1.7, -4.4))
+      : new THREE.Vector3(0, 2.2, -2.4);
 
     camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
     camera.lookAt(lookTarget);
@@ -362,12 +374,28 @@ function SanctuaryScene({
       <color attach="background" args={["#d7e8fb"]} />
       <fog attach="fog" args={["#d7e8fb", 18, 62]} />
       <ambientLight intensity={1.45} />
-      <directionalLight position={[7, 11, 7]} intensity={3.5} castShadow shadow-mapSize={[2048, 2048]} />
+      <directionalLight
+        position={[7, 11, 7]}
+        intensity={3.5}
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+      />
       <pointLight position={[0, 5, -4]} intensity={18} color="#ffe5a6" distance={16} />
       <Environment preset="sunset" />
-      <SceneSparkles count={90} scale={[18, 7, 18]} size={2.2} speed={0.18} opacity={0.42} color="#fff1ba" />
+      <SceneSparkles
+        count={90}
+        scale={[18, 7, 18]}
+        size={2.2}
+        speed={0.18}
+        opacity={0.42}
+        color="#fff1ba"
+      />
       <CloudSea />
-      <FloatingTempleIsland activeZone={activeZone} onWalkTo={onWalkTo} onGroundClick={handleGroundClick} />
+      <FloatingTempleIsland
+        activeZone={activeZone}
+        onWalkTo={onWalkTo}
+        onGroundClick={handleGroundClick}
+      />
       <PlayerAvatar refObject={avatarRef} />
     </>
   );
@@ -423,7 +451,13 @@ function Temple() {
       </mesh>
       <mesh position={[0, 2.25, -0.15]} castShadow receiveShadow>
         <boxGeometry args={[8.2, 3.8, 3.55]} />
-        <meshStandardMaterial color="#d9d0c1" roughness={0.52} metalness={0.04} transparent opacity={0.58} />
+        <meshStandardMaterial
+          color="#d9d0c1"
+          roughness={0.52}
+          metalness={0.04}
+          transparent
+          opacity={0.58}
+        />
       </mesh>
       <mesh position={[0, 4.3, 0.04]} castShadow>
         <boxGeometry args={[9.1, 0.42, 4.8]} />
@@ -459,7 +493,13 @@ function Temple() {
       </mesh>
       <mesh position={[0, 5.52, 2.45]}>
         <torusGeometry args={[0.42, 0.035, 12, 48]} />
-        <meshStandardMaterial color="#d8b86b" emissive="#8f6a25" emissiveIntensity={0.25} metalness={0.55} roughness={0.22} />
+        <meshStandardMaterial
+          color="#d8b86b"
+          emissive="#8f6a25"
+          emissiveIntensity={0.25}
+          metalness={0.55}
+          roughness={0.22}
+        />
       </mesh>
     </group>
   );
@@ -469,9 +509,18 @@ function Staircase() {
   return (
     <group position={[0, 0.58, 0.85]}>
       {Array.from({ length: 14 }).map((_, index) => (
-        <mesh key={index} position={[0, index * 0.08, 4.15 - index * 0.46]} receiveShadow castShadow>
+        <mesh
+          key={index}
+          position={[0, index * 0.08, 4.15 - index * 0.46]}
+          receiveShadow
+          castShadow
+        >
           <boxGeometry args={[2.9 + index * 0.18, 0.13, 0.42]} />
-          <meshStandardMaterial color={index % 2 ? "#ece2d1" : "#fff4df"} roughness={0.46} metalness={0.04} />
+          <meshStandardMaterial
+            color={index % 2 ? "#ece2d1" : "#fff4df"}
+            roughness={0.46}
+            metalness={0.04}
+          />
         </mesh>
       ))}
     </group>
@@ -522,7 +571,14 @@ function Waterfalls() {
               metalness={0.02}
             />
           </mesh>
-          <SceneSparkles count={24} scale={[width * 1.8, height * 0.8, width * 1.8]} size={1.1} speed={0.28} color="#ffffff" opacity={0.5} />
+          <SceneSparkles
+            count={24}
+            scale={[width * 1.8, height * 0.8, width * 1.8]}
+            size={1.1}
+            speed={0.28}
+            color="#ffffff"
+            opacity={0.5}
+          />
         </group>
       ))}
     </group>
@@ -577,21 +633,37 @@ function FlowerBeds() {
       {flowers.map(([x, z, color, radius], index) => (
         <mesh key={index} position={[x, 0.95 + radius, z]} castShadow>
           <sphereGeometry args={[radius, 10, 8]} />
-          <meshStandardMaterial color={color} roughness={0.58} emissive={color} emissiveIntensity={0.04} />
+          <meshStandardMaterial
+            color={color}
+            roughness={0.58}
+            emissive={color}
+            emissiveIntensity={0.04}
+          />
         </mesh>
       ))}
     </group>
   );
 }
 
-function QuestPortals({ activeZone, onWalkTo }: { activeZone: ZoneKey; onWalkTo: (zone: Zone) => void }) {
+function QuestPortals({
+  activeZone,
+  onWalkTo,
+}: {
+  activeZone: ZoneKey;
+  onWalkTo: (zone: Zone) => void;
+}) {
   return (
     <group>
       {zones.map((zone) => {
         const isActive = activeZone === zone.key;
         return (
           <group key={zone.key} position={[zone.position.x, 1.05, zone.position.z]}>
-            <mesh onClick={(event) => { event.stopPropagation(); onWalkTo(zone); }}>
+            <mesh
+              onClick={(event) => {
+                event.stopPropagation();
+                onWalkTo(zone);
+              }}
+            >
               <torusGeometry args={[0.46, 0.035, 12, 64]} />
               <meshStandardMaterial
                 color={isActive ? "#ffe18a" : "#f6d37b"}
@@ -603,10 +675,23 @@ function QuestPortals({ activeZone, onWalkTo }: { activeZone: ZoneKey; onWalkTo:
             </mesh>
             <mesh position={[0, -0.04, 0]}>
               <cylinderGeometry args={[0.5, 0.5, 0.03, 48]} />
-              <meshStandardMaterial color="#fff1bc" emissive="#ffd36b" emissiveIntensity={isActive ? 0.75 : 0.35} transparent opacity={0.62} />
+              <meshStandardMaterial
+                color="#fff1bc"
+                emissive="#ffd36b"
+                emissiveIntensity={isActive ? 0.75 : 0.35}
+                transparent
+                opacity={0.62}
+              />
             </mesh>
-            <Html center distanceFactor={10} position={[0, 0.86, 0]} className="pointer-events-none hidden lg:block">
-              <div className={`rounded-full border px-3 py-1 text-xs font-bold backdrop-blur-xl ${isActive ? "border-primary bg-primary/90 text-primary-foreground" : "border-border/60 bg-background/55 text-foreground"}`}>
+            <Html
+              center
+              distanceFactor={10}
+              position={[0, 0.86, 0]}
+              className="pointer-events-none hidden lg:block"
+            >
+              <div
+                className={`rounded-full border px-3 py-1 text-xs font-bold backdrop-blur-xl ${isActive ? "border-primary bg-primary/90 text-primary-foreground" : "border-border/60 bg-background/55 text-foreground"}`}
+              >
                 {zone.label}
               </div>
             </Html>
@@ -623,7 +708,12 @@ function CloudSea() {
     for (let i = 0; i < 36; i += 1) {
       const angle = (i / 36) * Math.PI * 2;
       const radius = 12 + (i % 7) * 1.8;
-      positions.push([Math.cos(angle) * radius, -3.4 - (i % 4) * 0.28, Math.sin(angle) * radius + 2, 2.2 + (i % 5) * 0.42]);
+      positions.push([
+        Math.cos(angle) * radius,
+        -3.4 - (i % 4) * 0.28,
+        Math.sin(angle) * radius + 2,
+        2.2 + (i % 5) * 0.42,
+      ]);
     }
     return positions;
   }, []);
@@ -633,7 +723,13 @@ function CloudSea() {
       {clouds.map(([x, y, z, scale], index) => (
         <mesh key={index} position={[x, y, z]} scale={[scale * 1.8, scale * 0.45, scale]}>
           <sphereGeometry args={[1, 20, 12]} />
-          <meshStandardMaterial color="#ffffff" transparent opacity={0.42} roughness={0.95} depthWrite={false} />
+          <meshStandardMaterial
+            color="#ffffff"
+            transparent
+            opacity={0.42}
+            roughness={0.95}
+            depthWrite={false}
+          />
         </mesh>
       ))}
       <mesh position={[0, -4.2, 3]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -649,7 +745,13 @@ function PlayerAvatar({ refObject }: { refObject: RefObject<THREE.Group | null> 
     <group ref={refObject} position={[START_POSITION.x, 0.52, START_POSITION.z]}>
       <mesh position={[0, 0.18, 0]} castShadow>
         <cylinderGeometry args={[0.18, 0.22, 0.54, 24]} />
-        <meshStandardMaterial color="#f1d37b" emissive="#d3a842" emissiveIntensity={0.16} roughness={0.38} metalness={0.08} />
+        <meshStandardMaterial
+          color="#f1d37b"
+          emissive="#d3a842"
+          emissiveIntensity={0.16}
+          roughness={0.38}
+          metalness={0.08}
+        />
       </mesh>
       <mesh position={[0, 0.64, 0]} castShadow>
         <sphereGeometry args={[0.17, 24, 16]} />
@@ -657,7 +759,13 @@ function PlayerAvatar({ refObject }: { refObject: RefObject<THREE.Group | null> 
       </mesh>
       <mesh position={[0, 0.42, 0.04]}>
         <torusGeometry args={[0.34, 0.014, 8, 48]} />
-        <meshStandardMaterial color="#fff1a6" emissive="#ffd36b" emissiveIntensity={0.65} transparent opacity={0.64} />
+        <meshStandardMaterial
+          color="#fff1a6"
+          emissive="#ffd36b"
+          emissiveIntensity={0.65}
+          transparent
+          opacity={0.64}
+        />
       </mesh>
       <pointLight position={[0, 0.8, 0]} intensity={1.4} color="#ffe7a6" distance={3} />
     </group>
@@ -672,11 +780,19 @@ function MovementHud() {
       </div>
       <div className="mt-2 grid grid-cols-3 gap-1 text-xs font-bold text-muted-foreground">
         <span />
-        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">W</kbd>
+        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
+          W
+        </kbd>
         <span />
-        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">A</kbd>
-        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">S</kbd>
-        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">D</kbd>
+        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
+          A
+        </kbd>
+        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
+          S
+        </kbd>
+        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
+          D
+        </kbd>
       </div>
     </div>
   );
@@ -700,10 +816,15 @@ function WorldPanel({
   if (activeZone === "overview" || !selectedZone) {
     return (
       <aside className="sanctuary-panel absolute bottom-4 left-4 right-4 z-30 rounded-[2rem] border border-border/60 p-5 shadow-[var(--shadow-aura)] lg:bottom-6 lg:left-auto lg:right-6 lg:w-[24rem]">
-        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">Arrival Terrace</p>
-        <h2 className="mt-2 text-2xl font-bold text-foreground">Move through the marble sanctuary.</h2>
+        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
+          Arrival Terrace
+        </p>
+        <h2 className="mt-2 text-2xl font-bold text-foreground">
+          Move through the marble sanctuary.
+        </h2>
         <p className="mt-3 text-sm text-muted-foreground">
-          Walk with WASD or tap a glowing destination. Each temple area opens quests that strengthen your skill tree.
+          Walk with WASD or tap a glowing destination. Each temple area opens quests that strengthen
+          your skill tree.
         </p>
         <div className="mt-5 grid gap-2">
           {zones.map((zone) => (
@@ -730,11 +851,15 @@ function WorldPanel({
         <ArrowLeft className="h-4 w-4" /> Arrival Terrace
       </button>
       <div className="flex items-start gap-4">
-        <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-[40%] border ${selectedZone.aura}`}>
+        <div
+          className={`grid h-14 w-14 shrink-0 place-items-center rounded-[40%] border ${selectedZone.aura}`}
+        >
           <selectedZone.Icon className="h-7 w-7" />
         </div>
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{selectedTree.name}</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+            {selectedTree.name}
+          </p>
           <h2 className="mt-1 text-2xl font-bold text-foreground">{selectedZone.label}</h2>
         </div>
       </div>
@@ -753,7 +878,10 @@ function WorldPanel({
       </div>
       <div className="mt-5 grid gap-3">
         {(zoneQuests.length ? zoneQuests : allQuests.slice(0, 2)).map((quest) => (
-          <div key={quest.title} className="rounded-2xl border border-border/60 bg-background/42 p-4">
+          <div
+            key={quest.title}
+            className="rounded-2xl border border-border/60 bg-background/42 p-4"
+          >
             <div className="flex items-start justify-between gap-3">
               <p className="font-semibold text-foreground">{quest.title}</p>
               <span className="shrink-0 rounded-full bg-primary/15 px-2 py-1 text-xs font-bold text-primary">
