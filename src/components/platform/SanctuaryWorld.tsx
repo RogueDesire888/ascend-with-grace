@@ -48,6 +48,14 @@ const WALK_RADIUS_X = 8.85;
 const WALK_RADIUS_Z = 7.05;
 const WALK_CENTER_Z = 0.45;
 const SURFACE_Y = 0.44;
+const WALKABLE_RECTS = [
+  { x: 0, z: 4.35, hx: 5.4, hz: 2.65 },
+  { x: 0, z: 1.3, hx: 2.9, hz: 4.35 },
+  { x: 0, z: -2.5, hx: 5.85, hz: 1.8 },
+  { x: 0, z: -4.65, hx: 3.55, hz: 1.85 },
+  { x: -5.75, z: 0.15, hx: 2.45, hz: 3.35 },
+  { x: 5.75, z: 0.15, hx: 2.45, hz: 3.35 },
+] as const;
 
 const zones: Zone[] = [
   {
@@ -102,15 +110,33 @@ function distance(a: Point, b: Point) {
 }
 
 function clampPosition(point: Point): Point {
+  if (isWalkable(point)) return point;
+
   const normalized =
     point.x ** 2 / WALK_RADIUS_X ** 2 + (point.z - WALK_CENTER_Z) ** 2 / WALK_RADIUS_Z ** 2;
-  if (normalized <= 1) return point;
-
   const angle = Math.atan2((point.z - WALK_CENTER_Z) / WALK_RADIUS_Z, point.x / WALK_RADIUS_X);
-  return {
+  const ellipsePoint = {
     x: Math.cos(angle) * WALK_RADIUS_X,
     z: WALK_CENTER_Z + Math.sin(angle) * WALK_RADIUS_Z,
   };
+  const rectPoints = WALKABLE_RECTS.map((area) => ({
+    x: Math.min(area.x + area.hx, Math.max(area.x - area.hx, point.x)),
+    z: Math.min(area.z + area.hz, Math.max(area.z - area.hz, point.z)),
+  }));
+  return [ellipsePoint, ...rectPoints].sort((a, b) => distance(a, point) - distance(b, point))[0];
+}
+
+function isWalkable(point: Point) {
+  const inEllipse =
+    point.x ** 2 / WALK_RADIUS_X ** 2 + (point.z - WALK_CENTER_Z) ** 2 / WALK_RADIUS_Z ** 2 <= 1;
+  const inRect = WALKABLE_RECTS.some(
+    (area) => Math.abs(point.x - area.x) <= area.hx && Math.abs(point.z - area.z) <= area.hz,
+  );
+  return inEllipse || inRect;
+}
+
+function isInTempleInterior(point: Point) {
+  return Math.abs(point.x) < 2.85 && point.z < -3.05 && point.z > -6.15;
 }
 
 function clamp01(value: number) {
@@ -126,6 +152,8 @@ function getTerrainHeight(point: Point) {
 
   const templeTerrace = Math.abs(point.x) < 5.35 && point.z < -1.45 && point.z > -5.75;
   if (templeTerrace) return SURFACE_Y + 1.08;
+
+  if (isInTempleInterior(point)) return SURFACE_Y + 1.12;
 
   const sideTerrace =
     Math.abs(point.x) > 4.25 && Math.abs(point.x) < 7.15 && point.z > -2.85 && point.z < 2.6;
@@ -167,6 +195,7 @@ export function SanctuaryWorld() {
   const activeZone = nearbyZone?.key ?? manualZone;
   const selectedZone = zones.find((zone) => zone.key === activeZone);
   const selectedTree = skillTrees.find((tree) => tree.name === selectedZone?.tree) ?? skillTrees[1];
+  const isInsideTemple = isInTempleInterior(avatarPosition);
   const zoneQuests = useMemo(
     () => allQuests.filter((quest) => quest.tree === selectedTree.name).slice(0, 3),
     [selectedTree.name],
@@ -218,8 +247,8 @@ export function SanctuaryWorld() {
         if (velocity.x || velocity.z) {
           const magnitude = Math.hypot(velocity.x, velocity.z) || 1;
           const nextPosition = clampPosition({
-            x: current.x + (velocity.x / magnitude) * 0.085 * delta,
-            z: current.z + (velocity.z / magnitude) * 0.085 * delta,
+            x: current.x + (velocity.x / magnitude) * 0.105 * delta,
+            z: current.z + (velocity.z / magnitude) * 0.105 * delta,
           });
           lastAvatarPosition.current = current;
           avatarDirection.current = Math.atan2(
@@ -371,6 +400,7 @@ export function SanctuaryWorld() {
                   hasEntered={hasEntered}
                   avatarPosition={avatarPosition}
                   avatarDirection={avatarDirection.current}
+                  isInsideTemple={isInsideTemple}
                   activeZone={activeZone}
                   onWalkTo={walkTo}
                   onMoveTo={(point) => {
@@ -456,6 +486,7 @@ function SanctuaryScene({
   hasEntered,
   avatarPosition,
   avatarDirection,
+  isInsideTemple,
   activeZone,
   onWalkTo,
   onMoveTo,
@@ -463,6 +494,7 @@ function SanctuaryScene({
   hasEntered: boolean;
   avatarPosition: Point;
   avatarDirection: number;
+  isInsideTemple: boolean;
   activeZone: ZoneKey;
   onWalkTo: (zone: Zone) => void;
   onMoveTo: (point: Point) => void;
@@ -478,14 +510,14 @@ function SanctuaryScene({
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
     const introCamera = new THREE.Vector3(0, 13.5 - eased * 6.1, 24 - eased * 10.2);
-    const followCamera = new THREE.Vector3(
-      avatarPosition.x,
-      avatar.y + 4.25,
-      avatarPosition.z + 8.25,
-    );
+    const followCamera = isInsideTemple
+      ? new THREE.Vector3(avatarPosition.x * 0.45, avatar.y + 2.35, avatarPosition.z + 4.15)
+      : new THREE.Vector3(avatarPosition.x, avatar.y + 4.25, avatarPosition.z + 8.25);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
-      ? avatar.clone().add(new THREE.Vector3(0, 1.25, -3.8))
+      ? avatar
+          .clone()
+          .add(new THREE.Vector3(0, isInsideTemple ? 0.8 : 1.25, isInsideTemple ? -1.35 : -3.8))
       : new THREE.Vector3(0, 2.2, -2.4);
 
     camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
@@ -638,6 +670,54 @@ function TempleBalustrades() {
   );
 }
 
+function TempleInterior({
+  onGroundClick,
+}: {
+  onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
+}) {
+  const innerColumns = [-2.25, -1.15, 1.15, 2.25];
+  return (
+    <group position={[0, 1.78, -2.05]}>
+      <mesh position={[0, 0.04, -0.18]} receiveShadow onClick={onGroundClick}>
+        <boxGeometry args={[4.75, 0.08, 2.62]} />
+        <meshStandardMaterial color="#fff8ea" roughness={0.22} metalness={0.14} />
+      </mesh>
+      <mesh position={[0, 0.18, -1.16]} castShadow>
+        <cylinderGeometry args={[0.72, 0.88, 0.34, 48]} />
+        <meshStandardMaterial color="#ead7b8" roughness={0.32} metalness={0.12} />
+      </mesh>
+      <mesh position={[0, 0.46, -1.16]} castShadow>
+        <sphereGeometry args={[0.38, 32, 20]} />
+        <meshStandardMaterial
+          color="#fff2ae"
+          emissive="#ffd76b"
+          emissiveIntensity={1.35}
+          roughness={0.16}
+        />
+      </mesh>
+      <pointLight position={[0, 1.12, -1.16]} intensity={8.5} color="#ffe28f" distance={5.4} />
+      {innerColumns.map((x) => (
+        <mesh key={x} position={[x, 1.25, -0.34]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.14, 0.2, 2.55, 30]} />
+          <meshStandardMaterial color="#fff1d9" roughness={0.3} metalness={0.1} />
+        </mesh>
+      ))}
+      {[-1, 1].map((side) => (
+        <mesh key={side} position={[side * 2.95, 1.1, -1.1]} castShadow>
+          <torusGeometry args={[0.38, 0.026, 10, 44]} />
+          <meshStandardMaterial
+            color="#d8b86b"
+            emissive="#d29d32"
+            emissiveIntensity={0.32}
+            metalness={0.52}
+            roughness={0.22}
+          />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
   const columns = Array.from({ length: 10 }, (_, index) => -4.05 + index * 0.9);
   const sideColumns = [-4.55, 4.55];
@@ -652,13 +732,29 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
         <boxGeometry args={[9.7, 0.24, 4.62]} />
         <meshStandardMaterial color="#fff8ea" roughness={0.33} metalness={0.1} />
       </mesh>
-      <mesh position={[0, 2.18, -0.62]} castShadow receiveShadow>
-        <boxGeometry args={[7.55, 3.55, 3.15]} />
-        <meshStandardMaterial color="#eadfcd" roughness={0.5} metalness={0.04} />
+      <mesh position={[0, 1.7, -2.2]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[5.95, 0.08, 3.35]} />
+        <meshStandardMaterial color="#fff6e5" roughness={0.28} metalness={0.12} />
       </mesh>
-      <mesh position={[0, 2.18, 1.08]} castShadow receiveShadow>
-        <boxGeometry args={[8.35, 3.3, 0.38]} />
-        <meshStandardMaterial color="#f7ecd8" roughness={0.4} metalness={0.08} />
+      <mesh position={[0, 2.28, -2.95]} castShadow receiveShadow>
+        <boxGeometry args={[7.55, 3.75, 0.36]} />
+        <meshStandardMaterial color="#d9cbb8" roughness={0.52} metalness={0.04} />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <mesh key={side} position={[side * 3.93, 2.2, -0.65]} castShadow receiveShadow>
+          <boxGeometry args={[0.34, 3.42, 3.45]} />
+          <meshStandardMaterial color="#eadfcd" roughness={0.48} metalness={0.05} />
+        </mesh>
+      ))}
+      {[-1, 1].map((side) => (
+        <mesh key={side} position={[side * 2.75, 2.18, 1.08]} castShadow receiveShadow>
+          <boxGeometry args={[2.75, 3.3, 0.38]} />
+          <meshStandardMaterial color="#f7ecd8" roughness={0.4} metalness={0.08} />
+        </mesh>
+      ))}
+      <mesh position={[0, 3.54, 1.08]} castShadow receiveShadow>
+        <boxGeometry args={[2.45, 0.78, 0.38]} />
+        <meshStandardMaterial color="#f7ecd8" roughness={0.38} metalness={0.08} />
       </mesh>
       <mesh position={[0, 4.08, 0.05]} castShadow>
         <boxGeometry args={[9.2, 0.42, 4.95]} />
@@ -700,11 +796,12 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
           </mesh>
         </group>
       ))}
-      <mesh position={[0, 1.98, 1.9]} castShadow receiveShadow>
-        <boxGeometry args={[1.28, 2.45, 0.2]} />
-        <meshStandardMaterial color="#211b1a" roughness={0.58} transparent opacity={0.74} />
+      <TempleInterior onGroundClick={onGroundClick} />
+      <mesh position={[0, 2.05, 1.9]} castShadow receiveShadow>
+        <boxGeometry args={[1.62, 2.7, 0.08]} />
+        <meshStandardMaterial color="#231d1b" roughness={0.58} transparent opacity={0.26} />
       </mesh>
-      <pointLight position={[0, 2.25, 1.76]} intensity={4.2} color="#ffd982" distance={5.6} />
+      <pointLight position={[0, 2.25, 1.38]} intensity={5.6} color="#ffd982" distance={6.5} />
       <mesh position={[0, 5.38, 1.58]}>
         <torusGeometry args={[0.58, 0.045, 14, 72]} />
         <meshStandardMaterial
@@ -1161,7 +1258,7 @@ function WorldPanel({
   }
 
   return (
-    <aside className="sanctuary-panel absolute bottom-4 left-4 right-4 z-30 max-h-[72%] overflow-y-auto rounded-[2rem] border border-border/60 p-5 shadow-[var(--shadow-aura)] lg:bottom-6 lg:left-auto lg:right-6 lg:w-[25rem]">
+    <aside className="sanctuary-panel absolute right-3 top-3 z-30 max-h-[calc(100%-1.5rem)] w-[min(22rem,calc(100%-1.5rem))] overflow-y-auto rounded-[1.35rem] border border-border/60 p-4 shadow-[var(--shadow-aura)] sm:right-4 sm:top-4 lg:right-5 lg:top-5 lg:w-[23rem]">
       <button
         onClick={onBack}
         className="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
@@ -1178,10 +1275,10 @@ function WorldPanel({
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
             {selectedTree.name}
           </p>
-          <h2 className="mt-1 text-2xl font-bold text-foreground">{selectedZone.label}</h2>
+          <h2 className="mt-1 text-xl font-bold text-foreground">{selectedZone.label}</h2>
         </div>
       </div>
-      <p className="mt-4 text-sm text-muted-foreground">{selectedZone.copy}</p>
+      <p className="mt-3 text-sm text-muted-foreground">{selectedZone.copy}</p>
       <div className="mt-5">
         <div className="flex items-center justify-between text-sm font-semibold text-foreground">
           <span>Level {selectedTree.level}</span>
@@ -1194,13 +1291,13 @@ function WorldPanel({
           />
         </div>
       </div>
-      <div className="mt-5 grid gap-3">
+      <div className="mt-4 grid gap-2">
         {(zoneQuests.length ? zoneQuests : allQuests.slice(0, 2)).map((quest) => {
           const isComplete = completedQuests.has(quest.title);
           return (
             <div
               key={quest.title}
-              className={`rounded-2xl border p-4 transition-all ${isComplete ? "border-primary/55 bg-primary/15 shadow-[var(--shadow-glow)]" : "border-border/60 bg-background/42"}`}
+              className={`rounded-2xl border p-3 transition-all ${isComplete ? "border-primary/55 bg-primary/15 shadow-[var(--shadow-glow)]" : "border-border/60 bg-background/42"}`}
             >
               <div className="flex items-start justify-between gap-3">
                 <p className="font-semibold text-foreground">{quest.title}</p>

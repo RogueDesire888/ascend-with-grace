@@ -1,34 +1,42 @@
-Plan to upgrade the Sanctuary page:
+Plan to refine the Sanctuary world:
 
-1. Build the temple as real 3D geometry
-   - Replace the current simple block temple with a detailed white-marble floating temple matching the reference direction: broad front stairs, layered plinths, columned portico, central dark entrance, pediment/roof tiers, gold halo ornament, side wings, marble trim, and luminous highlights.
-   - Keep the uploaded reference image as the cinematic backdrop, but make the 3D temple itself visible and recognizable in-world instead of relying on the background image.
-   - Reframe camera/lighting so the temple is not hidden by overlays or background blending.
+1. Make the temple enterable with an interior view
+   - Add an interior region behind the front doorway so walking through the temple entrance transitions the camera into a closer interior view.
+   - Open up the front doorway visually instead of using a flat dark panel.
+   - Add visible interior details: marble floor, glowing altar/energy pool, rear columns, ceiling light, side alcoves, gold accents, and soft interior bloom-style lighting.
+   - Keep the avatar visible inside and allow walking around the interior chamber.
 
-2. Make the stairs and island walkable
-   - Replace the current flat-only movement with terrain-aware movement.
-   - Add a height function for the island surface so the avatar rises smoothly on stair steps, temple terrace/platforms, and garden areas instead of staying at one fixed Y height.
-   - Update click/tap movement to land on valid walkable areas across the whole island.
-   - Expand and shape the walkable boundary to include the front stairs, temple landing, side terraces, gardens, and portal zones.
+2. Improve full-island navigation
+   - Expand the walkable model from one oval clamp into a more accurate sanctuary traversal shape covering:
+     - arrival terrace
+     - main staircase
+     - temple landing
+     - temple interior
+     - side garden terraces
+     - healing/spirit/herbal/movement portal zones
+   - Add better terrain height transitions so stairs, temple landing, and interior floor feel continuous.
+   - Tune movement speed and click/tap target handling so users can reliably walk up stairs, into the temple, and around the whole island.
+   - Prevent the avatar from getting pushed outside the island while still allowing access to all intended paths.
 
-3. Improve third-person character movement
-   - Add avatar facing direction based on movement vector so the character turns toward where they walk.
-   - Smooth camera follow with a better over-the-shoulder/behind-the-avatar framing.
-   - Keep WASD/arrow movement and click/tap-to-move, but tune speed and path feel so stairs, landings, and side terraces feel accessible.
+3. Move interactive spot menu to top right only
+   - Change the zone/quest panel from a large bottom/full-width overlay into a compact top-right panel inside the 3D viewport.
+   - Keep it scrollable if content is long, but constrain its width/height so it never covers the whole scene.
+   - On mobile, also keep it top-right or top-aligned compact instead of covering the entire screen.
+   - Preserve quest completion, Ascension Level updates, and VFX behavior.
 
-4. Improve floating island detail and reference match
-   - Add layered garden terraces, stair rail edges, marble paths, waterfall lips, floating rock underside details, cloud depth, and cypress/flower placement around the temple.
-   - Preserve the bright sky, massive clouds, white temple, lush green/pink terraces, and waterfall composition from the reference.
-   - Keep the UI controls and quest/VFX behavior already added; only adjust them if needed to avoid covering the temple.
+4. Match the reference image more closely
+   - Further refine the temple silhouette toward the reference: taller luminous columns, broad white stairway, layered plinth, floral terraces, cypress trees framing both sides, waterfalls, and gold ornamental glow.
+   - Reduce any remaining visual elements that fight the reference composition.
+   - Keep the 3D temple prominent while using the reference image as atmospheric backing.
 
-Technical notes
-   - Main implementation stays in `src/components/platform/SanctuaryWorld.tsx`.
-   - Styling/VFX refinements stay in `src/styles.css` if needed.
+Technical scope
+   - Main changes in `src/components/platform/SanctuaryWorld.tsx`.
+   - Minor CSS adjustments in `src/styles.css` if needed for compact panel behavior and visual polish.
    - No backend or persistence changes.
-   - I will avoid editing generated router files.
 
 Validation
-   - Verify `/sanctuary` renders without runtime errors.
-   - Confirm the 3D temple is visible in the world.
-   - Confirm the avatar can walk up the stairs, onto the temple terrace, around gardens, and to all portal zones.
-   - Check desktop framing at the current preview size and a mobile viewport for no major overlap.
+   - Verify `/sanctuary` loads without runtime errors.
+   - Verify walking up the stairs and through the temple entrance reveals the interior.
+   - Verify all interactive spots are still reachable.
+   - Verify zone menus appear only as compact top-right panels and do not cover the world.
+   - Check current desktop viewport and a mobile viewport for layout/framing.
