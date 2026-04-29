@@ -213,6 +213,8 @@ export function SanctuaryWorld() {
   const keysPressed = useRef(new Set<string>());
   const lastAvatarPosition = useRef<Point>(START_POSITION);
   const avatarDirection = useRef(0);
+  const worldApiRef = useRef<SanctuaryWorldApi | null>(null);
+  const avatarPositionRef = useRef<Point>(START_POSITION);
 
   useEffect(() => setIsMounted(true), []);
 
@@ -255,66 +257,20 @@ export function SanctuaryWorld() {
 
   useEffect(() => {
     if (!hasEntered) return;
-
     let frame = 0;
-    let lastTime = performance.now();
-
-    function tick(now: number) {
-      const delta = Math.min(32, now - lastTime) / 16.67;
-      lastTime = now;
-
-      setAvatarPosition((current) => {
-        const keys = keysPressed.current;
-        const velocity = { x: 0, z: 0 };
-
-        if (keys.has("arrowleft") || keys.has("a")) velocity.x -= 1;
-        if (keys.has("arrowright") || keys.has("d")) velocity.x += 1;
-        if (keys.has("arrowup") || keys.has("w")) velocity.z -= 1;
-        if (keys.has("arrowdown") || keys.has("s")) velocity.z += 1;
-
-        if (velocity.x || velocity.z) {
-          const magnitude = Math.hypot(velocity.x, velocity.z) || 1;
-          const nextPosition = clampPosition({
-            x: current.x + (velocity.x / magnitude) * 0.105 * delta,
-            z: current.z + (velocity.z / magnitude) * 0.105 * delta,
-          });
-          lastAvatarPosition.current = current;
-          avatarDirection.current = Math.atan2(
-            nextPosition.x - current.x,
-            nextPosition.z - current.z,
-          );
-          return nextPosition;
-        }
-
-        if (targetPosition) {
-          const dx = targetPosition.x - current.x;
-          const dz = targetPosition.z - current.z;
-          const remaining = Math.hypot(dx, dz);
-          if (remaining < 0.08) {
-            setTargetPosition(null);
-            return current;
-          }
-          const nextPosition = clampPosition({
-            x: current.x + (dx / remaining) * Math.min(remaining, 0.075 * delta),
-            z: current.z + (dz / remaining) * Math.min(remaining, 0.075 * delta),
-          });
-          lastAvatarPosition.current = current;
-          avatarDirection.current = Math.atan2(
-            nextPosition.x - current.x,
-            nextPosition.z - current.z,
-          );
-          return nextPosition;
-        }
-
-        return current;
-      });
-
-      frame = requestAnimationFrame(tick);
+    let lastSync = 0;
+    function sync(now: number) {
+      const livePosition = worldApiRef.current?.getPosition() ?? avatarPositionRef.current;
+      if (now - lastSync > 90 && distance(livePosition, avatarPositionRef.current) > 0.035) {
+        avatarPositionRef.current = livePosition;
+        setAvatarPosition(livePosition);
+        lastSync = now;
+      }
+      frame = requestAnimationFrame(sync);
     }
-
-    frame = requestAnimationFrame(tick);
+    frame = requestAnimationFrame(sync);
     return () => cancelAnimationFrame(frame);
-  }, [hasEntered, targetPosition]);
+  }, [hasEntered]);
 
   function playAscensionCue(leveledUp: boolean) {
     if (isMuted || typeof window === "undefined") return;
