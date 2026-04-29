@@ -7,24 +7,27 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-background text-foreground">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-[var(--gradient-cosmos)]" />
-        <div className="star-field absolute inset-0 opacity-70" />
-        <div className="absolute left-1/2 top-0 h-80 w-[42rem] -translate-x-1/2 rounded-full bg-spirit/20 blur-3xl" />
+        <div className="garden-grid absolute inset-0 opacity-45" />
+        <div className="star-field absolute inset-0 opacity-60" />
+        <div className="petal-mist absolute inset-0 opacity-80" />
+        <div className="absolute left-1/2 top-0 h-96 w-[44rem] -translate-x-1/2 rounded-full bg-earth/20 blur-3xl" />
+        <div className="absolute bottom-[-8rem] right-[-4rem] h-96 w-96 rounded-full bg-water/15 blur-3xl" />
       </div>
-      <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/70 backdrop-blur-2xl">
         <div className="mx-auto flex min-h-20 w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <Link to="/" className="group flex items-center gap-3" aria-label="Ascension home">
-            <span className="grid h-11 w-11 place-items-center rounded-2xl border border-spirit/30 bg-card/80 shadow-[var(--shadow-glow)] transition-transform group-hover:scale-105">
-              <Sparkles className="h-5 w-5 text-spirit" />
+            <span className="grid h-11 w-11 place-items-center rounded-full border border-primary/30 bg-card/80 shadow-[var(--shadow-glow)] transition-transform group-hover:scale-105">
+              <Sparkles className="h-5 w-5 text-primary" />
             </span>
             <span className="leading-tight">
               <span className="block text-base font-semibold tracking-[0.18em] text-foreground">
                 ASCEND
               </span>
-              <span className="block text-xs text-muted-foreground">healing sanctuary</span>
+              <span className="block text-xs text-muted-foreground">galactic garden</span>
             </span>
           </Link>
           <nav
-            className="hidden items-center gap-1 rounded-full border border-border/70 bg-card/60 p-1 md:flex"
+            className="hidden items-center gap-1 rounded-full border border-border/60 bg-card/55 p-1 shadow-[var(--shadow-soft)] md:flex"
             aria-label="Primary navigation"
           >
             {navItems.map((item) => (

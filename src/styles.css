@@ -58,92 +58,93 @@
 }
 
 :root {
-  --radius: 0.875rem;
-  --background: oklch(0.145 0.065 278);
-  --foreground: oklch(0.975 0.018 83);
-  --card: oklch(0.205 0.07 281 / 82%);
-  --card-foreground: oklch(0.975 0.018 83);
-  --popover: oklch(0.18 0.07 281);
-  --popover-foreground: oklch(0.975 0.018 83);
-  --primary: oklch(0.78 0.19 52);
-  --primary-foreground: oklch(0.145 0.065 278);
-  --secondary: oklch(0.27 0.09 285 / 82%);
-  --secondary-foreground: oklch(0.955 0.03 88);
-  --muted: oklch(0.255 0.058 279 / 78%);
-  --muted-foreground: oklch(0.78 0.055 292);
-  --accent: oklch(0.28 0.12 214 / 74%);
-  --accent-foreground: oklch(0.94 0.055 194);
+  --radius: 1rem;
+  --background: oklch(0.13 0.055 246);
+  --foreground: oklch(0.97 0.022 114);
+  --card: oklch(0.2 0.055 242 / 76%);
+  --card-foreground: oklch(0.97 0.022 114);
+  --popover: oklch(0.17 0.052 245);
+  --popover-foreground: oklch(0.97 0.022 114);
+  --primary: oklch(0.8 0.18 158);
+  --primary-foreground: oklch(0.12 0.05 246);
+  --secondary: oklch(0.25 0.07 258 / 82%);
+  --secondary-foreground: oklch(0.94 0.038 128);
+  --muted: oklch(0.255 0.045 248 / 78%);
+  --muted-foreground: oklch(0.78 0.055 188);
+  --accent: oklch(0.29 0.08 186 / 76%);
+  --accent-foreground: oklch(0.94 0.06 170);
   --destructive: oklch(0.68 0.22 25);
   --destructive-foreground: oklch(0.98 0.01 80);
-  --border: oklch(0.72 0.12 296 / 22%);
-  --input: oklch(0.72 0.12 296 / 26%);
-  --ring: oklch(0.82 0.17 190);
-  --chart-1: oklch(0.78 0.19 52);
-  --chart-2: oklch(0.82 0.17 190);
-  --chart-3: oklch(0.73 0.2 343);
-  --chart-4: oklch(0.75 0.17 143);
-  --chart-5: oklch(0.72 0.18 305);
-  --sidebar: oklch(0.18 0.07 281);
-  --sidebar-foreground: oklch(0.975 0.018 83);
-  --sidebar-primary: oklch(0.78 0.19 52);
-  --sidebar-primary-foreground: oklch(0.145 0.065 278);
-  --sidebar-accent: oklch(0.28 0.12 214 / 74%);
-  --sidebar-accent-foreground: oklch(0.94 0.055 194);
-  --sidebar-border: oklch(0.72 0.12 296 / 22%);
-  --sidebar-ring: oklch(0.82 0.17 190);
-  --spirit: oklch(0.76 0.2 315);
-  --water: oklch(0.81 0.16 199);
-  --fire: oklch(0.72 0.23 25);
-  --earth: oklch(0.78 0.17 145);
-  --air: oklch(0.83 0.12 235);
-  --coral-glow: oklch(0.74 0.21 12);
-  --cyan-glow: oklch(0.86 0.16 190);
-  --sun-glow: oklch(0.88 0.18 85);
-  --orchid-glow: oklch(0.7 0.22 300);
-  --leaf-glow: oklch(0.82 0.18 136);
+  --border: oklch(0.76 0.09 168 / 24%);
+  --input: oklch(0.76 0.09 168 / 28%);
+  --ring: oklch(0.84 0.16 176);
+  --chart-1: oklch(0.8 0.18 158);
+  --chart-2: oklch(0.82 0.15 195);
+  --chart-3: oklch(0.78 0.16 334);
+  --chart-4: oklch(0.86 0.14 93);
+  --chart-5: oklch(0.72 0.17 285);
+  --sidebar: oklch(0.17 0.052 245);
+  --sidebar-foreground: oklch(0.97 0.022 114);
+  --sidebar-primary: oklch(0.8 0.18 158);
+  --sidebar-primary-foreground: oklch(0.12 0.05 246);
+  --sidebar-accent: oklch(0.29 0.08 186 / 76%);
+  --sidebar-accent-foreground: oklch(0.94 0.06 170);
+  --sidebar-border: oklch(0.76 0.09 168 / 24%);
+  --sidebar-ring: oklch(0.84 0.16 176);
+  --spirit: oklch(0.76 0.18 318);
+  --water: oklch(0.82 0.14 202);
+  --fire: oklch(0.78 0.16 30);
+  --earth: oklch(0.8 0.17 146);
+  --air: oklch(0.86 0.1 214);
+  --coral-glow: oklch(0.79 0.16 19);
+  --cyan-glow: oklch(0.87 0.15 185);
+  --sun-glow: oklch(0.88 0.15 88);
+  --orchid-glow: oklch(0.73 0.18 305);
+  --leaf-glow: oklch(0.84 0.17 141);
   --gradient-cosmos:
     radial-gradient(
-      circle at 20% 15%,
-      color-mix(in oklab, var(--spirit) 24%, transparent),
+      ellipse at 18% 18%,
+      color-mix(in oklab, var(--leaf-glow) 24%, transparent),
+      transparent 30%
+    ),
+    radial-gradient(
+      ellipse at 82% 12%,
+      color-mix(in oklab, var(--cyan-glow) 18%, transparent),
       transparent 28%
     ),
     radial-gradient(
-      circle at 80% 20%,
-      color-mix(in oklab, var(--water) 18%, transparent),
-      transparent 26%
+      ellipse at 54% 92%,
+      color-mix(in oklab, var(--orchid-glow) 18%, transparent),
+      transparent 36%
     ),
-    radial-gradient(
-      circle at 50% 90%,
-      color-mix(in oklab, var(--fire) 12%, transparent),
-      transparent 34%
-    ),
-    linear-gradient(135deg, oklch(0.12 0.08 276), oklch(0.18 0.08 292) 45%, oklch(0.13 0.07 250));
+    linear-gradient(135deg, oklch(0.1 0.055 246), oklch(0.155 0.06 218) 48%, oklch(0.12 0.05 170));
   --gradient-panel: linear-gradient(
     135deg,
-    color-mix(in oklab, var(--card) 88%, var(--spirit) 12%),
-    color-mix(in oklab, var(--card) 88%, var(--water) 12%)
+    color-mix(in oklab, var(--card) 84%, var(--leaf-glow) 16%),
+    color-mix(in oklab, var(--card) 86%, var(--water) 14%),
+    color-mix(in oklab, var(--card) 88%, var(--spirit) 12%)
   );
   --gradient-avatar: conic-gradient(
     from 140deg,
+    var(--leaf-glow),
     var(--water),
     var(--spirit),
-    var(--fire),
     var(--sun-glow),
     var(--earth),
-    var(--water)
+    var(--leaf-glow)
   );
-  --shadow-soft: 0 20px 60px -36px color-mix(in oklab, var(--water) 42%, transparent);
+  --shadow-soft: 0 24px 70px -42px color-mix(in oklab, var(--leaf-glow) 45%, transparent);
   --shadow-glow:
-    0 0 32px color-mix(in oklab, var(--primary) 35%, transparent),
-    0 0 64px color-mix(in oklab, var(--spirit) 18%, transparent);
+    0 0 30px color-mix(in oklab, var(--primary) 34%, transparent),
+    0 0 70px color-mix(in oklab, var(--cyan-glow) 18%, transparent);
   --shadow-aura:
-    0 0 42px color-mix(in oklab, var(--spirit) 28%, transparent),
-    0 24px 80px -42px color-mix(in oklab, var(--water) 45%, transparent);
+    0 0 46px color-mix(in oklab, var(--leaf-glow) 24%, transparent),
+    0 24px 84px -44px color-mix(in oklab, var(--water) 45%, transparent);
 }
 
 .dark {
-  --background: oklch(0.145 0.065 278);
-  --foreground: oklch(0.975 0.018 83);
+  --background: oklch(0.13 0.055 246);
+  --foreground: oklch(0.97 0.022 114);
 }
 
 @layer base {
@@ -181,18 +182,18 @@
     background-image:
       radial-gradient(
         circle,
-        color-mix(in oklab, var(--foreground) 88%, transparent) 0 1px,
-        transparent 1.5px
+        color-mix(in oklab, var(--foreground) 78%, transparent) 0 1px,
+        transparent 1.6px
       ),
       radial-gradient(
-        circle,
-        color-mix(in oklab, var(--sun-glow) 90%, transparent) 0 1px,
-        transparent 1.5px
+        ellipse,
+        color-mix(in oklab, var(--leaf-glow) 82%, transparent) 0 1px,
+        transparent 2px
       ),
       radial-gradient(
-        circle,
-        color-mix(in oklab, var(--water) 90%, transparent) 0 1px,
-        transparent 1.5px
+        ellipse,
+        color-mix(in oklab, var(--orchid-glow) 76%, transparent) 0 1px,
+        transparent 2.2px
       );
     background-position:
       0 0,
@@ -202,6 +203,37 @@
       140px 140px,
       180px 180px,
       220px 220px;
+  }
+
+  .garden-grid {
+    background-image:
+      linear-gradient(color-mix(in oklab, var(--leaf-glow) 13%, transparent) 1px, transparent 1px),
+      linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--water) 11%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 96px 96px;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+  }
+
+  .petal-mist {
+    background-image:
+      radial-gradient(
+        ellipse at 18% 42%,
+        color-mix(in oklab, var(--leaf-glow) 22%, transparent),
+        transparent 24%
+      ),
+      radial-gradient(
+        ellipse at 72% 58%,
+        color-mix(in oklab, var(--spirit) 18%, transparent),
+        transparent 28%
+      ),
+      radial-gradient(
+        ellipse at 50% 8%,
+        color-mix(in oklab, var(--sun-glow) 12%, transparent),
+        transparent 26%
+      );
   }
 
   .scrollbar-none {
