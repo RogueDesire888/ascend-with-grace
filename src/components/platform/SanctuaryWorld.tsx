@@ -651,7 +651,7 @@ function MarbleWalkways({
         <boxGeometry args={[13.6, 0.12, 2.35]} />
         <meshStandardMaterial color="#fff4df" roughness={0.34} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 0.12, -7.95]} receiveShadow castShadow onClick={onGroundClick}>
+      <mesh position={[0, 1.04, -7.95]} receiveShadow castShadow onClick={onGroundClick}>
         <boxGeometry args={[12.8, 0.12, 4.6]} />
         <meshStandardMaterial color="#f7ead4" roughness={0.38} metalness={0.07} />
       </mesh>
@@ -670,7 +670,7 @@ function MarbleWalkways({
       {[-1, 1].map((side) => (
         <mesh
           key={`rear-${side}`}
-          position={[side * 5.55, 0.14, -9.95]}
+          position={[side * 5.55, 1.06, -9.95]}
           receiveShadow
           castShadow
           onClick={onGroundClick}
