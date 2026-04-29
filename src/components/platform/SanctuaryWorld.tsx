@@ -598,7 +598,11 @@ function SanctuaryScene({
         ? new THREE.Vector3(-Math.sign(currentPosition.x) * 4.8, 6.6, 9.2)
         : new THREE.Vector3(0, 5.85, 10.8);
     const followCamera = currentInsideTemple
-      ? new THREE.Vector3(currentPosition.x * 0.58, avatar.y + 3.15, currentPosition.z + 5.25)
+      ? new THREE.Vector3(
+          currentPosition.x * 0.45,
+          avatar.y + 4.25,
+          Math.min(currentPosition.z + 2.15, -2.15),
+        )
       : avatar.clone().add(exteriorCameraOffset);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
@@ -607,8 +611,8 @@ function SanctuaryScene({
           .add(
             new THREE.Vector3(
               0,
-              currentInsideTemple ? 0.95 : 1.55,
-              behindTemple ? 1.1 : sideOfTemple ? -2.2 : -4.2,
+              currentInsideTemple ? 1.1 : 1.55,
+              currentInsideTemple ? -2.6 : behindTemple ? 1.1 : sideOfTemple ? -2.2 : -4.2,
             ),
           )
       : new THREE.Vector3(0, 2.8, -3.4);
