@@ -48,6 +48,14 @@ const WALK_RADIUS_X = 8.85;
 const WALK_RADIUS_Z = 7.05;
 const WALK_CENTER_Z = 0.45;
 const SURFACE_Y = 0.44;
+const WALKABLE_RECTS = [
+  { x: 0, z: 4.35, hx: 5.4, hz: 2.65 },
+  { x: 0, z: 1.3, hx: 2.9, hz: 4.35 },
+  { x: 0, z: -2.5, hx: 5.85, hz: 1.8 },
+  { x: 0, z: -4.65, hx: 3.55, hz: 1.85 },
+  { x: -5.75, z: 0.15, hx: 2.45, hz: 3.35 },
+  { x: 5.75, z: 0.15, hx: 2.45, hz: 3.35 },
+] as const;
 
 const zones: Zone[] = [
   {
@@ -102,15 +110,33 @@ function distance(a: Point, b: Point) {
 }
 
 function clampPosition(point: Point): Point {
+  if (isWalkable(point)) return point;
+
   const normalized =
     point.x ** 2 / WALK_RADIUS_X ** 2 + (point.z - WALK_CENTER_Z) ** 2 / WALK_RADIUS_Z ** 2;
-  if (normalized <= 1) return point;
-
   const angle = Math.atan2((point.z - WALK_CENTER_Z) / WALK_RADIUS_Z, point.x / WALK_RADIUS_X);
-  return {
+  const ellipsePoint = {
     x: Math.cos(angle) * WALK_RADIUS_X,
     z: WALK_CENTER_Z + Math.sin(angle) * WALK_RADIUS_Z,
   };
+  const rectPoints = WALKABLE_RECTS.map((area) => ({
+    x: Math.min(area.x + area.hx, Math.max(area.x - area.hx, point.x)),
+    z: Math.min(area.z + area.hz, Math.max(area.z - area.hz, point.z)),
+  }));
+  return [ellipsePoint, ...rectPoints].sort((a, b) => distance(a, point) - distance(b, point))[0];
+}
+
+function isWalkable(point: Point) {
+  const inEllipse =
+    point.x ** 2 / WALK_RADIUS_X ** 2 + (point.z - WALK_CENTER_Z) ** 2 / WALK_RADIUS_Z ** 2 <= 1;
+  const inRect = WALKABLE_RECTS.some(
+    (area) => Math.abs(point.x - area.x) <= area.hx && Math.abs(point.z - area.z) <= area.hz,
+  );
+  return inEllipse || inRect;
+}
+
+function isInTempleInterior(point: Point) {
+  return Math.abs(point.x) < 2.85 && point.z < -3.05 && point.z > -6.15;
 }
 
 function clamp01(value: number) {
@@ -126,6 +152,8 @@ function getTerrainHeight(point: Point) {
 
   const templeTerrace = Math.abs(point.x) < 5.35 && point.z < -1.45 && point.z > -5.75;
   if (templeTerrace) return SURFACE_Y + 1.08;
+
+  if (isInTempleInterior(point)) return SURFACE_Y + 1.12;
 
   const sideTerrace =
     Math.abs(point.x) > 4.25 && Math.abs(point.x) < 7.15 && point.z > -2.85 && point.z < 2.6;
