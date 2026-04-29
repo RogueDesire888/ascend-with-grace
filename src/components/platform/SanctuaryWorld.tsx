@@ -1028,10 +1028,12 @@ function ZenGarden({
 
 function Waterfalls() {
   const falls = [
-    [-8.7, 0.62, 7.4, 0.58, 4.2],
-    [-3.1, 0.48, 9.5, 0.72, 5.2],
-    [3.1, 0.48, 9.5, 0.72, 5.3],
-    [8.7, 0.62, 7.35, 0.58, 4.3],
+    [-10.6, 0.62, 7.9, 0.62, 4.8],
+    [-4.1, 0.48, 10.55, 0.82, 5.8],
+    [4.1, 0.48, 10.55, 0.82, 5.9],
+    [10.6, 0.62, 7.85, 0.62, 4.9],
+    [-8.8, 0.98, -9.9, 0.44, 3.6],
+    [8.8, 0.98, -9.9, 0.44, 3.6],
   ];
 
   return (
@@ -1066,15 +1068,17 @@ function Waterfalls() {
 
 function CypressGrove() {
   const trees = [
-    [-10.5, -3.1, 1.95],
-    [-10.1, 3.8, 1.65],
-    [-7.2, -4.6, 1.45],
-    [-8.8, 2.05, 1.32],
-    [10.5, -3.0, 2.0],
-    [10.1, 3.9, 1.62],
-    [7.2, -4.55, 1.48],
-    [-2.55, -7.45, 1.32],
-    [2.55, -7.45, 1.32],
+    [-12.4, -3.8, 2.12],
+    [-11.8, 4.2, 1.78],
+    [-8.6, -5.8, 1.62],
+    [-10.1, 2.25, 1.48],
+    [12.4, -3.7, 2.16],
+    [11.8, 4.3, 1.76],
+    [8.55, -5.75, 1.62],
+    [-5.4, -10.9, 1.42],
+    [5.4, -10.9, 1.42],
+    [-2.6, -11.15, 1.26],
+    [2.6, -11.15, 1.26],
   ];
 
   return (
@@ -1101,8 +1105,8 @@ function FlowerBeds() {
     const palette = ["#f4a6bd", "#ffd2dc", "#f7c56b", "#f7f0ca", "#c6e6a4"];
     for (let i = 0; i < 138; i += 1) {
       const side = i % 4;
-      const baseX = side < 2 ? -9.6 + Math.random() * 3.8 : 6.0 + Math.random() * 4.4;
-      const baseZ = side % 2 ? -3.5 + Math.random() * 2.8 : 1.1 + Math.random() * 5.8;
+      const baseX = side < 2 ? -12.1 + Math.random() * 5.2 : 6.8 + Math.random() * 5.5;
+      const baseZ = side % 2 ? -6.2 + Math.random() * 4.2 : 1.0 + Math.random() * 7.1;
       points.push([baseX, baseZ, palette[i % palette.length], 0.07 + Math.random() * 0.06]);
     }
     return points;
@@ -1120,6 +1124,47 @@ function FlowerBeds() {
             emissiveIntensity={0.04}
           />
         </mesh>
+      ))}
+    </group>
+  );
+}
+
+
+function FlowerUrns() {
+  const urns = [
+    [-5.15, 6.15, 0.72],
+    [5.15, 6.15, 0.72],
+    [-3.8, 4.3, 0.58],
+    [3.8, 4.3, 0.58],
+    [-7.7, -2.8, 0.62],
+    [7.7, -2.8, 0.62],
+    [-6.8, -8.8, 0.54],
+    [6.8, -8.8, 0.54],
+  ];
+  const petals = ["#f4a6bd", "#ffd2dc", "#fff0b8", "#c9e7a8"];
+
+  return (
+    <group>
+      {urns.map(([x, z, scale], index) => (
+        <group key={index} position={[x, getTerrainHeight({ x, z }) + 0.22, z]} scale={[scale, scale, scale]}>
+          <mesh castShadow>
+            <cylinderGeometry args={[0.18, 0.28, 0.48, 18]} />
+            <meshStandardMaterial color="#d9c5a6" roughness={0.5} metalness={0.04} />
+          </mesh>
+          <mesh position={[0, 0.3, 0]} castShadow>
+            <cylinderGeometry args={[0.34, 0.24, 0.22, 20]} />
+            <meshStandardMaterial color="#ead8bd" roughness={0.44} metalness={0.05} />
+          </mesh>
+          {Array.from({ length: 7 }).map((_, petalIndex) => {
+            const angle = (petalIndex / 7) * Math.PI * 2;
+            return (
+              <mesh key={petalIndex} position={[Math.cos(angle) * 0.18, 0.48 + (petalIndex % 2) * 0.04, Math.sin(angle) * 0.18]} castShadow>
+                <sphereGeometry args={[0.095, 10, 8]} />
+                <meshStandardMaterial color={petals[(index + petalIndex) % petals.length]} roughness={0.55} />
+              </mesh>
+            );
+          })}
+        </group>
       ))}
     </group>
   );
@@ -1201,7 +1246,7 @@ function CloudSea() {
   return (
     <group>
       {clouds.map(([x, y, z, scale], index) => (
-        <mesh key={index} position={[x, y, z]} scale={[scale * 1.8, scale * 0.45, scale]}>
+        <mesh key={index} position={[x, y, z]} scale={[scale * 2.05, scale * 0.5, scale * 1.12]}>
           <sphereGeometry args={[1, 20, 12]} />
           <meshStandardMaterial
             color="#ffffff"
@@ -1213,7 +1258,7 @@ function CloudSea() {
         </mesh>
       ))}
       <mesh position={[0, -4.2, 3]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[36, 112]} />
+        <circleGeometry args={[42, 128]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.22} depthWrite={false} />
       </mesh>
     </group>
