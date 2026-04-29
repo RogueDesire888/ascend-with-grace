@@ -482,6 +482,10 @@ function SanctuaryScene({
   avatarDirection,
   isInsideTemple,
   activeZone,
+  keysPressed,
+  targetPosition,
+  onReady,
+  onTargetReached,
   onWalkTo,
   onMoveTo,
 }: {
@@ -490,29 +494,96 @@ function SanctuaryScene({
   avatarDirection: number;
   isInsideTemple: boolean;
   activeZone: ZoneKey;
+  keysPressed: RefObject<Set<string>>;
+  targetPosition: Point | null;
+  onReady: (api: SanctuaryWorldApi) => void;
+  onTargetReached: () => void;
   onWalkTo: (zone: Zone) => void;
   onMoveTo: (point: Point) => void;
 }) {
   const avatarRef = useRef<THREE.Group>(null);
   const clockRef = useRef(0);
+  const livePosition = useRef<Point>(avatarPosition);
+  const targetRef = useRef<Point | null>(targetPosition);
+  const velocityRef = useRef<Point>({ x: 0, z: 0 });
+  const directionRef = useRef(avatarDirection);
 
-  useFrame(({ camera, clock }) => {
+  useEffect(() => {
+    targetRef.current = targetPosition;
+  }, [targetPosition]);
+
+  useEffect(() => {
+    onReady({
+      getPosition: () => livePosition.current,
+      setTarget: (point) => {
+        targetRef.current = point;
+      },
+    });
+  }, [onReady]);
+
+  useFrame(({ camera, clock }, frameDelta) => {
+    const delta = Math.min(frameDelta, 0.05);
     const elapsed = clock.getElapsedTime();
     clockRef.current = elapsed;
 
-    const avatar = getAvatarWorldPosition(avatarPosition);
+    if (hasEntered) {
+      const keys = keysPressed.current;
+      const input = { x: 0, z: 0 };
+      if (keys.has("arrowleft") || keys.has("a")) input.x -= 1;
+      if (keys.has("arrowright") || keys.has("d")) input.x += 1;
+      if (keys.has("arrowup") || keys.has("w")) input.z -= 1;
+      if (keys.has("arrowdown") || keys.has("s")) input.z += 1;
+
+      let desiredVelocity = { x: 0, z: 0 };
+      const inputMagnitude = Math.hypot(input.x, input.z);
+      if (inputMagnitude > 0) {
+        targetRef.current = null;
+        desiredVelocity = { x: (input.x / inputMagnitude) * 4.15, z: (input.z / inputMagnitude) * 4.15 };
+      } else if (targetRef.current) {
+        const dx = targetRef.current.x - livePosition.current.x;
+        const dz = targetRef.current.z - livePosition.current.z;
+        const remaining = Math.hypot(dx, dz);
+        if (remaining < 0.08) {
+          targetRef.current = null;
+          onTargetReached();
+        } else {
+          desiredVelocity = { x: (dx / remaining) * 3.05, z: (dz / remaining) * 3.05 };
+        }
+      }
+
+      velocityRef.current = {
+        x: damp(velocityRef.current.x, desiredVelocity.x, 11, delta),
+        z: damp(velocityRef.current.z, desiredVelocity.z, 11, delta),
+      };
+      const nextPosition = clampPosition({
+        x: livePosition.current.x + velocityRef.current.x * delta,
+        z: livePosition.current.z + velocityRef.current.z * delta,
+      });
+      const moved = distance(nextPosition, livePosition.current);
+      if (moved > 0.0008) {
+        directionRef.current = Math.atan2(
+          nextPosition.x - livePosition.current.x,
+          nextPosition.z - livePosition.current.z,
+        );
+      }
+      livePosition.current = nextPosition;
+    }
+
+    const currentPosition = livePosition.current;
+    const currentInsideTemple = isInTempleInterior(currentPosition);
+    const avatar = getAvatarWorldPosition(currentPosition);
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
     const introCamera = new THREE.Vector3(0, 15.5 - eased * 6.6, 29 - eased * 11.2);
-    const behindTemple = avatarPosition.z < -8.45;
-    const sideOfTemple = Math.abs(avatarPosition.x) > 7.25 && avatarPosition.z < -2.6;
+    const behindTemple = currentPosition.z < -8.45;
+    const sideOfTemple = Math.abs(currentPosition.x) > 7.25 && currentPosition.z < -2.6;
     const exteriorCameraOffset = behindTemple
-      ? new THREE.Vector3(avatarPosition.x * 0.12, 8.2, -8.6)
+      ? new THREE.Vector3(currentPosition.x * 0.12, 8.2, -8.6)
       : sideOfTemple
-        ? new THREE.Vector3(-Math.sign(avatarPosition.x) * 4.8, 6.6, 9.2)
+        ? new THREE.Vector3(-Math.sign(currentPosition.x) * 4.8, 6.6, 9.2)
         : new THREE.Vector3(0, 5.85, 10.8);
-    const followCamera = isInsideTemple
-      ? new THREE.Vector3(avatarPosition.x * 0.58, avatar.y + 3.15, avatarPosition.z + 5.25)
+    const followCamera = currentInsideTemple
+      ? new THREE.Vector3(currentPosition.x * 0.58, avatar.y + 3.15, currentPosition.z + 5.25)
       : avatar.clone().add(exteriorCameraOffset);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
@@ -521,21 +592,21 @@ function SanctuaryScene({
           .add(
             new THREE.Vector3(
               0,
-              isInsideTemple ? 0.95 : 1.55,
+              currentInsideTemple ? 0.95 : 1.55,
               behindTemple ? 1.1 : sideOfTemple ? -2.2 : -4.2,
             ),
           )
       : new THREE.Vector3(0, 2.8, -3.4);
 
-    camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
+    camera.position.lerp(desiredCamera, 1 - Math.exp(-(hasEntered ? 4.2 : 2.2) * delta));
     camera.lookAt(lookTarget);
 
     if (avatarRef.current) {
-      avatarRef.current.position.lerp(avatar, 0.34);
+      avatarRef.current.position.lerp(avatar, 1 - Math.exp(-18 * delta));
       avatarRef.current.rotation.y = THREE.MathUtils.lerp(
         avatarRef.current.rotation.y,
-        avatarDirection,
-        0.16,
+        directionRef.current,
+        1 - Math.exp(-10 * delta),
       );
     }
   });
