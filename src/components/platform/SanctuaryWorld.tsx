@@ -678,19 +678,19 @@ function TempleInterior({
 }: {
   onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
 }) {
-  const innerColumns = [-2.25, -1.15, 1.15, 2.25];
+  const innerColumns = [-3.15, -1.65, 1.65, 3.15];
   return (
-    <group position={[0, 1.78, -2.05]}>
+    <group position={[0, 2.18, -2.6]}>
       <mesh position={[0, 0.04, -0.18]} receiveShadow onClick={onGroundClick}>
-        <boxGeometry args={[4.75, 0.08, 2.62]} />
+        <boxGeometry args={[7.2, 0.09, 3.8]} />
         <meshStandardMaterial color="#fff8ea" roughness={0.22} metalness={0.14} />
       </mesh>
-      <mesh position={[0, 0.18, -1.16]} castShadow>
-        <cylinderGeometry args={[0.72, 0.88, 0.34, 48]} />
+      <mesh position={[0, 0.2, -1.58]} castShadow>
+        <cylinderGeometry args={[0.9, 1.08, 0.38, 56]} />
         <meshStandardMaterial color="#ead7b8" roughness={0.32} metalness={0.12} />
       </mesh>
-      <mesh position={[0, 0.46, -1.16]} castShadow>
-        <sphereGeometry args={[0.38, 32, 20]} />
+      <mesh position={[0, 0.56, -1.58]} castShadow>
+        <sphereGeometry args={[0.48, 32, 20]} />
         <meshStandardMaterial
           color="#fff2ae"
           emissive="#ffd76b"
@@ -698,16 +698,16 @@ function TempleInterior({
           roughness={0.16}
         />
       </mesh>
-      <pointLight position={[0, 1.12, -1.16]} intensity={8.5} color="#ffe28f" distance={5.4} />
+      <pointLight position={[0, 1.35, -1.58]} intensity={10.5} color="#ffe28f" distance={7.4} />
       {innerColumns.map((x) => (
-        <mesh key={x} position={[x, 1.25, -0.34]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.14, 0.2, 2.55, 30]} />
+        <mesh key={x} position={[x, 1.55, -0.45]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.18, 0.25, 3.15, 30]} />
           <meshStandardMaterial color="#fff1d9" roughness={0.3} metalness={0.1} />
         </mesh>
       ))}
       {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * 2.95, 1.1, -1.1]} castShadow>
-          <torusGeometry args={[0.38, 0.026, 10, 44]} />
+        <mesh key={side} position={[side * 4.05, 1.36, -1.48]} castShadow>
+          <torusGeometry args={[0.48, 0.032, 10, 44]} />
           <meshStandardMaterial
             color="#d8b86b"
             emissive="#d29d32"
