@@ -102,7 +102,8 @@ function distance(a: Point, b: Point) {
 }
 
 function clampPosition(point: Point): Point {
-  const normalized = point.x ** 2 / WALK_RADIUS_X ** 2 + (point.z - WALK_CENTER_Z) ** 2 / WALK_RADIUS_Z ** 2;
+  const normalized =
+    point.x ** 2 / WALK_RADIUS_X ** 2 + (point.z - WALK_CENTER_Z) ** 2 / WALK_RADIUS_Z ** 2;
   if (normalized <= 1) return point;
 
   const angle = Math.atan2((point.z - WALK_CENTER_Z) / WALK_RADIUS_Z, point.x / WALK_RADIUS_X);
@@ -126,7 +127,8 @@ function getTerrainHeight(point: Point) {
   const templeTerrace = Math.abs(point.x) < 5.35 && point.z < -1.45 && point.z > -5.75;
   if (templeTerrace) return SURFACE_Y + 1.08;
 
-  const sideTerrace = Math.abs(point.x) > 4.25 && Math.abs(point.x) < 7.15 && point.z > -2.85 && point.z < 2.6;
+  const sideTerrace =
+    Math.abs(point.x) > 4.25 && Math.abs(point.x) < 7.15 && point.z > -2.85 && point.z < 2.6;
   if (sideTerrace) return SURFACE_Y + 0.24;
 
   const springTerrace = Math.abs(point.x) < 5.25 && point.z > 3.45;
@@ -220,7 +222,10 @@ export function SanctuaryWorld() {
             z: current.z + (velocity.z / magnitude) * 0.085 * delta,
           });
           lastAvatarPosition.current = current;
-          avatarDirection.current = Math.atan2(nextPosition.x - current.x, nextPosition.z - current.z);
+          avatarDirection.current = Math.atan2(
+            nextPosition.x - current.x,
+            nextPosition.z - current.z,
+          );
           return nextPosition;
         }
 
@@ -237,7 +242,10 @@ export function SanctuaryWorld() {
             z: current.z + (dz / remaining) * Math.min(remaining, 0.075 * delta),
           });
           lastAvatarPosition.current = current;
-          avatarDirection.current = Math.atan2(nextPosition.x - current.x, nextPosition.z - current.z);
+          avatarDirection.current = Math.atan2(
+            nextPosition.x - current.x,
+            nextPosition.z - current.z,
+          );
           return nextPosition;
         }
 
@@ -470,7 +478,11 @@ function SanctuaryScene({
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
     const introCamera = new THREE.Vector3(0, 13.5 - eased * 6.1, 24 - eased * 10.2);
-    const followCamera = new THREE.Vector3(avatarPosition.x, avatar.y + 4.25, avatarPosition.z + 8.25);
+    const followCamera = new THREE.Vector3(
+      avatarPosition.x,
+      avatar.y + 4.25,
+      avatarPosition.z + 8.25,
+    );
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
       ? avatar.clone().add(new THREE.Vector3(0, 1.25, -3.8))
@@ -568,7 +580,11 @@ function FloatingTempleIsland({
   );
 }
 
-function MarbleWalkways({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
+function MarbleWalkways({
+  onGroundClick,
+}: {
+  onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
+}) {
   return (
     <group position={[0, 0.73, 0]}>
       <mesh position={[0, 0, 1.95]} receiveShadow castShadow onClick={onGroundClick}>
@@ -580,7 +596,13 @@ function MarbleWalkways({ onGroundClick }: { onGroundClick: (event: ThreeEvent<P
         <meshStandardMaterial color="#fff4df" roughness={0.36} metalness={0.07} />
       </mesh>
       {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * 4.85, 0.04, -0.12]} receiveShadow castShadow onClick={onGroundClick}>
+        <mesh
+          key={side}
+          position={[side * 4.85, 0.04, -0.12]}
+          receiveShadow
+          castShadow
+          onClick={onGroundClick}
+        >
           <boxGeometry args={[2.75, 0.08, 5.45]} />
           <meshStandardMaterial color="#f3e5cf" roughness={0.48} metalness={0.04} />
         </mesh>
@@ -680,7 +702,13 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
       <pointLight position={[0, 2.25, 1.76]} intensity={4.2} color="#ffd982" distance={5.6} />
       <mesh position={[0, 5.38, 1.58]}>
         <torusGeometry args={[0.58, 0.045, 14, 72]} />
-        <meshStandardMaterial color="#d8b86b" emissive="#f2bd4b" emissiveIntensity={0.55} metalness={0.58} roughness={0.2} />
+        <meshStandardMaterial
+          color="#d8b86b"
+          emissive="#f2bd4b"
+          emissiveIntensity={0.55}
+          metalness={0.58}
+          roughness={0.2}
+        />
       </mesh>
       <mesh position={[0, 5.4, 1.58]}>
         <sphereGeometry args={[0.09, 18, 12]} />
@@ -690,7 +718,11 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
   );
 }
 
-function Staircase({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
+function Staircase({
+  onGroundClick,
+}: {
+  onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
+}) {
   return (
     <group position={[0, 0.58, 0.85]}>
       {Array.from({ length: 14 }).map((_, index) => (
@@ -713,7 +745,11 @@ function Staircase({ onGroundClick }: { onGroundClick: (event: ThreeEvent<Pointe
   );
 }
 
-function GardenTerraces({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
+function GardenTerraces({
+  onGroundClick,
+}: {
+  onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
+}) {
   return (
     <group position={[0, 0.62, 0]}>
       {[
@@ -724,7 +760,14 @@ function GardenTerraces({ onGroundClick }: { onGroundClick: (event: ThreeEvent<P
         [-5.1, -2.2, 1.7, 0.8],
         [5.2, -2.25, 1.7, 0.8],
       ].map(([x, z, sx, sz], index) => (
-        <mesh key={index} position={[x, 0.05, z]} scale={[sx, 1, sz]} receiveShadow castShadow onClick={onGroundClick}>
+        <mesh
+          key={index}
+          position={[x, 0.05, z]}
+          scale={[sx, 1, sz]}
+          receiveShadow
+          castShadow
+          onClick={onGroundClick}
+        >
           <cylinderGeometry args={[1, 1.08, 0.34, 48]} />
           <meshStandardMaterial color={index % 2 ? "#87a96f" : "#789a68"} roughness={0.76} />
         </mesh>
