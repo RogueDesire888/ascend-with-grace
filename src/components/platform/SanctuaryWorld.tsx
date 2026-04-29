@@ -238,6 +238,7 @@ export function SanctuaryWorld() {
               shadows
               dpr={[1, 1.65]}
               camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 120 }}
+              style={{ opacity: hasEntered ? 0.9 : 0.34 }}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             >
               <Suspense fallback={null}>
