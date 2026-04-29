@@ -153,7 +153,9 @@ function clamp01(value: number) {
 function getTerrainHeight(point: Point) {
   const stairLane = Math.abs(point.x) < 4.7 && point.z <= STAIR_START_Z && point.z >= -2.25;
   if (stairLane) {
-    const stairProgress = clamp01((STAIR_START_Z - point.z) / (STAIR_STEP_DEPTH * (STAIR_COUNT + 1)));
+    const stairProgress = clamp01(
+      (STAIR_START_Z - point.z) / (STAIR_STEP_DEPTH * (STAIR_COUNT + 1)),
+    );
     return SURFACE_Y + stairProgress * 1.56;
   }
 
@@ -534,7 +536,13 @@ function SanctuaryScene({
     const lookTarget = hasEntered
       ? avatar
           .clone()
-          .add(new THREE.Vector3(0, isInsideTemple ? 0.95 : 1.55, behindTemple ? 1.1 : sideOfTemple ? -2.2 : -4.2))
+          .add(
+            new THREE.Vector3(
+              0,
+              isInsideTemple ? 0.95 : 1.55,
+              behindTemple ? 1.1 : sideOfTemple ? -2.2 : -4.2,
+            ),
+          )
       : new THREE.Vector3(0, 2.8, -3.4);
 
     camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
@@ -721,7 +729,14 @@ function TempleBalustrades() {
             );
           })}
           {[0, STAIR_COUNT - 1].map((stepIndex) => (
-            <group key={`newel-${stepIndex}`} position={[0, 0.58 + stepIndex * STAIR_STEP_RISE + 0.3, 1.42 + STAIR_START_Z - stepIndex * STAIR_STEP_DEPTH]}>
+            <group
+              key={`newel-${stepIndex}`}
+              position={[
+                0,
+                0.58 + stepIndex * STAIR_STEP_RISE + 0.3,
+                1.42 + STAIR_START_Z - stepIndex * STAIR_STEP_DEPTH,
+              ]}
+            >
               <mesh castShadow>
                 <cylinderGeometry args={[0.16, 0.2, 0.84, 20]} />
                 <meshStandardMaterial color="#f8ead2" roughness={0.38} metalness={0.06} />
@@ -891,12 +906,22 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
         <meshStandardMaterial color="#fff4bd" emissive="#ffd86b" emissiveIntensity={1.2} />
       </mesh>
       {[-1, 1].map((side) => (
-        <mesh key={`ornament-${side}`} position={[side * 4.95, 5.9, 1.92]} rotation={[0, 0, side * 0.25]} castShadow>
+        <mesh
+          key={`ornament-${side}`}
+          position={[side * 4.95, 5.9, 1.92]}
+          rotation={[0, 0, side * 0.25]}
+          castShadow
+        >
           <coneGeometry args={[0.18, 0.82, 5]} />
-          <meshStandardMaterial color="#d8b86b" emissive="#d29d32" emissiveIntensity={0.28} metalness={0.55} roughness={0.22} />
+          <meshStandardMaterial
+            color="#d8b86b"
+            emissive="#d29d32"
+            emissiveIntensity={0.28}
+            metalness={0.55}
+            roughness={0.22}
+          />
         </mesh>
       ))}
-
     </group>
   );
 }
@@ -924,7 +949,16 @@ function Staircase({
           />
         </mesh>
       ))}
-      <mesh position={[0, STAIR_COUNT * STAIR_STEP_RISE + 0.02, STAIR_START_Z - STAIR_COUNT * STAIR_STEP_DEPTH - 0.42]} receiveShadow castShadow onClick={onGroundClick}>
+      <mesh
+        position={[
+          0,
+          STAIR_COUNT * STAIR_STEP_RISE + 0.02,
+          STAIR_START_Z - STAIR_COUNT * STAIR_STEP_DEPTH - 0.42,
+        ]}
+        receiveShadow
+        castShadow
+        onClick={onGroundClick}
+      >
         <boxGeometry args={[8.5, 0.14, 1.2]} />
         <meshStandardMaterial color="#fff2dc" roughness={0.38} metalness={0.06} />
       </mesh>
@@ -1129,7 +1163,6 @@ function FlowerBeds() {
   );
 }
 
-
 function FlowerUrns() {
   const urns = [
     [-5.15, 6.15, 0.72],
@@ -1146,7 +1179,11 @@ function FlowerUrns() {
   return (
     <group>
       {urns.map(([x, z, scale], index) => (
-        <group key={index} position={[x, getTerrainHeight({ x, z }) + 0.22, z]} scale={[scale, scale, scale]}>
+        <group
+          key={index}
+          position={[x, getTerrainHeight({ x, z }) + 0.22, z]}
+          scale={[scale, scale, scale]}
+        >
           <mesh castShadow>
             <cylinderGeometry args={[0.18, 0.28, 0.48, 18]} />
             <meshStandardMaterial color="#d9c5a6" roughness={0.5} metalness={0.04} />
@@ -1158,9 +1195,20 @@ function FlowerUrns() {
           {Array.from({ length: 7 }).map((_, petalIndex) => {
             const angle = (petalIndex / 7) * Math.PI * 2;
             return (
-              <mesh key={petalIndex} position={[Math.cos(angle) * 0.18, 0.48 + (petalIndex % 2) * 0.04, Math.sin(angle) * 0.18]} castShadow>
+              <mesh
+                key={petalIndex}
+                position={[
+                  Math.cos(angle) * 0.18,
+                  0.48 + (petalIndex % 2) * 0.04,
+                  Math.sin(angle) * 0.18,
+                ]}
+                castShadow
+              >
                 <sphereGeometry args={[0.095, 10, 8]} />
-                <meshStandardMaterial color={petals[(index + petalIndex) % petals.length]} roughness={0.55} />
+                <meshStandardMaterial
+                  color={petals[(index + petalIndex) % petals.length]}
+                  roughness={0.55}
+                />
               </mesh>
             );
           })}
