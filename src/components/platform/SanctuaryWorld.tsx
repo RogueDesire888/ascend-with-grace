@@ -520,14 +520,21 @@ function SanctuaryScene({
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
     const introCamera = new THREE.Vector3(0, 15.5 - eased * 6.6, 29 - eased * 11.2);
+    const behindTemple = avatarPosition.z < -8.45;
+    const sideOfTemple = Math.abs(avatarPosition.x) > 7.25 && avatarPosition.z < -2.6;
+    const exteriorCameraOffset = behindTemple
+      ? new THREE.Vector3(avatarPosition.x * 0.12, 8.2, -8.6)
+      : sideOfTemple
+        ? new THREE.Vector3(-Math.sign(avatarPosition.x) * 4.8, 6.6, 9.2)
+        : new THREE.Vector3(0, 5.85, 10.8);
     const followCamera = isInsideTemple
-      ? new THREE.Vector3(avatarPosition.x * 0.42, avatar.y + 2.7, avatarPosition.z + 4.9)
-      : new THREE.Vector3(avatarPosition.x, avatar.y + 5.35, avatarPosition.z + 10.6);
+      ? new THREE.Vector3(avatarPosition.x * 0.58, avatar.y + 3.15, avatarPosition.z + 5.25)
+      : avatar.clone().add(exteriorCameraOffset);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
       ? avatar
           .clone()
-          .add(new THREE.Vector3(0, isInsideTemple ? 0.95 : 1.45, isInsideTemple ? -1.75 : -4.9))
+          .add(new THREE.Vector3(0, isInsideTemple ? 0.95 : 1.55, behindTemple ? 1.1 : sideOfTemple ? -2.2 : -4.2))
       : new THREE.Vector3(0, 2.8, -3.4);
 
     camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
