@@ -869,11 +869,15 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
     <group position={[0, 1.62, -5.45]} scale={[1.42, 1.24, 1.28]}>
       <mesh position={[0, -0.18, -0.08]} receiveShadow castShadow onClick={onGroundClick}>
         <boxGeometry args={[13.2, 0.42, 7.25]} />
-        <meshStandardMaterial color="#f9efd9" roughness={0.38} metalness={0.07} />
+        <meshStandardMaterial color="#fff0d8" roughness={0.3} metalness={0.1} />
       </mesh>
       <mesh position={[0, 0.08, -0.12]} receiveShadow castShadow onClick={onGroundClick}>
         <boxGeometry args={[12.1, 0.28, 6.36]} />
-        <meshStandardMaterial color="#fff8ea" roughness={0.33} metalness={0.1} />
+        <meshStandardMaterial color="#fff9ef" roughness={0.24} metalness={0.13} />
+      </mesh>
+      <mesh position={[0, 0.34, 1.84]} castShadow receiveShadow>
+        <boxGeometry args={[12.8, 0.18, 0.32]} />
+        <meshStandardMaterial color="#d8b86b" roughness={0.22} metalness={0.58} />
       </mesh>
       <mesh position={[0, 1.7, -2.65]} receiveShadow castShadow onClick={onGroundClick}>
         <boxGeometry args={[8.45, 0.1, 4.95]} />
@@ -914,8 +918,8 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
       {columns.map((x) => (
         <group key={x} position={[x, 1.86, 1.65]}>
           <mesh castShadow receiveShadow>
-            <cylinderGeometry args={[0.24, 0.32, 3.95, 36]} />
-            <meshStandardMaterial color="#fff7ea" roughness={0.34} metalness={0.08} />
+            <cylinderGeometry args={[0.24, 0.32, 3.95, 48]} />
+            <meshStandardMaterial color="#fffaf0" roughness={0.26} metalness={0.12} />
           </mesh>
           <mesh position={[0, -1.75, 0]} castShadow>
             <cylinderGeometry args={[0.38, 0.42, 0.22, 28]} />
@@ -961,6 +965,12 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
           roughness={0.2}
         />
       </mesh>
+      {[-1, 1].map((side) => (
+        <mesh key={`gold-line-${side}`} position={[side * 5.55, 4.82, 1.9]} castShadow>
+          <boxGeometry args={[0.12, 0.2, 4.8]} />
+          <meshStandardMaterial color="#d8b86b" emissive="#b8872e" emissiveIntensity={0.12} metalness={0.6} roughness={0.2} />
+        </mesh>
+      ))}
       <mesh position={[0, 6.44, 1.88]}>
         <sphereGeometry args={[0.12, 18, 12]} />
         <meshStandardMaterial color="#fff4bd" emissive="#ffd86b" emissiveIntensity={1.2} />
