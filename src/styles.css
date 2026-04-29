@@ -208,16 +208,32 @@
   .garden-grid {
     background-image:
       linear-gradient(color-mix(in oklab, var(--leaf-glow) 13%, transparent) 1px, transparent 1px),
-      linear-gradient(90deg, color-mix(in oklab, var(--water) 11%, transparent) 1px, transparent 1px);
+      linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--water) 11%, transparent) 1px,
+        transparent 1px
+      );
     background-size: 96px 96px;
     mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
   }
 
   .petal-mist {
     background-image:
-      radial-gradient(ellipse at 18% 42%, color-mix(in oklab, var(--leaf-glow) 22%, transparent), transparent 24%),
-      radial-gradient(ellipse at 72% 58%, color-mix(in oklab, var(--spirit) 18%, transparent), transparent 28%),
-      radial-gradient(ellipse at 50% 8%, color-mix(in oklab, var(--sun-glow) 12%, transparent), transparent 26%);
+      radial-gradient(
+        ellipse at 18% 42%,
+        color-mix(in oklab, var(--leaf-glow) 22%, transparent),
+        transparent 24%
+      ),
+      radial-gradient(
+        ellipse at 72% 58%,
+        color-mix(in oklab, var(--spirit) 18%, transparent),
+        transparent 28%
+      ),
+      radial-gradient(
+        ellipse at 50% 8%,
+        color-mix(in oklab, var(--sun-glow) 12%, transparent),
+        transparent 26%
+      );
   }
 
   .scrollbar-none {

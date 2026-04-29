@@ -100,7 +100,10 @@ function Index() {
           </h2>
           <div className="mt-6 grid gap-3">
             {skillTrees.slice(0, 3).map((tree) => (
-              <div key={tree.name} className="rounded-[1.75rem] border border-border/60 bg-card/65 p-4">
+              <div
+                key={tree.name}
+                className="rounded-[1.75rem] border border-border/60 bg-card/65 p-4"
+              >
                 <p className="font-semibold text-foreground">{tree.name}</p>
                 <p className="text-sm text-muted-foreground">{tree.nextQuest}</p>
               </div>
