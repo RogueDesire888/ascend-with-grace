@@ -371,7 +371,7 @@ export function SanctuaryWorld() {
           <img
             src={floatingTempleSanctuary}
             alt="Floating marble temple sanctuary above luminous clouds"
-            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-105 opacity-32 blur-[1px]" : "scale-100 opacity-100 blur-0"}`}
+            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-105 opacity-15 blur-[1px]" : "scale-100 opacity-100 blur-0"}`}
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--background)_10%,transparent)_42%,color-mix(in_oklab,var(--background)_22%,transparent))]" />
           {isMounted ? (
@@ -380,7 +380,7 @@ export function SanctuaryWorld() {
               shadows
               dpr={[1, 1.9]}
               camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 120 }}
-              style={{ opacity: hasEntered ? 0.94 : 0.2 }}
+              style={{ opacity: hasEntered ? 1 : 0.2 }}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
               onCreated={({ gl }) => {
                 gl.shadowMap.enabled = true;
