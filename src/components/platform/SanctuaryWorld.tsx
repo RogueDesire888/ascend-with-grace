@@ -155,7 +155,7 @@ export function SanctuaryWorld() {
 
       setAvatarPosition((current) => {
         const keys = keysPressed.current;
-        let velocity = { x: 0, z: 0 };
+        const velocity = { x: 0, z: 0 };
 
         if (keys.has("arrowleft") || keys.has("a")) velocity.x -= 1;
         if (keys.has("arrowright") || keys.has("d")) velocity.x += 1;
