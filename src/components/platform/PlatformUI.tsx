@@ -41,14 +41,14 @@ export function AvatarOrb({ size = "large" }: { size?: "large" | "small" }) {
       className={`relative mx-auto grid place-items-center ${large ? "h-72 w-72" : "h-36 w-36"}`}
     >
       <div className="absolute inset-0 rounded-full bg-[var(--gradient-avatar)] opacity-80 blur-2xl" />
-      <div className="absolute inset-5 rounded-full border border-primary/35 bg-card/35 shadow-[var(--shadow-glow)]" />
-      <div className="absolute h-[84%] w-[84%] animate-[spin_34s_linear_infinite] rounded-full border border-dashed border-earth/45" />
-      <div className="absolute h-[68%] w-[68%] rotate-45 rounded-[42%] border border-water/25 bg-primary/10" />
-      <div className="absolute h-[52%] w-[52%] animate-[pulse_5s_ease-in-out_infinite] rounded-[38%] bg-earth/15" />
-      <div className="relative grid h-[44%] w-[44%] place-items-center rounded-[40%] border border-primary/45 bg-background/80 shadow-[var(--shadow-aura)]">
+      <div className="absolute inset-5 rounded-full border border-primary/45 bg-secondary/20 shadow-[var(--shadow-glow)]" />
+      <div className="absolute h-[88%] w-[88%] animate-[spin_42s_linear_infinite] rounded-full border border-dashed border-primary/45" />
+      <div className="absolute h-[72%] w-[72%] rotate-45 rounded-[42%] border border-secondary/55 bg-primary/10 marble-sheen" />
+      <div className="absolute h-[54%] w-[54%] animate-[pulse_5s_ease-in-out_infinite] rounded-[38%] bg-coral-glow/15" />
+      <div className="relative grid h-[44%] w-[44%] place-items-center rounded-[40%] border border-primary/55 bg-background/72 shadow-[var(--shadow-aura)] backdrop-blur-xl">
         <Sparkles className={large ? "h-14 w-14 text-primary" : "h-8 w-8 text-primary"} />
       </div>
-      <span className="absolute bottom-7 rounded-full border border-primary/30 bg-card/80 px-4 py-1 text-xs font-semibold text-foreground shadow-[var(--shadow-soft)]">
+      <span className="absolute bottom-7 rounded-full border border-primary/40 bg-secondary/85 px-4 py-1 text-xs font-semibold text-secondary-foreground shadow-[var(--shadow-soft)]">
         Level 24
       </span>
     </div>
@@ -57,10 +57,11 @@ export function AvatarOrb({ size = "large" }: { size?: "large" | "small" }) {
 
 export function SkillWheel() {
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[28rem] rounded-full border border-border/60 bg-card/45 p-8 shadow-[var(--shadow-soft)]">
-      <div className="garden-grid absolute inset-6 rounded-full opacity-40" />
-      <div className="absolute inset-12 rounded-full border border-dashed border-primary/35" />
-      <div className="absolute inset-24 rounded-full border border-water/20 bg-background/35" />
+    <div className="sanctuary-panel relative mx-auto aspect-square w-full max-w-[28rem] overflow-hidden rounded-full border border-border/70 p-8">
+      <div className="marble-sheen absolute inset-0 opacity-70" />
+      <div className="garden-grid absolute inset-6 rounded-full opacity-35" />
+      <div className="absolute inset-12 rounded-full border border-dashed border-primary/45" />
+      <div className="absolute inset-24 rounded-full border border-secondary/50 bg-background/30" />
       <div className="absolute inset-0 grid place-items-center">
         <div className="grid h-24 w-24 place-items-center rounded-[40%] bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
           <Star className="h-9 w-9" />
@@ -74,7 +75,7 @@ export function SkillWheel() {
         return (
           <div
             key={tree.name}
-            className={`absolute grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-[35%] border bg-card/90 shadow-[var(--shadow-soft)] ${tree.className}`}
+            className={`absolute grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-[35%] border bg-card/90 shadow-[var(--shadow-soft)] backdrop-blur-xl ${tree.className}`}
             style={{ left: `${x}%`, top: `${y}%` }}
           >
             <tree.Icon className="h-7 w-7" />
@@ -90,10 +91,7 @@ export function StatsStrip() {
   return (
     <div className="grid gap-4 sm:grid-cols-3">
       {stats.map((stat) => (
-        <div
-          key={stat.label}
-          className="rounded-[1.75rem] border border-border/60 bg-card/65 p-5 shadow-[var(--shadow-soft)]"
-        >
+        <div key={stat.label} className="sanctuary-panel rounded-[1.75rem] border border-border/60 p-5">
           <p className="text-sm text-muted-foreground">{stat.label}</p>
           <p className="mt-2 text-4xl font-bold text-foreground">{stat.value}</p>
           <p className="mt-1 text-sm text-muted-foreground">{stat.helper}</p>
@@ -112,7 +110,7 @@ export function QuestCard({
 }) {
   const Icon = variant === "main" ? LockKeyhole : variant === "weekly" ? Circle : CheckCircle2;
   return (
-    <article className="group rounded-[1.75rem] border border-border/60 bg-card/70 p-5 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-1">
+    <article className="sanctuary-panel group rounded-[1.75rem] border border-border/60 p-5 transition-transform hover:-translate-y-1">
       <div className="flex items-start justify-between gap-4">
         <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[40%] bg-accent text-accent-foreground">
           <Icon className="h-5 w-5" />
@@ -137,7 +135,7 @@ export function QuestCard({
 
 export function SkillProgressCard({ tree }: { tree: SkillTree }) {
   return (
-    <article className="rounded-[1.75rem] border border-border/60 bg-card/70 p-6 shadow-[var(--shadow-soft)]">
+    <article className="sanctuary-panel rounded-[1.75rem] border border-border/60 p-6">
       <div className="flex items-start gap-4">
         <div className={`grid h-14 w-14 place-items-center rounded-[38%] border ${tree.className}`}>
           <tree.Icon className="h-7 w-7" />
@@ -171,7 +169,7 @@ export function ElementCards() {
       {elements.map((element) => (
         <article
           key={element.name}
-          className={`rounded-[1.75rem] border border-border/60 bg-gradient-to-br p-5 shadow-[var(--shadow-soft)] ${element.className}`}
+          className={`sanctuary-panel rounded-[1.75rem] border border-border/60 bg-gradient-to-br p-5 ${element.className}`}
         >
           <element.Icon className="h-8 w-8" />
           <h3 className="mt-4 text-lg font-semibold text-foreground">{element.name}</h3>
@@ -189,7 +187,7 @@ export function ResourceGrid() {
       {resources.map((resource) => (
         <article
           key={resource.title}
-          className="rounded-[1.75rem] border border-border/60 bg-card/70 p-5 shadow-[var(--shadow-soft)]"
+          className="sanctuary-panel rounded-[1.75rem] border border-border/60 p-5"
         >
           <div className="grid h-12 w-12 place-items-center rounded-[40%] bg-accent text-accent-foreground">
             <resource.Icon className="h-5 w-5" />
@@ -207,7 +205,7 @@ export function ResourceGrid() {
 
 export function SearchBarMock() {
   return (
-    <div className="flex min-h-14 items-center gap-3 rounded-full border border-border/60 bg-card/70 px-5 shadow-[var(--shadow-soft)]">
+    <div className="sanctuary-panel flex min-h-14 items-center gap-3 rounded-full border border-border/60 px-5">
       <Search className="h-5 w-5 text-muted-foreground" />
       <span className="text-sm text-muted-foreground">
         Search herbs, breathwork, audio tracks, shadow prompts...
@@ -222,7 +220,7 @@ export function CommunityFeed() {
       {communityPosts.map((post) => (
         <article
           key={post.name}
-          className="rounded-[1.75rem] border border-border/60 bg-card/70 p-6 shadow-[var(--shadow-soft)]"
+          className="sanctuary-panel rounded-[1.75rem] border border-border/60 p-6"
         >
           <div className="flex items-center gap-4">
             <div className="grid h-12 w-12 place-items-center rounded-[40%] bg-primary text-primary-foreground">
@@ -245,7 +243,7 @@ export function CommunityFeed() {
 
 export function MembershipCTA() {
   return (
-    <section className="rounded-[2rem] border border-primary/30 bg-[var(--gradient-panel)] p-8 shadow-[var(--shadow-aura)] lg:p-10">
+    <section className="rounded-[2rem] border border-primary/40 bg-[var(--gradient-panel)] p-8 shadow-[var(--shadow-aura)] lg:p-10">
       <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
