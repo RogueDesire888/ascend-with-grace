@@ -623,19 +623,25 @@ function SanctuaryScene({
 
   return (
     <>
-      <color attach="background" args={["#d7e8fb"]} />
-      <fog attach="fog" args={["#d7e8fb", 24, 72]} />
-      <ambientLight intensity={1.38} />
+      <color attach="background" args={["#dcecff"]} />
+      <fog attach="fog" args={["#dcecff", 28, 82]} />
+      <ambientLight intensity={1.05} />
       <directionalLight
         position={[7, 11, 7]}
-        intensity={3.05}
+        intensity={3.45}
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[4096, 4096]}
+        shadow-camera-near={0.5}
+        shadow-camera-far={48}
+        shadow-camera-left={-18}
+        shadow-camera-right={18}
+        shadow-camera-top={18}
+        shadow-camera-bottom={-18}
       />
-      <pointLight position={[0, 5, -4]} intensity={11.5} color="#ffe5a6" distance={16} />
+      <pointLight position={[0, 5, -4]} intensity={8.4} color="#ffe5a6" distance={16} />
       <Environment preset="sunset" />
       <SceneSparkles
-        count={120}
+        count={78}
         scale={[25, 8, 25]}
         size={2.2}
         speed={0.18}
