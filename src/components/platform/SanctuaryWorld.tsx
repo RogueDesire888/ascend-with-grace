@@ -230,7 +230,7 @@ export function SanctuaryWorld() {
               className="sanctuary-canvas"
               shadows
               dpr={[1, 1.65]}
-              camera={{ position: [0, 9, 16], fov: 45, near: 0.1, far: 120 }}
+              camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 120 }}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             >
               <Suspense fallback={null}>
@@ -329,10 +329,10 @@ function SanctuaryScene({
     const avatar = new THREE.Vector3(avatarPosition.x, 0.52, avatarPosition.z);
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
-    const introCamera = new THREE.Vector3(0, 14 - eased * 7.5, 24 - eased * 13);
-    const followCamera = new THREE.Vector3(avatarPosition.x, 4.3, avatarPosition.z + 7.2);
+    const introCamera = new THREE.Vector3(0, 13.5 - eased * 6.1, 24 - eased * 10.2);
+    const followCamera = new THREE.Vector3(avatarPosition.x, 5.8, avatarPosition.z + 11.4);
     const desiredCamera = hasEntered ? followCamera : introCamera;
-    const lookTarget = hasEntered ? avatar.clone().add(new THREE.Vector3(0, 1.05, -1.8)) : new THREE.Vector3(0, 1.6, -1.4);
+    const lookTarget = hasEntered ? avatar.clone().add(new THREE.Vector3(0, 1.7, -4.4)) : new THREE.Vector3(0, 2.2, -2.4);
 
     camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
     camera.lookAt(lookTarget);
