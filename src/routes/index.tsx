@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 import sanctuaryImage from "@/assets/celestial-garden-sanctuary.png";
 import {
-  AvatarOrb,
   ElementCards,
   MembershipCTA,
   QuestCard,
