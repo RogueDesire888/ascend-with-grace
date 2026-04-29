@@ -4,16 +4,16 @@ import { SanctuaryWorld } from "@/components/platform/SanctuaryWorld";
 export const Route = createFileRoute("/sanctuary")({
   head: () => ({
     meta: [
-      { title: "The Sanctuary Dashboard — Ascend" },
+      { title: "Interactive Floating Sanctuary — Ascend" },
       {
         name: "description",
         content:
-          "Your central hub for avatar glow, Ascension Level, daily quests, streaks, and healing skill trees.",
+          "Walk through a celestial floating temple world where each sanctuary area opens quests and skill-tree growth.",
       },
-      { property: "og:title", content: "The Sanctuary Dashboard — Ascend" },
+      { property: "og:title", content: "Interactive Floating Sanctuary — Ascend" },
       {
         property: "og:description",
-        content: "Track your elemental avatar, quests, streaks, and holistic healing progress.",
+        content: "Explore a third-person celestial sanctuary with avatar movement, quests, and holistic skill trees.",
       },
     ],
   }),
