@@ -133,6 +133,16 @@
     var(--earth),
     var(--sun-glow)
   );
+  --gradient-sky-sanctuary:
+    radial-gradient(ellipse at 50% 5%, color-mix(in oklab, var(--foreground) 28%, transparent), transparent 28%),
+    radial-gradient(ellipse at 20% 26%, color-mix(in oklab, var(--water) 25%, transparent), transparent 30%),
+    radial-gradient(ellipse at 82% 30%, color-mix(in oklab, var(--spirit) 18%, transparent), transparent 34%),
+    linear-gradient(180deg, oklch(0.78 0.055 220), oklch(0.58 0.07 206) 38%, oklch(0.22 0.05 130) 100%);
+  --gradient-island-garden:
+    radial-gradient(ellipse at 50% 12%, color-mix(in oklab, var(--secondary) 88%, transparent), transparent 30%),
+    radial-gradient(ellipse at 18% 50%, color-mix(in oklab, var(--leaf-glow) 48%, transparent), transparent 36%),
+    radial-gradient(ellipse at 82% 48%, color-mix(in oklab, var(--coral-glow) 34%, transparent), transparent 34%),
+    linear-gradient(145deg, color-mix(in oklab, var(--earth) 42%, var(--card)), color-mix(in oklab, var(--secondary) 36%, var(--card)));
   --shadow-soft: 0 28px 90px -48px color-mix(in oklab, var(--sun-glow) 52%, transparent);
   --shadow-glow:
     0 0 32px color-mix(in oklab, var(--primary) 38%, transparent),
