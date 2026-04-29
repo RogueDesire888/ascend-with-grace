@@ -668,11 +668,11 @@ function TempleBalustrades() {
   );
 }
 
-function TempleInterior() {
+function TempleInterior({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
   const innerColumns = [-2.25, -1.15, 1.15, 2.25];
   return (
     <group position={[0, 1.78, -2.05]}>
-      <mesh position={[0, 0.04, -0.18]} receiveShadow>
+      <mesh position={[0, 0.04, -0.18]} receiveShadow onClick={onGroundClick}>
         <boxGeometry args={[4.75, 0.08, 2.62]} />
         <meshStandardMaterial color="#fff8ea" roughness={0.22} metalness={0.14} />
       </mesh>
@@ -779,7 +779,7 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
           </mesh>
         </group>
       ))}
-      <TempleInterior />
+      <TempleInterior onGroundClick={onGroundClick} />
       <mesh position={[0, 2.05, 1.9]} castShadow receiveShadow>
         <boxGeometry args={[1.62, 2.7, 0.08]} />
         <meshStandardMaterial color="#231d1b" roughness={0.58} transparent opacity={0.26} />
