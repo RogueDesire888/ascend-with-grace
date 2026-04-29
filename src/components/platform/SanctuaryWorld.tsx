@@ -907,7 +907,12 @@ function ZenGarden({
         </mesh>
       ))}
       {stones.map(([x, z, scale], index) => (
-        <mesh key={index} position={[x, 0.22, z]} scale={[scale * 1.55, scale * 0.34, scale]} castShadow>
+        <mesh
+          key={index}
+          position={[x, 0.22, z]}
+          scale={[scale * 1.55, scale * 0.34, scale]}
+          castShadow
+        >
           <sphereGeometry args={[1, 18, 10]} />
           <meshStandardMaterial color="#b7b0a4" roughness={0.86} />
         </mesh>
@@ -1097,7 +1102,7 @@ function CloudSea() {
     const positions: Array<[number, number, number, number]> = [];
     for (let i = 0; i < 36; i += 1) {
       const angle = (i / 36) * Math.PI * 2;
-        const radius = 17 + (i % 7) * 2.1;
+      const radius = 17 + (i % 7) * 2.1;
       positions.push([
         Math.cos(angle) * radius,
         -3.4 - (i % 4) * 0.28,
