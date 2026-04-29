@@ -195,6 +195,7 @@ export function SanctuaryWorld() {
   const activeZone = nearbyZone?.key ?? manualZone;
   const selectedZone = zones.find((zone) => zone.key === activeZone);
   const selectedTree = skillTrees.find((tree) => tree.name === selectedZone?.tree) ?? skillTrees[1];
+  const isInsideTemple = isInTempleInterior(avatarPosition);
   const zoneQuests = useMemo(
     () => allQuests.filter((quest) => quest.tree === selectedTree.name).slice(0, 3),
     [selectedTree.name],
@@ -246,8 +247,8 @@ export function SanctuaryWorld() {
         if (velocity.x || velocity.z) {
           const magnitude = Math.hypot(velocity.x, velocity.z) || 1;
           const nextPosition = clampPosition({
-            x: current.x + (velocity.x / magnitude) * 0.085 * delta,
-            z: current.z + (velocity.z / magnitude) * 0.085 * delta,
+            x: current.x + (velocity.x / magnitude) * 0.105 * delta,
+            z: current.z + (velocity.z / magnitude) * 0.105 * delta,
           });
           lastAvatarPosition.current = current;
           avatarDirection.current = Math.atan2(
@@ -399,6 +400,7 @@ export function SanctuaryWorld() {
                   hasEntered={hasEntered}
                   avatarPosition={avatarPosition}
                   avatarDirection={avatarDirection.current}
+                  isInsideTemple={isInsideTemple}
                   activeZone={activeZone}
                   onWalkTo={walkTo}
                   onMoveTo={(point) => {
