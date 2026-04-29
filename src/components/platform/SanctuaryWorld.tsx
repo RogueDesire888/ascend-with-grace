@@ -395,7 +395,7 @@ export function SanctuaryWorld() {
           <img
             src={floatingTempleSanctuary}
             alt="Floating marble temple sanctuary above luminous clouds"
-            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-105 opacity-48 blur-[1px]" : "scale-100 opacity-100 blur-0"}`}
+            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-105 opacity-32 blur-[1px]" : "scale-100 opacity-100 blur-0"}`}
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--background)_10%,transparent)_42%,color-mix(in_oklab,var(--background)_22%,transparent))]" />
           {isMounted ? (
@@ -567,15 +567,15 @@ function SanctuaryScene({
   return (
     <>
       <color attach="background" args={["#d7e8fb"]} />
-      <fog attach="fog" args={["#d7e8fb", 18, 62]} />
-      <ambientLight intensity={2.15} />
+      <fog attach="fog" args={["#d7e8fb", 24, 72]} />
+      <ambientLight intensity={1.38} />
       <directionalLight
         position={[7, 11, 7]}
-        intensity={4.4}
+        intensity={3.05}
         castShadow
         shadow-mapSize={[2048, 2048]}
       />
-      <pointLight position={[0, 5, -4]} intensity={18} color="#ffe5a6" distance={16} />
+      <pointLight position={[0, 5, -4]} intensity={11.5} color="#ffe5a6" distance={16} />
       <Environment preset="sunset" />
       <SceneSparkles
         count={120}
