@@ -940,12 +940,14 @@ function GardenTerraces({
   return (
     <group position={[0, 0.62, 0]}>
       {[
-        [-8.5, 0.75, 3.7, 1.55],
-        [8.55, 0.75, 3.75, 1.5],
-        [-6.9, 5.35, 3.15, 1.2],
-        [7.05, 5.3, 3.2, 1.2],
-        [-6.9, -2.75, 2.45, 1.0],
-        [7.0, -2.75, 2.45, 1.0],
+        [-9.25, 0.75, 4.25, 1.75],
+        [9.3, 0.75, 4.3, 1.7],
+        [-7.55, 5.45, 3.55, 1.35],
+        [7.75, 5.4, 3.6, 1.35],
+        [-8.35, -4.15, 3.4, 1.35],
+        [8.45, -4.1, 3.45, 1.35],
+        [-5.85, -9.65, 3.1, 1.35],
+        [5.85, -9.65, 3.1, 1.35],
       ].map(([x, z, sx, sz], index) => (
         <mesh
           key={index}
@@ -968,23 +970,24 @@ function ZenGarden({
 }: {
   onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
 }) {
-  const rakedLines = Array.from({ length: 11 }, (_, index) => -1.95 + index * 0.39);
+  const rakedLines = Array.from({ length: 15 }, (_, index) => -2.75 + index * 0.39);
   const stones = [
-    [-1.35, -0.95, 0.36],
-    [-0.35, 0.62, 0.28],
-    [0.75, -0.35, 0.32],
-    [1.55, 0.92, 0.24],
+    [-1.85, -1.45, 0.38],
+    [-0.55, 0.82, 0.3],
+    [0.95, -0.5, 0.34],
+    [2.05, 1.22, 0.26],
+    [-2.35, 1.75, 0.24],
   ];
 
   return (
-    <group position={[-8.55, 0.9, -0.2]}>
+    <group position={[-10.25, 1.02, -1.1]}>
       <mesh receiveShadow castShadow onClick={onGroundClick}>
-        <cylinderGeometry args={[2.85, 3.05, 0.18, 72]} />
+        <cylinderGeometry args={[3.65, 3.95, 0.18, 84]} />
         <meshStandardMaterial color="#e8dcc4" roughness={0.7} metalness={0.02} />
       </mesh>
       {rakedLines.map((z, index) => (
         <mesh key={index} position={[0, 0.12, z]} rotation={[0, 0, Math.sin(index) * 0.035]}>
-          <boxGeometry args={[4.7 - Math.abs(z) * 0.42, 0.018, 0.035]} />
+          <boxGeometry args={[6.35 - Math.abs(z) * 0.44, 0.018, 0.035]} />
           <meshStandardMaterial color="#fff4df" roughness={0.62} />
         </mesh>
       ))}
@@ -1008,7 +1011,7 @@ function ZenGarden({
         <meshStandardMaterial color="#bfeeff" emissive="#8ed6ed" emissiveIntensity={0.18} />
       </mesh>
       {[-1, 1].map((side) => (
-        <group key={side} position={[side * 2.48, 0.52, 1.55]} scale={[0.82, 0.82, 0.82]}>
+        <group key={side} position={[side * 3.18, 0.52, 2.22]} scale={[0.92, 0.92, 0.92]}>
           <mesh position={[0, 0.62, 0]} castShadow>
             <coneGeometry args={[0.38, 1.85, 12]} />
             <meshStandardMaterial color="#476f53" roughness={0.82} />
