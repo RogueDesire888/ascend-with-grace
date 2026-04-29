@@ -318,12 +318,14 @@ export function SanctuaryWorld() {
   function walkTo(zone: Zone) {
     setManualZone(zone.key);
     setTargetPosition(zone.position);
+    worldApiRef.current?.setTarget(zone.position);
     setIsArrivalMenuOpen(false);
   }
 
   function resetView() {
     setManualZone("overview");
     setTargetPosition(START_POSITION);
+    worldApiRef.current?.setTarget(START_POSITION);
     setIsArrivalMenuOpen(false);
   }
 
@@ -387,10 +389,17 @@ export function SanctuaryWorld() {
                   avatarDirection={avatarDirection.current}
                   isInsideTemple={isInsideTemple}
                   activeZone={activeZone}
+                  keysPressed={keysPressed}
+                  targetPosition={targetPosition}
+                  onReady={(api) => {
+                    worldApiRef.current = api;
+                  }}
+                  onTargetReached={() => setTargetPosition(null)}
                   onWalkTo={walkTo}
                   onMoveTo={(point) => {
                     setManualZone("overview");
                     setTargetPosition(point);
+                    worldApiRef.current?.setTarget(point);
                   }}
                 />
               </Suspense>
