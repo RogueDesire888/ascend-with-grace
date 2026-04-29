@@ -207,13 +207,13 @@
 
   .garden-grid {
     background-image:
-      linear-gradient(color-mix(in oklab, var(--leaf-glow) 13%, transparent) 1px, transparent 1px),
+      linear-gradient(color-mix(in oklab, var(--sun-glow) 11%, transparent) 1px, transparent 1px),
       linear-gradient(
         90deg,
-        color-mix(in oklab, var(--water) 11%, transparent) 1px,
+        color-mix(in oklab, var(--leaf-glow) 9%, transparent) 1px,
         transparent 1px
       );
-    background-size: 96px 96px;
+    background-size: 112px 112px;
     mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
   }
 
@@ -221,19 +221,44 @@
     background-image:
       radial-gradient(
         ellipse at 18% 42%,
-        color-mix(in oklab, var(--leaf-glow) 22%, transparent),
+        color-mix(in oklab, var(--coral-glow) 20%, transparent),
         transparent 24%
       ),
       radial-gradient(
         ellipse at 72% 58%,
-        color-mix(in oklab, var(--spirit) 18%, transparent),
+        color-mix(in oklab, var(--spirit) 16%, transparent),
         transparent 28%
       ),
       radial-gradient(
         ellipse at 50% 8%,
-        color-mix(in oklab, var(--sun-glow) 12%, transparent),
+        color-mix(in oklab, var(--sun-glow) 18%, transparent),
         transparent 26%
       );
+  }
+
+  .sanctuary-panel {
+    background:
+      linear-gradient(135deg, color-mix(in oklab, var(--card) 78%, white 9%), var(--card)),
+      radial-gradient(ellipse at 20% 0%, color-mix(in oklab, var(--sun-glow) 14%, transparent), transparent 42%);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .marble-sheen {
+    background-image:
+      linear-gradient(115deg, transparent 0 32%, color-mix(in oklab, var(--foreground) 8%, transparent) 36%, transparent 42%),
+      linear-gradient(145deg, color-mix(in oklab, var(--secondary) 18%, transparent), transparent 58%);
+  }
+
+  .sun-rays {
+    background: conic-gradient(
+      from 178deg at 50% 0%,
+      transparent 0deg,
+      color-mix(in oklab, var(--sun-glow) 20%, transparent) 10deg,
+      transparent 20deg,
+      color-mix(in oklab, var(--foreground) 10%, transparent) 31deg,
+      transparent 46deg
+    );
+    mask-image: linear-gradient(to bottom, black 0%, transparent 78%);
   }
 
   .scrollbar-none {
