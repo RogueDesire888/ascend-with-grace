@@ -829,16 +829,16 @@ function Staircase({
   onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
 }) {
   return (
-    <group position={[0, 0.58, 0.85]}>
-      {Array.from({ length: 14 }).map((_, index) => (
+    <group position={[0, 0.58, 1.42]}>
+      {Array.from({ length: 24 }).map((_, index) => (
         <mesh
           key={index}
-          position={[0, index * 0.08, 4.15 - index * 0.46]}
+          position={[0, index * 0.064, 6.2 - index * 0.38]}
           receiveShadow
           castShadow
           onClick={onGroundClick}
         >
-          <boxGeometry args={[2.9 + index * 0.18, 0.13, 0.42]} />
+          <boxGeometry args={[4.25 + index * 0.16, 0.12, 0.38]} />
           <meshStandardMaterial
             color={index % 2 ? "#ece2d1" : "#fff4df"}
             roughness={0.46}
