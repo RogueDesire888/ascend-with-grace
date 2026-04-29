@@ -44,19 +44,24 @@ type Zone = {
 
 const allQuests = [...dailyQuests, ...weeklyQuests, ...mainQuests];
 const START_POSITION: Point = { x: 0, z: 8.2 };
-const WALK_RADIUS_X = 12.6;
-const WALK_RADIUS_Z = 10.2;
-const WALK_CENTER_Z = 0.4;
+const WALK_RADIUS_X = 15.2;
+const WALK_RADIUS_Z = 12.35;
+const WALK_CENTER_Z = -0.15;
 const SURFACE_Y = 0.44;
+const STAIR_COUNT = 24;
+const STAIR_START_Z = 7.62;
+const STAIR_STEP_DEPTH = 0.38;
+const STAIR_STEP_RISE = 0.064;
 const WALKABLE_RECTS = [
-  { x: 0, z: 6.2, hx: 7.45, hz: 3.35 },
-  { x: 0, z: 1.6, hx: 4.15, hz: 6.7 },
-  { x: 0, z: -3.35, hx: 8.15, hz: 2.5 },
-  { x: 0, z: -6.25, hx: 5.4, hz: 2.45 },
-  { x: -8.55, z: -0.15, hx: 3.75, hz: 4.75 },
-  { x: 8.55, z: -0.05, hx: 3.75, hz: 4.65 },
-  { x: -8.15, z: 5.25, hx: 3.35, hz: 2.45 },
-  { x: 8.15, z: 5.2, hx: 3.35, hz: 2.35 },
+  { x: 0, z: 6.25, hx: 8.55, hz: 3.55 },
+  { x: 0, z: 1.42, hx: 4.75, hz: 6.95 },
+  { x: 0, z: -3.85, hx: 10.75, hz: 3.05 },
+  { x: 0, z: -7.3, hx: 8.65, hz: 3.15 },
+  { x: 0, z: -10.3, hx: 7.55, hz: 2.05 },
+  { x: -10.45, z: -1.25, hx: 4.95, hz: 5.95 },
+  { x: 10.45, z: -1.15, hx: 4.95, hz: 5.85 },
+  { x: -8.7, z: 5.45, hx: 3.9, hz: 2.55 },
+  { x: 8.7, z: 5.4, hx: 3.9, hz: 2.5 },
 ] as const;
 
 const zones: Zone[] = [
@@ -138,7 +143,7 @@ function isWalkable(point: Point) {
 }
 
 function isInTempleInterior(point: Point) {
-  return Math.abs(point.x) < 4.15 && point.z < -4.15 && point.z > -8.15;
+  return Math.abs(point.x) < 5.2 && point.z < -4.25 && point.z > -9.65;
 }
 
 function clamp01(value: number) {
@@ -146,23 +151,26 @@ function clamp01(value: number) {
 }
 
 function getTerrainHeight(point: Point) {
-  const stairLane = Math.abs(point.x) < 3.75 && point.z <= 7.55 && point.z >= -2.2;
+  const stairLane = Math.abs(point.x) < 4.7 && point.z <= STAIR_START_Z && point.z >= -2.25;
   if (stairLane) {
-    const stairProgress = clamp01((7.55 - point.z) / 9.75);
-    return SURFACE_Y + stairProgress * 1.46;
+    const stairProgress = clamp01((STAIR_START_Z - point.z) / (STAIR_STEP_DEPTH * (STAIR_COUNT + 1)));
+    return SURFACE_Y + stairProgress * 1.56;
   }
 
-  const templeTerrace = Math.abs(point.x) < 7.45 && point.z < -2.2 && point.z > -7.6;
-  if (templeTerrace) return SURFACE_Y + 1.48;
+  const templeTerrace = Math.abs(point.x) < 9.85 && point.z < -2.25 && point.z > -10.95;
+  if (templeTerrace) return SURFACE_Y + 1.5;
 
-  if (isInTempleInterior(point)) return SURFACE_Y + 1.52;
+  if (isInTempleInterior(point)) return SURFACE_Y + 1.54;
 
   const sideTerrace =
-    Math.abs(point.x) > 5.95 && Math.abs(point.x) < 11.45 && point.z > -3.75 && point.z < 3.65;
-  if (sideTerrace) return SURFACE_Y + 0.34;
+    Math.abs(point.x) > 5.85 && Math.abs(point.x) < 13.9 && point.z > -6.95 && point.z < 4.25;
+  if (sideTerrace) return SURFACE_Y + 0.48;
 
-  const springTerrace = Math.abs(point.x) < 8.65 && point.z > 4.35;
-  if (springTerrace) return SURFACE_Y + 0.22;
+  const rearGarden = Math.abs(point.x) < 8.8 && point.z <= -8.75 && point.z > -12.2;
+  if (rearGarden) return SURFACE_Y + 1.18;
+
+  const springTerrace = Math.abs(point.x) < 9.3 && point.z > 4.15;
+  if (springTerrace) return SURFACE_Y + 0.24;
 
   return SURFACE_Y;
 }
