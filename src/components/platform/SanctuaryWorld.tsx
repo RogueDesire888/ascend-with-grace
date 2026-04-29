@@ -644,23 +644,39 @@ function MarbleWalkways({
   return (
     <group position={[0, 0.82, 0]}>
       <mesh position={[0, 0, 2.7]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[4.25, 0.08, 9.8]} />
-        <meshStandardMaterial color="#f8ecd6" roughness={0.42} metalness={0.05} />
+        <boxGeometry args={[4.9, 0.08, 9.95]} />
+        <meshStandardMaterial color="#f8ecd6" roughness={0.4} metalness={0.06} />
       </mesh>
-      <mesh position={[0, 0.03, -3.05]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[10.3, 0.1, 2.15]} />
-        <meshStandardMaterial color="#fff4df" roughness={0.36} metalness={0.07} />
+      <mesh position={[0, 0.05, -3.18]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[13.6, 0.12, 2.35]} />
+        <meshStandardMaterial color="#fff4df" roughness={0.34} metalness={0.08} />
+      </mesh>
+      <mesh position={[0, 0.12, -7.95]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[12.8, 0.12, 4.6]} />
+        <meshStandardMaterial color="#f7ead4" roughness={0.38} metalness={0.07} />
       </mesh>
       {[-1, 1].map((side) => (
         <mesh
           key={side}
-          position={[side * 7.45, 0.04, -0.12]}
+          position={[side * 9.2, 0.08, -1.1]}
           receiveShadow
           castShadow
           onClick={onGroundClick}
         >
-          <boxGeometry args={[3.85, 0.08, 7.25]} />
-          <meshStandardMaterial color="#f3e5cf" roughness={0.48} metalness={0.04} />
+          <boxGeometry args={[4.9, 0.1, 9.4]} />
+          <meshStandardMaterial color="#f3e5cf" roughness={0.46} metalness={0.05} />
+        </mesh>
+      ))}
+      {[-1, 1].map((side) => (
+        <mesh
+          key={`rear-${side}`}
+          position={[side * 5.55, 0.14, -9.95]}
+          receiveShadow
+          castShadow
+          onClick={onGroundClick}
+        >
+          <boxGeometry args={[4.8, 0.1, 2.65]} />
+          <meshStandardMaterial color="#f5e6cf" roughness={0.42} metalness={0.05} />
         </mesh>
       ))}
     </group>
