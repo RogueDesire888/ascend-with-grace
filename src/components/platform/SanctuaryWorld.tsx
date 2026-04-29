@@ -645,7 +645,7 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
   );
 }
 
-function Staircase() {
+function Staircase({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
   return (
     <group position={[0, 0.58, 0.85]}>
       {Array.from({ length: 14 }).map((_, index) => (
@@ -654,6 +654,7 @@ function Staircase() {
           position={[0, index * 0.08, 4.15 - index * 0.46]}
           receiveShadow
           castShadow
+          onClick={onGroundClick}
         >
           <boxGeometry args={[2.9 + index * 0.18, 0.13, 0.42]} />
           <meshStandardMaterial
@@ -667,7 +668,7 @@ function Staircase() {
   );
 }
 
-function GardenTerraces() {
+function GardenTerraces({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
   return (
     <group position={[0, 0.62, 0]}>
       {[
@@ -678,7 +679,7 @@ function GardenTerraces() {
         [-5.1, -2.2, 1.7, 0.8],
         [5.2, -2.25, 1.7, 0.8],
       ].map(([x, z, sx, sz], index) => (
-        <mesh key={index} position={[x, 0.05, z]} scale={[sx, 1, sz]} receiveShadow castShadow>
+        <mesh key={index} position={[x, 0.05, z]} scale={[sx, 1, sz]} receiveShadow castShadow onClick={onGroundClick}>
           <cylinderGeometry args={[1, 1.08, 0.34, 48]} />
           <meshStandardMaterial color={index % 2 ? "#87a96f" : "#789a68"} roughness={0.76} />
         </mesh>
