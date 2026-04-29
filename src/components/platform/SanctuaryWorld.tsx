@@ -568,6 +568,49 @@ function FloatingTempleIsland({
   );
 }
 
+function MarbleWalkways({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
+  return (
+    <group position={[0, 0.73, 0]}>
+      <mesh position={[0, 0, 1.95]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[2.95, 0.08, 6.95]} />
+        <meshStandardMaterial color="#f8ecd6" roughness={0.42} metalness={0.05} />
+      </mesh>
+      <mesh position={[0, 0.03, -2.25]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[6.8, 0.09, 1.65]} />
+        <meshStandardMaterial color="#fff4df" roughness={0.36} metalness={0.07} />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <mesh key={side} position={[side * 4.85, 0.04, -0.12]} receiveShadow castShadow onClick={onGroundClick}>
+          <boxGeometry args={[2.75, 0.08, 5.45]} />
+          <meshStandardMaterial color="#f3e5cf" roughness={0.48} metalness={0.04} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+function TempleBalustrades() {
+  const rails = [-1, 1];
+  return (
+    <group position={[0, 1.08, 1.58]}>
+      {rails.map((side) => (
+        <group key={side} position={[side * 2.12, 0, 0]}>
+          <mesh position={[0, 0.36, 0]} castShadow>
+            <boxGeometry args={[0.14, 0.24, 5.9]} />
+            <meshStandardMaterial color="#fff4df" roughness={0.34} metalness={0.08} />
+          </mesh>
+          {Array.from({ length: 8 }).map((_, index) => (
+            <mesh key={index} position={[0, 0.13, 2.65 - index * 0.74]} castShadow>
+              <cylinderGeometry args={[0.055, 0.07, 0.5, 14]} />
+              <meshStandardMaterial color="#f3e4cd" roughness={0.42} metalness={0.05} />
+            </mesh>
+          ))}
+        </group>
+      ))}
+    </group>
+  );
+}
+
 function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
   const columns = Array.from({ length: 10 }, (_, index) => -4.05 + index * 0.9);
   const sideColumns = [-4.55, 4.55];
