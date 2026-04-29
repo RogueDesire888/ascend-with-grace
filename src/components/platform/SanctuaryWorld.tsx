@@ -388,7 +388,6 @@ export function SanctuaryWorld() {
                   hasEntered={hasEntered}
                   avatarPosition={avatarPosition}
                   avatarDirection={avatarDirection.current}
-                  isInsideTemple={isInsideTemple}
                   activeZone={activeZone}
                   keysPressed={keysPressed}
                   targetPosition={targetPosition}
@@ -481,7 +480,6 @@ function SanctuaryScene({
   hasEntered,
   avatarPosition,
   avatarDirection,
-  isInsideTemple,
   activeZone,
   keysPressed,
   targetPosition,
@@ -493,7 +491,6 @@ function SanctuaryScene({
   hasEntered: boolean;
   avatarPosition: Point;
   avatarDirection: number;
-  isInsideTemple: boolean;
   activeZone: ZoneKey;
   keysPressed: RefObject<Set<string>>;
   targetPosition: Point | null;
