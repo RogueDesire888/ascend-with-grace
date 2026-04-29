@@ -92,7 +92,7 @@ export function StatsStrip() {
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="rounded-3xl border border-border/70 bg-card/70 p-5 shadow-[var(--shadow-soft)]"
+          className="rounded-[1.75rem] border border-border/60 bg-card/65 p-5 shadow-[var(--shadow-soft)]"
         >
           <p className="text-sm text-muted-foreground">{stat.label}</p>
           <p className="mt-2 text-4xl font-bold text-foreground">{stat.value}</p>
@@ -112,9 +112,9 @@ export function QuestCard({
 }) {
   const Icon = variant === "main" ? LockKeyhole : variant === "weekly" ? Circle : CheckCircle2;
   return (
-    <article className="group rounded-3xl border border-border/70 bg-card/75 p-5 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-1">
+    <article className="group rounded-[1.75rem] border border-border/60 bg-card/70 p-5 shadow-[var(--shadow-soft)] transition-transform hover:-translate-y-1">
       <div className="flex items-start justify-between gap-4">
-        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-accent text-accent-foreground">
+        <div className="grid h-12 w-12 shrink-0 place-items-center rounded-[40%] bg-accent text-accent-foreground">
           <Icon className="h-5 w-5" />
         </div>
         <span className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
@@ -137,9 +137,9 @@ export function QuestCard({
 
 export function SkillProgressCard({ tree }: { tree: SkillTree }) {
   return (
-    <article className="rounded-3xl border border-border/70 bg-card/75 p-6 shadow-[var(--shadow-soft)]">
+    <article className="rounded-[1.75rem] border border-border/60 bg-card/70 p-6 shadow-[var(--shadow-soft)]">
       <div className="flex items-start gap-4">
-        <div className={`grid h-14 w-14 place-items-center rounded-2xl border ${tree.className}`}>
+        <div className={`grid h-14 w-14 place-items-center rounded-[38%] border ${tree.className}`}>
           <tree.Icon className="h-7 w-7" />
         </div>
         <div className="min-w-0 flex-1">
@@ -154,7 +154,7 @@ export function SkillProgressCard({ tree }: { tree: SkillTree }) {
       </div>
       <div className="mt-6 h-3 overflow-hidden rounded-full bg-muted">
         <div
-          className="h-full rounded-full bg-primary shadow-[var(--shadow-glow)]"
+          className="h-full rounded-full bg-gradient-to-r from-primary via-water to-spirit shadow-[var(--shadow-glow)]"
           style={{ width: `${tree.progress}%` }}
         />
       </div>
