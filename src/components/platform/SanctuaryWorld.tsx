@@ -584,16 +584,16 @@ function FloatingTempleIsland({
 }) {
   return (
     <group>
-      <mesh position={[0, -1.78, 0]} rotation={[0, 0, 0]} castShadow receiveShadow>
-        <coneGeometry args={[9.15, 5.55, 28, 7]} />
+      <mesh position={[0, -2.08, 0]} rotation={[0, 0, 0]} castShadow receiveShadow>
+        <coneGeometry args={[12.8, 6.4, 32, 7]} />
         <meshStandardMaterial color="#80776d" roughness={0.88} metalness={0.01} />
       </mesh>
-      <mesh position={[0, -1.36, 0.1]} castShadow receiveShadow>
-        <coneGeometry args={[7.55, 4.9, 22, 4]} />
+      <mesh position={[0, -1.55, 0.1]} castShadow receiveShadow>
+        <coneGeometry args={[10.7, 5.35, 24, 4]} />
         <meshStandardMaterial color="#5f594f" roughness={0.92} metalness={0.01} />
       </mesh>
       <mesh position={[0, 0, 0]} receiveShadow onClick={onGroundClick}>
-        <cylinderGeometry args={[8.7, 8.1, 0.72, 96]} />
+        <cylinderGeometry args={[12.25, 11.55, 0.78, 112]} />
         <meshStandardMaterial color="#8cae77" roughness={0.78} />
       </mesh>
       <mesh
@@ -602,11 +602,12 @@ function FloatingTempleIsland({
         receiveShadow
         onClick={onGroundClick}
       >
-        <circleGeometry args={[8.25, 96]} />
+        <circleGeometry args={[11.85, 112]} />
         <meshStandardMaterial color="#a9bf91" roughness={0.74} />
       </mesh>
 
       <GardenTerraces onGroundClick={onGroundClick} />
+      <ZenGarden onGroundClick={onGroundClick} />
       <MarbleWalkways onGroundClick={onGroundClick} />
       <Temple onGroundClick={onGroundClick} />
       <Staircase onGroundClick={onGroundClick} />
