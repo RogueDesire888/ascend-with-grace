@@ -31,6 +31,7 @@ type ZoneKey = "overview" | "herbs" | "energy" | "movement" | "touch" | "spirit"
 type Point = { x: number; z: number };
 type Quest = (typeof allQuests)[number];
 type Celebration = { id: number; xp: number; leveledUp: boolean };
+type SanctuaryWorldApi = { getPosition: () => Point; setTarget: (point: Point | null) => void };
 
 type Zone = {
   key: Exclude<ZoneKey, "overview">;
