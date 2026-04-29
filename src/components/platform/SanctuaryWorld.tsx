@@ -787,25 +787,25 @@ function TempleInterior({
 }
 
 function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
-  const columns = Array.from({ length: 10 }, (_, index) => -4.05 + index * 0.9);
-  const sideColumns = [-4.55, 4.55];
+  const columns = Array.from({ length: 12 }, (_, index) => -4.95 + index * 0.9);
+  const sideColumns = Array.from({ length: 6 }, (_, index) => -2.55 + index * 0.9);
 
   return (
-    <group position={[0, 1.62, -5.2]} scale={[1.34, 1.2, 1.18]}>
-      <mesh position={[0, -0.18, 0.1]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[12.4, 0.42, 6.15]} />
+    <group position={[0, 1.62, -5.45]} scale={[1.42, 1.24, 1.28]}>
+      <mesh position={[0, -0.18, -0.08]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[13.2, 0.42, 7.25]} />
         <meshStandardMaterial color="#f9efd9" roughness={0.38} metalness={0.07} />
       </mesh>
-      <mesh position={[0, 0.08, 0.06]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[11.25, 0.28, 5.36]} />
+      <mesh position={[0, 0.08, -0.12]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[12.1, 0.28, 6.36]} />
         <meshStandardMaterial color="#fff8ea" roughness={0.33} metalness={0.1} />
       </mesh>
-      <mesh position={[0, 1.7, -2.2]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[7.6, 0.1, 4.15]} />
+      <mesh position={[0, 1.7, -2.65]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[8.45, 0.1, 4.95]} />
         <meshStandardMaterial color="#fff6e5" roughness={0.28} metalness={0.12} />
       </mesh>
-      <mesh position={[0, 2.28, -2.95]} castShadow receiveShadow>
-        <boxGeometry args={[9.4, 4.25, 0.42]} />
+      <mesh position={[0, 2.28, -3.55]} castShadow receiveShadow>
+        <boxGeometry args={[10.2, 4.25, 0.42]} />
         <meshStandardMaterial color="#d9cbb8" roughness={0.52} metalness={0.04} />
       </mesh>
       {[-1, 1].map((side) => (
@@ -824,16 +824,16 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
         <boxGeometry args={[3.05, 0.92, 0.42]} />
         <meshStandardMaterial color="#f7ecd8" roughness={0.38} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 4.54, 0.05]} castShadow>
-        <boxGeometry args={[10.95, 0.48, 5.75]} />
+      <mesh position={[0, 4.54, -0.12]} castShadow>
+        <boxGeometry args={[12.4, 0.48, 6.85]} />
         <meshStandardMaterial color="#fff4df" roughness={0.32} metalness={0.1} />
       </mesh>
-      <mesh position={[0, 5.18, 0.08]} rotation={[0, Math.PI / 4, 0]} castShadow>
-        <cylinderGeometry args={[4.75, 5.35, 1.18, 4]} />
+      <mesh position={[0, 5.2, -0.04]} rotation={[0, Math.PI / 4, 0]} castShadow>
+        <cylinderGeometry args={[5.25, 6.1, 1.28, 4]} />
         <meshStandardMaterial color="#ead9bf" roughness={0.38} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 5.58, 1.85]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <cylinderGeometry args={[0, 1.32, 10.8, 3]} />
+      <mesh position={[0, 5.72, 1.94]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0, 1.48, 12.4, 3]} />
         <meshStandardMaterial color="#fff0d5" roughness={0.36} metalness={0.08} />
       </mesh>
       {columns.map((x) => (
@@ -852,25 +852,31 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
           </mesh>
         </group>
       ))}
-      {sideColumns.map((x) => (
-        <group key={x} position={[x, 1.46, -0.2]}>
-          <mesh castShadow receiveShadow>
-            <cylinderGeometry args={[0.16, 0.22, 2.45, 28]} />
-            <meshStandardMaterial color="#f8eedb" roughness={0.38} metalness={0.08} />
-          </mesh>
-          <mesh position={[0, 1.42, 0]} castShadow>
-            <sphereGeometry args={[0.22, 18, 12]} />
-            <meshStandardMaterial color="#ffe8a8" emissive="#f1bb45" emissiveIntensity={0.22} />
-          </mesh>
-        </group>
-      ))}
+      {[-1, 1].flatMap((side) =>
+        sideColumns.map((z) => (
+          <group key={`${side}-${z}`} position={[side * 5.05, 1.6, z - 0.85]}>
+            <mesh castShadow receiveShadow>
+              <cylinderGeometry args={[0.18, 0.24, 2.8, 30]} />
+              <meshStandardMaterial color="#f8eedb" roughness={0.36} metalness={0.08} />
+            </mesh>
+            <mesh position={[0, -1.34, 0]} castShadow>
+              <cylinderGeometry args={[0.28, 0.32, 0.16, 22]} />
+              <meshStandardMaterial color="#e6d4bd" roughness={0.46} />
+            </mesh>
+            <mesh position={[0, 1.5, 0]} castShadow>
+              <sphereGeometry args={[0.18, 18, 12]} />
+              <meshStandardMaterial color="#ffe8a8" emissive="#f1bb45" emissiveIntensity={0.2} />
+            </mesh>
+          </group>
+        )),
+      )}
       <TempleInterior onGroundClick={onGroundClick} />
       <mesh position={[0, 2.05, 1.9]} castShadow receiveShadow>
         <boxGeometry args={[1.62, 2.7, 0.08]} />
         <meshStandardMaterial color="#231d1b" roughness={0.58} transparent opacity={0.26} />
       </mesh>
       <pointLight position={[0, 2.25, 1.38]} intensity={5.6} color="#ffd982" distance={6.5} />
-      <mesh position={[0, 6.25, 1.72]}>
+      <mesh position={[0, 6.42, 1.88]}>
         <torusGeometry args={[0.78, 0.055, 14, 72]} />
         <meshStandardMaterial
           color="#d8b86b"
@@ -880,10 +886,17 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
           roughness={0.2}
         />
       </mesh>
-      <mesh position={[0, 6.27, 1.72]}>
+      <mesh position={[0, 6.44, 1.88]}>
         <sphereGeometry args={[0.12, 18, 12]} />
         <meshStandardMaterial color="#fff4bd" emissive="#ffd86b" emissiveIntensity={1.2} />
       </mesh>
+      {[-1, 1].map((side) => (
+        <mesh key={`ornament-${side}`} position={[side * 4.95, 5.9, 1.92]} rotation={[0, 0, side * 0.25]} castShadow>
+          <coneGeometry args={[0.18, 0.82, 5]} />
+          <meshStandardMaterial color="#d8b86b" emissive="#d29d32" emissiveIntensity={0.28} metalness={0.55} roughness={0.22} />
+        </mesh>
+      ))}
+
     </group>
   );
 }
