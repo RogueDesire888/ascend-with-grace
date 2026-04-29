@@ -295,6 +295,38 @@
     transform-origin: 50% 40%;
   }
 
+  .third-person-stage {
+    transform-origin: 0 0;
+    will-change: transform, opacity, filter;
+  }
+
+  .sanctuary-landmass::before {
+    content: "";
+    position: absolute;
+    inset: 7% 3% 9%;
+    z-index: 1;
+    border-radius: 50%;
+    background:
+      radial-gradient(ellipse at 50% 30%, color-mix(in oklab, var(--foreground) 18%, transparent), transparent 36%),
+      radial-gradient(ellipse at 50% 58%, color-mix(in oklab, var(--background) 42%, transparent), transparent 58%);
+    filter: blur(18px);
+    opacity: 0.82;
+  }
+
+  .sanctuary-portal {
+    animation: portal-breathe 2.8s ease-in-out infinite;
+  }
+
+  .third-person-avatar {
+    transform-origin: 50% 100%;
+    animation: avatar-idle 2.6s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .avatar-shadow {
+    animation: shadow-pulse 2.6s ease-in-out infinite;
+  }
+
   .waterfall {
     background:
       linear-gradient(180deg, color-mix(in oklab, var(--foreground) 60%, transparent), color-mix(in oklab, var(--water) 40%, transparent), transparent),
@@ -313,8 +345,45 @@
     }
   }
 
+  @keyframes portal-breathe {
+    0%,
+    100% {
+      box-shadow: var(--shadow-glow);
+    }
+    50% {
+      box-shadow:
+        0 0 44px color-mix(in oklab, var(--primary) 48%, transparent),
+        0 0 120px color-mix(in oklab, var(--water) 24%, transparent);
+    }
+  }
+
+  @keyframes avatar-idle {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 0 -4px;
+    }
+  }
+
+  @keyframes shadow-pulse {
+    0%,
+    100% {
+      opacity: 0.54;
+      scale: 1;
+    }
+    50% {
+      opacity: 0.34;
+      scale: 0.86;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .floating-island {
+    .floating-island,
+    .sanctuary-portal,
+    .third-person-avatar,
+    .avatar-shadow {
       animation: none;
     }
 
