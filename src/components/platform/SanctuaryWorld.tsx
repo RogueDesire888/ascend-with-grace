@@ -980,19 +980,32 @@ function Staircase({
   onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
 }) {
   return (
-    <group position={[0, 0.58, 1.42]}>
-      {Array.from({ length: STAIR_COUNT }).map((_, index) => (
+    <group>
+      {Array.from({ length: STAIR_COUNT }).map((_, index) => {
+        const step = getStairStep(index);
+        return (
+          <mesh key={index} position={[0, step.y, step.z]} receiveShadow castShadow onClick={onGroundClick}>
+            <boxGeometry args={[step.width, 0.12, STAIR_STEP_DEPTH]} />
+            <meshStandardMaterial
+              color={index % 2 ? "#ece2d1" : "#fff4df"}
+              roughness={0.38}
+              metalness={0.07}
+            />
+          </mesh>
+        );
+      })}
+      {[-1, 1].map((side) => (
         <mesh
-          key={index}
-          position={[0, index * STAIR_STEP_RISE, STAIR_START_Z - index * STAIR_STEP_DEPTH]}
+          key={side}
+          position={[side * (STAIR_WIDTH / 2 + 0.09), STAIR_BASE_Y + 0.2 + (STAIR_COUNT * STAIR_STEP_RISE) / 2, STAIR_GROUP_Z + STAIR_START_Z - (STAIR_COUNT * STAIR_STEP_DEPTH) / 2]}
+          rotation={[Math.atan2(STAIR_STEP_RISE, STAIR_STEP_DEPTH), 0, 0]}
           receiveShadow
           castShadow
-          onClick={onGroundClick}
         >
-          <boxGeometry args={[4.55 + index * 0.17, 0.12, STAIR_STEP_DEPTH]} />
+          <boxGeometry args={[0.18, 0.42, STAIR_STEP_DEPTH * STAIR_COUNT + 0.4]} />
           <meshStandardMaterial
-            color={index % 2 ? "#ece2d1" : "#fff4df"}
-            roughness={0.44}
+            color="#ead7bb"
+            roughness={0.42}
             metalness={0.05}
           />
         </mesh>
@@ -1000,14 +1013,14 @@ function Staircase({
       <mesh
         position={[
           0,
-          STAIR_COUNT * STAIR_STEP_RISE + 0.02,
-          STAIR_START_Z - STAIR_COUNT * STAIR_STEP_DEPTH - 0.42,
+          STAIR_BASE_Y + STAIR_COUNT * STAIR_STEP_RISE + 0.02,
+          STAIR_GROUP_Z + STAIR_START_Z - STAIR_COUNT * STAIR_STEP_DEPTH - 0.42,
         ]}
         receiveShadow
         castShadow
         onClick={onGroundClick}
       >
-        <boxGeometry args={[8.5, 0.14, 1.2]} />
+        <boxGeometry args={[9.1, 0.14, 1.2]} />
         <meshStandardMaterial color="#fff2dc" roughness={0.38} metalness={0.06} />
       </mesh>
     </group>
