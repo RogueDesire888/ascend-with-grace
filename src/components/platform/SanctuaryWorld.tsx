@@ -14,7 +14,15 @@ import {
   VolumeX,
   Wind,
 } from "lucide-react";
-import { Suspense, useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import {
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type RefObject,
+} from "react";
 import * as THREE from "three";
 import { dailyQuests, mainQuests, skillTrees, weeklyQuests } from "./data";
 import floatingTempleSanctuary from "@/assets/floating-temple-sanctuary.png";
@@ -209,7 +217,9 @@ export function SanctuaryWorld() {
   function playAscensionCue(leveledUp: boolean) {
     if (isMuted || typeof window === "undefined") return;
 
-    const AudioCtor = window.AudioContext ?? window.webkitAudioContext;
+    const AudioCtor =
+      window.AudioContext ??
+      (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AudioCtor) return;
 
     const context = audioContextRef.current ?? new AudioCtor();
@@ -373,10 +383,6 @@ export function SanctuaryWorld() {
                 onBack={resetView}
                 completedQuests={completedQuests}
                 onCompleteQuest={completeQuest}
-                onSelect={(key) => {
-                  const zone = zones.find((item) => item.key === key);
-                  if (zone) walkTo(zone);
-                }}
               />
             </>
           ) : null}
@@ -907,7 +913,7 @@ function AscensionVfx({
               "--spark-x": `${(index % 6) * 34 - 86}px`,
               "--spark-y": `${-130 - (index % 5) * 22}px`,
               animationDelay: `${index * 38}ms`,
-            } as React.CSSProperties
+            } as CSSProperties
           }
         />
       ))}
@@ -989,7 +995,6 @@ function WorldPanel({
   onBack,
   completedQuests,
   onCompleteQuest,
-  onSelect,
 }: {
   activeZone: ZoneKey;
   selectedZone?: Zone;
@@ -998,7 +1003,6 @@ function WorldPanel({
   onBack: () => void;
   completedQuests: Set<string>;
   onCompleteQuest: (quest: Quest) => void;
-  onSelect: (zone: ZoneKey) => void;
 }) {
   if (activeZone === "overview" || !selectedZone) {
     return null;
