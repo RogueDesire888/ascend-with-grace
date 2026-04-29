@@ -275,6 +275,13 @@
     isolation: isolate;
   }
 
+  .sanctuary-canvas {
+    position: absolute !important;
+    inset: 0;
+    min-height: 100%;
+    touch-action: none;
+  }
+
   .sanctuary-clouds {
     background-image:
       radial-gradient(ellipse at 12% 55%, color-mix(in oklab, var(--foreground) 72%, transparent) 0 18%, transparent 38%),
