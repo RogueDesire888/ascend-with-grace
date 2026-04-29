@@ -40,14 +40,15 @@ export function AvatarOrb({ size = "large" }: { size?: "large" | "small" }) {
     <div
       className={`relative mx-auto grid place-items-center ${large ? "h-72 w-72" : "h-36 w-36"}`}
     >
-      <div className="absolute inset-0 rounded-full bg-[var(--gradient-avatar)] blur-xl" />
-      <div className="absolute inset-5 rounded-full border border-spirit/40 bg-card/40 shadow-[var(--shadow-glow)]" />
-      <div className="absolute h-[78%] w-[78%] animate-[spin_28s_linear_infinite] rounded-full border border-dashed border-water/50" />
-      <div className="absolute h-[56%] w-[56%] animate-[pulse_4s_ease-in-out_infinite] rounded-full bg-primary/15" />
-      <div className="relative grid h-[44%] w-[44%] place-items-center rounded-full border border-primary/40 bg-background/80 shadow-[var(--shadow-aura)]">
-        <Sparkles className={large ? "h-14 w-14 text-spirit" : "h-8 w-8 text-spirit"} />
+      <div className="absolute inset-0 rounded-full bg-[var(--gradient-avatar)] opacity-80 blur-2xl" />
+      <div className="absolute inset-5 rounded-full border border-primary/35 bg-card/35 shadow-[var(--shadow-glow)]" />
+      <div className="absolute h-[84%] w-[84%] animate-[spin_34s_linear_infinite] rounded-full border border-dashed border-earth/45" />
+      <div className="absolute h-[68%] w-[68%] rotate-45 rounded-[42%] border border-water/25 bg-primary/10" />
+      <div className="absolute h-[52%] w-[52%] animate-[pulse_5s_ease-in-out_infinite] rounded-[38%] bg-earth/15" />
+      <div className="relative grid h-[44%] w-[44%] place-items-center rounded-[40%] border border-primary/45 bg-background/80 shadow-[var(--shadow-aura)]">
+        <Sparkles className={large ? "h-14 w-14 text-primary" : "h-8 w-8 text-primary"} />
       </div>
-      <span className="absolute bottom-7 rounded-full border border-border/70 bg-card/80 px-4 py-1 text-xs font-semibold text-foreground shadow-[var(--shadow-soft)]">
+      <span className="absolute bottom-7 rounded-full border border-primary/30 bg-card/80 px-4 py-1 text-xs font-semibold text-foreground shadow-[var(--shadow-soft)]">
         Level 24
       </span>
     </div>
@@ -56,11 +57,12 @@ export function AvatarOrb({ size = "large" }: { size?: "large" | "small" }) {
 
 export function SkillWheel() {
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[28rem] rounded-full border border-border/70 bg-card/50 p-8 shadow-[var(--shadow-soft)]">
-      <div className="absolute inset-12 rounded-full border border-dashed border-spirit/30" />
-      <div className="absolute inset-24 rounded-full border border-water/20 bg-background/40" />
+    <div className="relative mx-auto aspect-square w-full max-w-[28rem] rounded-full border border-border/60 bg-card/45 p-8 shadow-[var(--shadow-soft)]">
+      <div className="garden-grid absolute inset-6 rounded-full opacity-40" />
+      <div className="absolute inset-12 rounded-full border border-dashed border-primary/35" />
+      <div className="absolute inset-24 rounded-full border border-water/20 bg-background/35" />
       <div className="absolute inset-0 grid place-items-center">
-        <div className="grid h-24 w-24 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
+        <div className="grid h-24 w-24 place-items-center rounded-[40%] bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
           <Star className="h-9 w-9" />
         </div>
       </div>
@@ -72,7 +74,7 @@ export function SkillWheel() {
         return (
           <div
             key={tree.name}
-            className={`absolute grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-3xl border bg-card/90 shadow-[var(--shadow-soft)] ${tree.className}`}
+            className={`absolute grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-[35%] border bg-card/90 shadow-[var(--shadow-soft)] ${tree.className}`}
             style={{ left: `${x}%`, top: `${y}%` }}
           >
             <tree.Icon className="h-7 w-7" />
