@@ -626,24 +626,24 @@ function MarbleWalkways({
   onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
 }) {
   return (
-    <group position={[0, 0.73, 0]}>
-      <mesh position={[0, 0, 1.95]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[2.95, 0.08, 6.95]} />
+    <group position={[0, 0.82, 0]}>
+      <mesh position={[0, 0, 2.7]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[4.25, 0.08, 9.8]} />
         <meshStandardMaterial color="#f8ecd6" roughness={0.42} metalness={0.05} />
       </mesh>
-      <mesh position={[0, 0.03, -2.25]} receiveShadow castShadow onClick={onGroundClick}>
-        <boxGeometry args={[6.8, 0.09, 1.65]} />
+      <mesh position={[0, 0.03, -3.05]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[10.3, 0.1, 2.15]} />
         <meshStandardMaterial color="#fff4df" roughness={0.36} metalness={0.07} />
       </mesh>
       {[-1, 1].map((side) => (
         <mesh
           key={side}
-          position={[side * 4.85, 0.04, -0.12]}
+          position={[side * 7.45, 0.04, -0.12]}
           receiveShadow
           castShadow
           onClick={onGroundClick}
         >
-          <boxGeometry args={[2.75, 0.08, 5.45]} />
+          <boxGeometry args={[3.85, 0.08, 7.25]} />
           <meshStandardMaterial color="#f3e5cf" roughness={0.48} metalness={0.04} />
         </mesh>
       ))}
