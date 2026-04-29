@@ -10,6 +10,8 @@ import {
   Leaf,
   MoonStar,
   Sparkles,
+  Volume2,
+  VolumeX,
   Wind,
 } from "lucide-react";
 import { Suspense, useEffect, useMemo, useRef, useState, type RefObject } from "react";
@@ -19,6 +21,8 @@ import floatingTempleSanctuary from "@/assets/floating-temple-sanctuary.png";
 
 type ZoneKey = "overview" | "herbs" | "energy" | "movement" | "touch" | "spirit";
 type Point = { x: number; z: number };
+type Quest = (typeof allQuests)[number];
+type Celebration = { id: number; xp: number; leveledUp: boolean };
 
 type Zone = {
   key: Exclude<ZoneKey, "overview">;
@@ -104,6 +108,13 @@ export function SanctuaryWorld() {
   const [targetPosition, setTargetPosition] = useState<Point | null>(null);
   const [manualZone, setManualZone] = useState<ZoneKey>("overview");
   const [isMounted, setIsMounted] = useState(false);
+  const [isArrivalMenuOpen, setIsArrivalMenuOpen] = useState(false);
+  const [completedQuests, setCompletedQuests] = useState<Set<string>>(() => new Set());
+  const [ascensionLevel, setAscensionLevel] = useState(24);
+  const [glowEarned, setGlowEarned] = useState(8700);
+  const [celebration, setCelebration] = useState<Celebration | null>(null);
+  const [isMuted, setIsMuted] = useState(false);
+  const audioContextRef = useRef<AudioContext | null>(null);
   const keysPressed = useRef(new Set<string>());
 
   useEffect(() => setIsMounted(true), []);
@@ -128,6 +139,7 @@ export function SanctuaryWorld() {
         keysPressed.current.add(key);
         setTargetPosition(null);
         setManualZone("overview");
+        setIsArrivalMenuOpen(false);
       }
     }
 
@@ -194,14 +206,56 @@ export function SanctuaryWorld() {
     return () => cancelAnimationFrame(frame);
   }, [hasEntered, targetPosition]);
 
+  function playAscensionCue(leveledUp: boolean) {
+    if (isMuted || typeof window === "undefined") return;
+
+    const AudioCtor = window.AudioContext ?? window.webkitAudioContext;
+    if (!AudioCtor) return;
+
+    const context = audioContextRef.current ?? new AudioCtor();
+    audioContextRef.current = context;
+
+    const now = context.currentTime;
+    const notes = leveledUp ? [523.25, 659.25, 783.99, 1046.5] : [392, 523.25, 659.25];
+
+    notes.forEach((frequency, index) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(frequency, now + index * 0.08);
+      gain.gain.setValueAtTime(0.0001, now + index * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.12, now + index * 0.08 + 0.025);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.08 + 0.42);
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start(now + index * 0.08);
+      oscillator.stop(now + index * 0.08 + 0.46);
+    });
+  }
+
+  function completeQuest(quest: Quest) {
+    if (completedQuests.has(quest.title)) return;
+
+    const nextGlow = glowEarned + quest.xp;
+    const leveledUp = Math.floor(nextGlow / 500) > Math.floor(glowEarned / 500);
+    setCompletedQuests((current) => new Set(current).add(quest.title));
+    setGlowEarned(nextGlow);
+    if (leveledUp) setAscensionLevel((level) => level + 1);
+    setCelebration({ id: Date.now(), xp: quest.xp, leveledUp });
+    playAscensionCue(leveledUp);
+    window.setTimeout(() => setCelebration(null), 2600);
+  }
+
   function walkTo(zone: Zone) {
     setManualZone(zone.key);
     setTargetPosition(zone.position);
+    setIsArrivalMenuOpen(false);
   }
 
   function resetView() {
     setManualZone("overview");
     setTargetPosition(START_POSITION);
+    setIsArrivalMenuOpen(false);
   }
 
   return (
@@ -221,29 +275,40 @@ export function SanctuaryWorld() {
             </h1>
           </div>
           {hasEntered ? (
-            <button
-              onClick={resetView}
-              className="sanctuary-panel hidden items-center gap-2 rounded-full border border-border/60 px-4 py-3 text-sm font-semibold text-foreground transition-transform hover:scale-[1.02] sm:inline-flex"
-            >
-              <Compass className="h-4 w-4 text-primary" /> Arrival Terrace
-            </button>
+            <div className="relative hidden sm:block">
+              <button
+                onClick={() => setIsArrivalMenuOpen((open) => !open)}
+                className="sanctuary-panel inline-flex items-center gap-2 rounded-full border border-border/60 px-4 py-3 text-sm font-semibold text-foreground transition-transform hover:scale-[1.02]"
+              >
+                <Compass className="h-4 w-4 text-primary" /> Arrival Terrace
+              </button>
+              {isArrivalMenuOpen ? (
+                <ArrivalTerraceMenu
+                  onReset={resetView}
+                  onSelect={walkTo}
+                  onClose={() => setIsArrivalMenuOpen(false)}
+                />
+              ) : null}
+            </div>
           ) : null}
         </div>
 
-        <div className="relative mt-3 min-h-[35rem] flex-1 overflow-hidden rounded-[2rem] border border-border/35 bg-background/20 shadow-[var(--shadow-aura)] lg:min-h-[40rem]">
+        <div
+          className={`relative mt-3 min-h-[35rem] flex-1 overflow-hidden rounded-[2rem] border border-primary/25 bg-background/10 shadow-[var(--shadow-aura)] lg:min-h-[40rem] ${celebration ? "ascension-celebrating" : ""}`}
+        >
           <img
             src={floatingTempleSanctuary}
             alt="Floating marble temple sanctuary above luminous clouds"
-            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-110 opacity-45 blur-[2px]" : "scale-100 opacity-95 blur-0"}`}
+            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-105 opacity-75 blur-[1px]" : "scale-100 opacity-100 blur-0"}`}
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--background)_12%,transparent),color-mix(in_oklab,var(--background)_42%,transparent))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--background)_10%,transparent)_42%,color-mix(in_oklab,var(--background)_22%,transparent))]" />
           {isMounted ? (
             <Canvas
               className="sanctuary-canvas"
               shadows
               dpr={[1, 1.65]}
               camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 120 }}
-              style={{ opacity: hasEntered ? 0.9 : 0.34 }}
+              style={{ opacity: hasEntered ? 0.72 : 0.18 }}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             >
               <Suspense fallback={null}>
@@ -264,6 +329,10 @@ export function SanctuaryWorld() {
               Preparing sanctuary...
             </div>
           )}
+
+          {celebration ? (
+            <AscensionVfx celebration={celebration} ascensionLevel={ascensionLevel} />
+          ) : null}
 
           {!hasEntered ? (
             <div className="absolute inset-0 z-30 grid place-items-center px-4">
@@ -290,13 +359,20 @@ export function SanctuaryWorld() {
 
           {hasEntered ? (
             <>
-              <MovementHud />
+              <MovementHud
+                ascensionLevel={ascensionLevel}
+                glowEarned={glowEarned}
+                isMuted={isMuted}
+                onToggleMute={() => setIsMuted((muted) => !muted)}
+              />
               <WorldPanel
                 activeZone={activeZone}
                 selectedZone={selectedZone}
                 selectedTree={selectedTree}
                 zoneQuests={zoneQuests}
                 onBack={resetView}
+                completedQuests={completedQuests}
+                onCompleteQuest={completeQuest}
                 onSelect={(key) => {
                   const zone = zones.find((item) => item.key === key);
                   if (zone) walkTo(zone);
@@ -348,10 +424,10 @@ function SanctuaryScene({
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
     const introCamera = new THREE.Vector3(0, 13.5 - eased * 6.1, 24 - eased * 10.2);
-    const followCamera = new THREE.Vector3(avatarPosition.x, 5.8, avatarPosition.z + 11.4);
+    const followCamera = new THREE.Vector3(avatarPosition.x, 4.9, avatarPosition.z + 9.2);
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
-      ? avatar.clone().add(new THREE.Vector3(0, 1.7, -4.4))
+      ? avatar.clone().add(new THREE.Vector3(0, 1.25, -3.8))
       : new THREE.Vector3(0, 2.2, -2.4);
 
     camera.position.lerp(desiredCamera, hasEntered ? 0.055 : 0.035);
@@ -373,10 +449,10 @@ function SanctuaryScene({
     <>
       <color attach="background" args={["#d7e8fb"]} />
       <fog attach="fog" args={["#d7e8fb", 18, 62]} />
-      <ambientLight intensity={1.45} />
+      <ambientLight intensity={2.15} />
       <directionalLight
         position={[7, 11, 7]}
-        intensity={3.5}
+        intensity={4.4}
         castShadow
         shadow-mapSize={[2048, 2048]}
       />
@@ -772,27 +848,134 @@ function PlayerAvatar({ refObject }: { refObject: RefObject<THREE.Group | null> 
   );
 }
 
-function MovementHud() {
+function ArrivalTerraceMenu({
+  onReset,
+  onSelect,
+  onClose,
+}: {
+  onReset: () => void;
+  onSelect: (zone: Zone) => void;
+  onClose: () => void;
+}) {
   return (
-    <div className="sanctuary-panel absolute left-4 top-4 z-30 hidden rounded-2xl border border-border/60 p-3 shadow-[var(--shadow-soft)] md:block">
-      <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
-        <Footprints className="h-4 w-4 text-primary" /> Move
+    <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-72 rounded-[1.5rem] border border-primary/30 bg-background/78 p-3 shadow-[var(--shadow-aura)] backdrop-blur-2xl">
+      <button
+        aria-label="Close Arrival Terrace menu"
+        className="absolute inset-[-200vh] -z-10 cursor-default"
+        onClick={onClose}
+      />
+      <button
+        onClick={onReset}
+        className="flex w-full items-center justify-between rounded-2xl border border-border/50 bg-secondary/55 px-4 py-3 text-left text-sm font-bold text-secondary-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+      >
+        <span>Return to arrival stairs</span>
+        <Compass className="h-4 w-4" />
+      </button>
+      <div className="mt-2 grid gap-2">
+        {zones.map((zone) => (
+          <button
+            key={zone.key}
+            onClick={() => onSelect(zone)}
+            className="flex items-center justify-between rounded-2xl border border-border/45 bg-background/42 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-secondary/70"
+          >
+            <span>{zone.label}</span>
+            <zone.Icon className="h-4 w-4 text-primary" />
+          </button>
+        ))}
       </div>
-      <div className="mt-2 grid grid-cols-3 gap-1 text-xs font-bold text-muted-foreground">
-        <span />
-        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
-          W
-        </kbd>
-        <span />
-        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
-          A
-        </kbd>
-        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
-          S
-        </kbd>
-        <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
-          D
-        </kbd>
+    </div>
+  );
+}
+
+function AscensionVfx({
+  celebration,
+  ascensionLevel,
+}: {
+  celebration: Celebration;
+  ascensionLevel: number;
+}) {
+  return (
+    <div key={celebration.id} className="pointer-events-none absolute inset-0 z-40 overflow-hidden">
+      <div className="ascension-bloom absolute inset-0" />
+      <div className="ascension-sweep absolute inset-y-0 left-[-30%] w-[38%]" />
+      {Array.from({ length: 18 }).map((_, index) => (
+        <span
+          key={index}
+          className="spark-trail absolute left-1/2 top-[64%] h-2 w-2 rounded-full bg-primary shadow-[var(--shadow-glow)]"
+          style={
+            {
+              "--spark-x": `${(index % 6) * 34 - 86}px`,
+              "--spark-y": `${-130 - (index % 5) * 22}px`,
+              animationDelay: `${index * 38}ms`,
+            } as React.CSSProperties
+          }
+        />
+      ))}
+      <div className="ascension-toast absolute left-1/2 top-[20%] -translate-x-1/2 rounded-full border border-primary/45 bg-background/70 px-6 py-4 text-center shadow-[var(--shadow-aura)] backdrop-blur-2xl">
+        <p className="text-sm font-bold uppercase tracking-[0.22em] text-primary">
+          {celebration.leveledUp ? "Ascension Level Up" : "Quest Complete"}
+        </p>
+        <p className="mt-1 text-2xl font-black text-foreground">
+          +{celebration.xp} glow {celebration.leveledUp ? `• Level ${ascensionLevel}` : ""}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function MovementHud({
+  ascensionLevel,
+  glowEarned,
+  isMuted,
+  onToggleMute,
+}: {
+  ascensionLevel: number;
+  glowEarned: number;
+  isMuted: boolean;
+  onToggleMute: () => void;
+}) {
+  return (
+    <div className="absolute left-4 top-4 z-30 grid gap-3">
+      <div className="sanctuary-panel rounded-2xl border border-primary/30 p-3 shadow-[var(--shadow-soft)]">
+        <div className="flex items-center gap-3">
+          <div className="grid h-11 w-11 place-items-center rounded-full bg-primary text-primary-foreground shadow-[var(--shadow-glow)]">
+            {ascensionLevel}
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">Ascension</p>
+            <p className="text-sm font-semibold text-foreground">
+              {glowEarned.toLocaleString()} glow
+            </p>
+          </div>
+          <button
+            onClick={onToggleMute}
+            className="ml-2 grid h-9 w-9 place-items-center rounded-full border border-border/60 bg-background/35 text-foreground"
+            aria-label={isMuted ? "Unmute sound cues" : "Mute sound cues"}
+          >
+            {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          </button>
+        </div>
+      </div>
+      <div className="sanctuary-panel hidden rounded-2xl border border-border/60 p-3 shadow-[var(--shadow-soft)] md:block">
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+          <Footprints className="h-4 w-4 text-primary" /> Move
+        </div>
+        <div className="mt-2 grid grid-cols-3 gap-1 text-xs font-bold text-muted-foreground">
+          <span />
+          <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
+            W
+          </kbd>
+          <span />
+          <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
+            A
+          </kbd>
+          <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
+            S
+          </kbd>
+          <kbd className="rounded-md border border-border/50 bg-background/45 px-2 py-1 text-center">
+            D
+          </kbd>
+        </div>
       </div>
     </div>
   );
@@ -804,6 +987,8 @@ function WorldPanel({
   selectedTree,
   zoneQuests,
   onBack,
+  completedQuests,
+  onCompleteQuest,
   onSelect,
 }: {
   activeZone: ZoneKey;
@@ -811,35 +996,12 @@ function WorldPanel({
   selectedTree: (typeof skillTrees)[number];
   zoneQuests: typeof allQuests;
   onBack: () => void;
+  completedQuests: Set<string>;
+  onCompleteQuest: (quest: Quest) => void;
   onSelect: (zone: ZoneKey) => void;
 }) {
   if (activeZone === "overview" || !selectedZone) {
-    return (
-      <aside className="sanctuary-panel absolute bottom-4 left-4 right-4 z-30 rounded-[2rem] border border-border/60 p-5 shadow-[var(--shadow-aura)] lg:bottom-6 lg:left-auto lg:right-6 lg:w-[24rem]">
-        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">
-          Arrival Terrace
-        </p>
-        <h2 className="mt-2 text-2xl font-bold text-foreground">
-          Move through the marble sanctuary.
-        </h2>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Walk with WASD or tap a glowing destination. Each temple area opens quests that strengthen
-          your skill tree.
-        </p>
-        <div className="mt-5 grid gap-2">
-          {zones.map((zone) => (
-            <button
-              key={zone.key}
-              onClick={() => onSelect(zone.key)}
-              className="flex items-center justify-between rounded-2xl border border-border/50 bg-background/35 px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:bg-secondary/60"
-            >
-              <span>{zone.label}</span>
-              <zone.Icon className="h-4 w-4 text-primary" />
-            </button>
-          ))}
-        </div>
-      </aside>
-    );
+    return null;
   }
 
   return (
@@ -877,20 +1039,34 @@ function WorldPanel({
         </div>
       </div>
       <div className="mt-5 grid gap-3">
-        {(zoneQuests.length ? zoneQuests : allQuests.slice(0, 2)).map((quest) => (
-          <div
-            key={quest.title}
-            className="rounded-2xl border border-border/60 bg-background/42 p-4"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <p className="font-semibold text-foreground">{quest.title}</p>
-              <span className="shrink-0 rounded-full bg-primary/15 px-2 py-1 text-xs font-bold text-primary">
-                {quest.xp} XP
-              </span>
+        {(zoneQuests.length ? zoneQuests : allQuests.slice(0, 2)).map((quest) => {
+          const isComplete = completedQuests.has(quest.title);
+          return (
+            <div
+              key={quest.title}
+              className={`rounded-2xl border p-4 transition-all ${isComplete ? "border-primary/55 bg-primary/15 shadow-[var(--shadow-glow)]" : "border-border/60 bg-background/42"}`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <p className="font-semibold text-foreground">{quest.title}</p>
+                <span className="shrink-0 rounded-full bg-primary/15 px-2 py-1 text-xs font-bold text-primary">
+                  {quest.xp} XP
+                </span>
+              </div>
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <p className="text-sm text-muted-foreground">
+                  {isComplete ? "Completed" : quest.status}
+                </p>
+                <button
+                  onClick={() => onCompleteQuest(quest)}
+                  disabled={isComplete}
+                  className="rounded-full bg-primary px-3 py-2 text-xs font-bold text-primary-foreground shadow-[var(--shadow-soft)] transition-transform hover:scale-[1.03] disabled:cursor-default disabled:bg-secondary disabled:text-secondary-foreground"
+                >
+                  {isComplete ? "Claimed" : "Complete"}
+                </button>
+              </div>
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">{quest.status}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <div className="mt-5 grid grid-cols-2 gap-3">
         <Link
