@@ -13,7 +13,8 @@ export const Route = createFileRoute("/sanctuary")({
       { property: "og:title", content: "Interactive Floating Sanctuary — Ascend" },
       {
         property: "og:description",
-        content: "Explore a third-person celestial sanctuary with avatar movement, quests, and holistic skill trees.",
+        content:
+          "Explore a third-person celestial sanctuary with avatar movement, quests, and holistic skill trees.",
       },
     ],
   }),

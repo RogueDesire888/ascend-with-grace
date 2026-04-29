@@ -1,69 +1,68 @@
-Build a more faithful, professional version of the Sanctuary page as a third-person explorable floating temple world inspired by the reference image.
+Rebuild the Sanctuary page into a true 3D floating temple garden world modeled after the uploaded reference: a marble temple on a floating island above clouds, lush flower terraces, cypress trees, waterfalls, and third-person avatar exploration.
 
-1. Replace the current 2.5D island map with an interactive third-person world
-   - Convert `/sanctuary` from a flat click-to-pan scene into a game-like floating sanctuary viewport.
-   - Add a visible player avatar in third-person view near the center/lower center of the screen.
-   - Let the user move the avatar around the sanctuary with keyboard controls on desktop and tap/click destination movement on mobile/desktop.
-   - Keep this first pass performant and reliable in React/CSS, while visually simulating depth, camera tracking, and 3D world space.
+1. Move from 2.5D CSS to a real 3D world
+   - Replace the current simulated 2.5D Sanctuary scene with a WebGL scene using Three.js through React-friendly tooling.
+   - Keep the rest of the app shell and navigation intact.
+   - Make `/sanctuary` feel like entering a premium interactive game world, not a dashboard.
 
-2. Make the world look much closer to the image reference
-   - Rebuild the sanctuary composition around a floating marble island with:
-     - central white/gold temple
-     - stepped stairs and platform terraces
-     - floating gardens and pink/green botanical zones
-     - waterfalls falling through clouds
-     - soft cloud sea below the island
-     - luminous celestial sky and sunlit mist
-     - glowing portals placed around the temple grounds
-   - Increase visual fidelity with layered perspective, shadows, atmospheric haze, and foreground/background parallax.
-   - Keep the style premium, cinematic, and professional rather than cartoonish.
+2. Build the floating island composition from the reference image
+   - Create a large suspended rock island with a tapered underside.
+   - Add layered garden terraces around the island edge.
+   - Add marble staircases rising toward the temple entrance.
+   - Add a central classical white-marble temple with columns, pediment, roof depth, and soft gold highlights.
+   - Add lush garden details: flower beds, rose clusters, greenery, hanging vines, planters, and tall cypress-like trees.
+   - Add multiple waterfalls spilling off the island into the cloud layer below.
+   - Add a luminous cloudscape sky with soft daylight, atmospheric fog, and depth haze.
 
-3. Add a third-person camera feel
-   - Implement a camera/world transform driven by the avatar position.
-   - Keep the avatar fixed near the lower-middle of the viewport while the sanctuary world moves behind it.
-   - Add a smooth cinematic landing state: after clicking Enter, the camera flies down from the clouds, approaches the island, then places the avatar at the arrival terrace.
-   - After landing, switch into free movement mode.
+3. Add third-person avatar exploration
+   - Add a visible player avatar in third-person view.
+   - Use a follow camera behind and above the avatar.
+   - Support keyboard movement on desktop.
+   - Support click/tap-to-move destinations for users who do not use keyboard controls.
+   - Restrict movement to the island’s walkable paths, stairs, and terraces.
+   - Add smooth camera easing so movement feels premium and cinematic.
 
-4. Add movement and interaction zones
-   - Define walkable coordinates for key sanctuary destinations:
-     - Herbal Garden
-     - Energy Temple
-     - Movement Terrace
-     - Healing Springs
-     - Spirit Observatory
-   - Add glowing world markers that become active when the avatar is near them.
-   - Clicking/tapping a marker can auto-walk the avatar to that destination.
-   - Desktop controls will support WASD/arrow-key movement.
-   - Add a small on-screen movement hint/control cluster that does not overwhelm the scene.
+4. Add a cinematic landing sequence
+   - Start high in the clouds looking at the floating island from a distance.
+   - On “Enter Sanctuary,” animate the camera flying toward the island, descending through clouds, and landing behind the avatar near the base of the stairs.
+   - After landing, transition into free third-person movement.
+   - Respect reduced-motion settings with a polished shortened transition.
 
-5. Connect world locations to skill growth content
-   - When the avatar reaches a location, open a polished in-world information panel for that zone.
-   - Reuse the existing `skillTrees`, `dailyQuests`, `weeklyQuests`, and `mainQuests` data.
-   - Each zone panel will show:
-     - related skill tree
-     - level and progress
-     - active quests for that tree
-     - buttons to view Quests or Skill Tree
-   - Make the panel feel like a sanctuary interface overlay, not a generic dashboard card.
+5. Turn sanctuary areas into explorable quest locations
+   - Place interactive destination zones throughout the 3D island:
+     - Herbal Garden among flowers and planters
+     - Energy Temple at the main marble temple
+     - Movement Terrace on an open garden platform
+     - Healing Springs beside waterfalls
+     - Spirit Observatory at a sky-facing outlook
+   - When the avatar approaches a zone, show a refined in-world prompt.
+   - Selecting a zone opens the existing skill-tree and quest panel using current app data.
+   - Keep quest completion presentational only unless backend functionality is requested later.
 
-6. Improve responsive behavior
-   - Desktop: third-person camera with keyboard movement and click-to-move markers.
-   - Mobile/tablet: larger touch targets, tap-to-walk zone controls, and a compact bottom panel.
-   - Ensure text and controls do not overlap the world, avatar, or navigation at the current preview size.
+6. Premium visual polish
+   - Use physically-inspired materials: marble, soft stone, greenery, flowers, mist, and water.
+   - Add sun beams, bloom-like glow, soft shadows, fog, and atmospheric layering.
+   - Use the uploaded image as the art direction reference, not a flat static replacement for the experience.
+   - Make the world bright, ethereal, luxurious, and professional.
+   - Avoid cartoon proportions; prioritize elegant realism within browser performance limits.
 
 7. Technical implementation
-   - Update `src/components/platform/SanctuaryWorld.tsx` substantially.
-   - Extend `src/styles.css` with dedicated utilities/keyframes for:
-     - third-person camera motion
-     - cloud sea
-     - waterfalls
-     - floating island depth
-     - avatar aura and idle animation
-     - glowing interaction portals
-   - Keep route metadata in `src/routes/sanctuary.tsx` aligned with the new experience.
-   - No backend, persistence, account logic, or real quest completion logic will be added in this pass.
+   - Add the needed 3D dependency stack, likely `three`, `@react-three/fiber`, and `@react-three/drei`.
+   - Create a focused 3D Sanctuary component, likely under `src/components/platform/SanctuaryWorld3D.tsx`.
+   - Keep UI overlays and panels in React/HTML for crisp text and accessible buttons.
+   - Update `src/components/platform/SanctuaryWorld.tsx` or route wiring to use the new 3D version.
+   - Extend `src/styles.css` only for overlay styling, loading states, and mobile controls.
+   - Keep route metadata aligned with the new 3D experience.
+
+8. Performance and responsive behavior
+   - Use procedural geometry and lightweight repeated objects rather than huge imported models.
+   - Keep the scene interactive on the current preview size and mobile.
+   - Add loading/fallback state so the page never appears blank.
+   - Tune camera framing for desktop and mobile.
 
 Validation
-   - Verify `/sanctuary` renders without runtime errors.
-   - Check the landing sequence, keyboard movement, click/tap movement, proximity panels, and navigation links.
-   - Check desktop and mobile layout, especially the current 1000x648 preview size.
+   - Verify `/sanctuary` loads without runtime errors.
+   - Test the entry landing sequence.
+   - Test keyboard movement and click/tap destination movement.
+   - Test at least one quest zone interaction.
+   - Capture desktop and mobile screenshots to confirm the world is visible, framed correctly, and feels close to the uploaded reference.
