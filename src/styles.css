@@ -281,13 +281,18 @@
 
   .sanctuary-panel {
     background:
-      linear-gradient(135deg, color-mix(in oklab, var(--card) 78%, white 9%), var(--card)),
+      linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--card) 62%, white 18%),
+        color-mix(in oklab, var(--card) 68%, var(--foreground) 8%)
+      ),
       radial-gradient(
         ellipse at 20% 0%,
-        color-mix(in oklab, var(--sun-glow) 14%, transparent),
+        color-mix(in oklab, var(--sun-glow) 22%, transparent),
         transparent 42%
       );
     box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(22px);
   }
 
   .marble-sheen {
@@ -326,6 +331,11 @@
     inset: 0;
     min-height: 100%;
     touch-action: none;
+    transition: opacity 900ms ease;
+  }
+
+  .ascension-celebrating {
+    animation: sanctuary-glow-ramp 2.6s ease-out both;
   }
 
   .sanctuary-clouds {
@@ -404,6 +414,42 @@
     animation: shadow-pulse 2.6s ease-in-out infinite;
   }
 
+  .ascension-bloom {
+    animation: ascension-bloom 2.6s ease-out both;
+    background:
+      radial-gradient(
+        ellipse at 50% 62%,
+        color-mix(in oklab, var(--sun-glow) 50%, transparent),
+        transparent 24%
+      ),
+      radial-gradient(
+        ellipse at 50% 45%,
+        color-mix(in oklab, var(--foreground) 28%, transparent),
+        transparent 56%
+      );
+  }
+
+  .ascension-sweep {
+    animation: ascension-sweep 1.35s ease-out both;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      color-mix(in oklab, var(--foreground) 32%, transparent),
+      color-mix(in oklab, var(--sun-glow) 35%, transparent),
+      transparent
+    );
+    filter: blur(10px);
+    transform: skewX(-12deg);
+  }
+
+  .spark-trail {
+    animation: spark-trail 1.55s cubic-bezier(0.18, 0.72, 0.2, 1) forwards;
+  }
+
+  .ascension-toast {
+    animation: ascension-toast 2.25s ease-out both;
+  }
+
   .waterfall {
     background:
       linear-gradient(
@@ -465,11 +511,91 @@
     }
   }
 
+  @keyframes sanctuary-glow-ramp {
+    0% {
+      box-shadow: var(--shadow-aura);
+      filter: saturate(1);
+    }
+    28% {
+      box-shadow:
+        0 0 72px color-mix(in oklab, var(--sun-glow) 58%, transparent),
+        0 0 150px color-mix(in oklab, var(--foreground) 28%, transparent);
+      filter: saturate(1.25) brightness(1.08);
+    }
+    100% {
+      box-shadow: var(--shadow-aura);
+      filter: saturate(1);
+    }
+  }
+
+  @keyframes ascension-bloom {
+    0% {
+      opacity: 0;
+      transform: scale(0.82);
+    }
+    22% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.18);
+    }
+  }
+
+  @keyframes ascension-sweep {
+    0% {
+      opacity: 0;
+      translate: 0 0;
+    }
+    24% {
+      opacity: 0.9;
+    }
+    100% {
+      opacity: 0;
+      translate: 360% 0;
+    }
+  }
+
+  @keyframes spark-trail {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, 0) scale(0.55);
+    }
+    18% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(calc(-50% + var(--spark-x)), var(--spark-y)) scale(1.25);
+    }
+  }
+
+  @keyframes ascension-toast {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, 14px) scale(0.92);
+    }
+    16%,
+    76% {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -12px) scale(0.98);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .floating-island,
     .sanctuary-portal,
     .third-person-avatar,
-    .avatar-shadow {
+    .avatar-shadow,
+    .ascension-celebrating,
+    .ascension-bloom,
+    .ascension-sweep,
+    .spark-trail,
+    .ascension-toast {
       animation: none;
     }
 
