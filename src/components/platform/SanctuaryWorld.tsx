@@ -538,12 +538,12 @@ function FloatingTempleIsland({
 }) {
   return (
     <group>
-      <mesh position={[0, -1.65, 0]} rotation={[0, 0, 0]} castShadow receiveShadow>
-        <coneGeometry args={[8.8, 5.2, 22, 6]} />
+      <mesh position={[0, -1.78, 0]} rotation={[0, 0, 0]} castShadow receiveShadow>
+        <coneGeometry args={[9.15, 5.55, 28, 7]} />
         <meshStandardMaterial color="#80776d" roughness={0.88} metalness={0.01} />
       </mesh>
-      <mesh position={[0, -1.25, 0]} castShadow receiveShadow>
-        <coneGeometry args={[7.4, 4.7, 22, 4]} />
+      <mesh position={[0, -1.36, 0.1]} castShadow receiveShadow>
+        <coneGeometry args={[7.55, 4.9, 22, 4]} />
         <meshStandardMaterial color="#5f594f" roughness={0.92} metalness={0.01} />
       </mesh>
       <mesh position={[0, 0, 0]} receiveShadow onClick={onGroundClick}>
@@ -556,8 +556,10 @@ function FloatingTempleIsland({
       </mesh>
 
       <GardenTerraces onGroundClick={onGroundClick} />
+      <MarbleWalkways onGroundClick={onGroundClick} />
       <Temple onGroundClick={onGroundClick} />
       <Staircase onGroundClick={onGroundClick} />
+      <TempleBalustrades />
       <Waterfalls />
       <CypressGrove />
       <FlowerBeds />
