@@ -44,8 +44,10 @@ type Zone = {
 
 const allQuests = [...dailyQuests, ...weeklyQuests, ...mainQuests];
 const START_POSITION: Point = { x: 0, z: 5.8 };
-const WALK_RADIUS_X = 8.4;
-const WALK_RADIUS_Z = 6.2;
+const WALK_RADIUS_X = 8.85;
+const WALK_RADIUS_Z = 7.05;
+const WALK_CENTER_Z = 0.45;
+const SURFACE_Y = 0.44;
 
 const zones: Zone[] = [
   {
@@ -100,14 +102,43 @@ function distance(a: Point, b: Point) {
 }
 
 function clampPosition(point: Point): Point {
-  const normalized = point.x ** 2 / WALK_RADIUS_X ** 2 + (point.z - 0.8) ** 2 / WALK_RADIUS_Z ** 2;
+  const normalized =
+    point.x ** 2 / WALK_RADIUS_X ** 2 + (point.z - WALK_CENTER_Z) ** 2 / WALK_RADIUS_Z ** 2;
   if (normalized <= 1) return point;
 
-  const angle = Math.atan2((point.z - 0.8) / WALK_RADIUS_Z, point.x / WALK_RADIUS_X);
+  const angle = Math.atan2((point.z - WALK_CENTER_Z) / WALK_RADIUS_Z, point.x / WALK_RADIUS_X);
   return {
     x: Math.cos(angle) * WALK_RADIUS_X,
-    z: 0.8 + Math.sin(angle) * WALK_RADIUS_Z,
+    z: WALK_CENTER_Z + Math.sin(angle) * WALK_RADIUS_Z,
   };
+}
+
+function clamp01(value: number) {
+  return Math.min(1, Math.max(0, value));
+}
+
+function getTerrainHeight(point: Point) {
+  const stairLane = Math.abs(point.x) < 2.55 && point.z <= 5.15 && point.z >= -1.45;
+  if (stairLane) {
+    const stairProgress = clamp01((5.15 - point.z) / 6.6);
+    return SURFACE_Y + stairProgress * 1.04;
+  }
+
+  const templeTerrace = Math.abs(point.x) < 5.35 && point.z < -1.45 && point.z > -5.75;
+  if (templeTerrace) return SURFACE_Y + 1.08;
+
+  const sideTerrace =
+    Math.abs(point.x) > 4.25 && Math.abs(point.x) < 7.15 && point.z > -2.85 && point.z < 2.6;
+  if (sideTerrace) return SURFACE_Y + 0.24;
+
+  const springTerrace = Math.abs(point.x) < 5.25 && point.z > 3.45;
+  if (springTerrace) return SURFACE_Y + 0.18;
+
+  return SURFACE_Y;
+}
+
+function getAvatarWorldPosition(point: Point) {
+  return new THREE.Vector3(point.x, getTerrainHeight(point) + 0.13, point.z);
 }
 
 export function SanctuaryWorld() {
@@ -124,6 +155,8 @@ export function SanctuaryWorld() {
   const [isMuted, setIsMuted] = useState(false);
   const audioContextRef = useRef<AudioContext | null>(null);
   const keysPressed = useRef(new Set<string>());
+  const lastAvatarPosition = useRef<Point>(START_POSITION);
+  const avatarDirection = useRef(0);
 
   useEffect(() => setIsMounted(true), []);
 
@@ -184,10 +217,16 @@ export function SanctuaryWorld() {
 
         if (velocity.x || velocity.z) {
           const magnitude = Math.hypot(velocity.x, velocity.z) || 1;
-          return clampPosition({
+          const nextPosition = clampPosition({
             x: current.x + (velocity.x / magnitude) * 0.085 * delta,
             z: current.z + (velocity.z / magnitude) * 0.085 * delta,
           });
+          lastAvatarPosition.current = current;
+          avatarDirection.current = Math.atan2(
+            nextPosition.x - current.x,
+            nextPosition.z - current.z,
+          );
+          return nextPosition;
         }
 
         if (targetPosition) {
@@ -198,10 +237,16 @@ export function SanctuaryWorld() {
             setTargetPosition(null);
             return current;
           }
-          return clampPosition({
+          const nextPosition = clampPosition({
             x: current.x + (dx / remaining) * Math.min(remaining, 0.075 * delta),
             z: current.z + (dz / remaining) * Math.min(remaining, 0.075 * delta),
           });
+          lastAvatarPosition.current = current;
+          avatarDirection.current = Math.atan2(
+            nextPosition.x - current.x,
+            nextPosition.z - current.z,
+          );
+          return nextPosition;
         }
 
         return current;
@@ -309,7 +354,7 @@ export function SanctuaryWorld() {
           <img
             src={floatingTempleSanctuary}
             alt="Floating marble temple sanctuary above luminous clouds"
-            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-105 opacity-75 blur-[1px]" : "scale-100 opacity-100 blur-0"}`}
+            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-105 opacity-48 blur-[1px]" : "scale-100 opacity-100 blur-0"}`}
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--background)_10%,transparent)_42%,color-mix(in_oklab,var(--background)_22%,transparent))]" />
           {isMounted ? (
@@ -318,13 +363,14 @@ export function SanctuaryWorld() {
               shadows
               dpr={[1, 1.65]}
               camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 120 }}
-              style={{ opacity: hasEntered ? 0.72 : 0.18 }}
+              style={{ opacity: hasEntered ? 0.94 : 0.2 }}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             >
               <Suspense fallback={null}>
                 <SanctuaryScene
                   hasEntered={hasEntered}
                   avatarPosition={avatarPosition}
+                  avatarDirection={avatarDirection.current}
                   activeZone={activeZone}
                   onWalkTo={walkTo}
                   onMoveTo={(point) => {
@@ -409,12 +455,14 @@ export function SanctuaryWorld() {
 function SanctuaryScene({
   hasEntered,
   avatarPosition,
+  avatarDirection,
   activeZone,
   onWalkTo,
   onMoveTo,
 }: {
   hasEntered: boolean;
   avatarPosition: Point;
+  avatarDirection: number;
   activeZone: ZoneKey;
   onWalkTo: (zone: Zone) => void;
   onMoveTo: (point: Point) => void;
@@ -426,11 +474,15 @@ function SanctuaryScene({
     const elapsed = clock.getElapsedTime();
     clockRef.current = elapsed;
 
-    const avatar = new THREE.Vector3(avatarPosition.x, 0.52, avatarPosition.z);
+    const avatar = getAvatarWorldPosition(avatarPosition);
     const intro = Math.min(1, elapsed / 3.6);
     const eased = 1 - Math.pow(1 - intro, 3);
     const introCamera = new THREE.Vector3(0, 13.5 - eased * 6.1, 24 - eased * 10.2);
-    const followCamera = new THREE.Vector3(avatarPosition.x, 4.9, avatarPosition.z + 9.2);
+    const followCamera = new THREE.Vector3(
+      avatarPosition.x,
+      avatar.y + 4.25,
+      avatarPosition.z + 8.25,
+    );
     const desiredCamera = hasEntered ? followCamera : introCamera;
     const lookTarget = hasEntered
       ? avatar.clone().add(new THREE.Vector3(0, 1.25, -3.8))
@@ -441,7 +493,11 @@ function SanctuaryScene({
 
     if (avatarRef.current) {
       avatarRef.current.position.lerp(avatar, 0.34);
-      avatarRef.current.rotation.y = Math.sin(elapsed * 1.1) * 0.05;
+      avatarRef.current.rotation.y = THREE.MathUtils.lerp(
+        avatarRef.current.rotation.y,
+        avatarDirection,
+        0.16,
+      );
     }
   });
 
@@ -494,26 +550,33 @@ function FloatingTempleIsland({
 }) {
   return (
     <group>
-      <mesh position={[0, -1.65, 0]} rotation={[0, 0, 0]} castShadow receiveShadow>
-        <coneGeometry args={[8.8, 5.2, 22, 6]} />
+      <mesh position={[0, -1.78, 0]} rotation={[0, 0, 0]} castShadow receiveShadow>
+        <coneGeometry args={[9.15, 5.55, 28, 7]} />
         <meshStandardMaterial color="#80776d" roughness={0.88} metalness={0.01} />
       </mesh>
-      <mesh position={[0, -1.25, 0]} castShadow receiveShadow>
-        <coneGeometry args={[7.4, 4.7, 22, 4]} />
+      <mesh position={[0, -1.36, 0.1]} castShadow receiveShadow>
+        <coneGeometry args={[7.55, 4.9, 22, 4]} />
         <meshStandardMaterial color="#5f594f" roughness={0.92} metalness={0.01} />
       </mesh>
       <mesh position={[0, 0, 0]} receiveShadow onClick={onGroundClick}>
         <cylinderGeometry args={[8.7, 8.1, 0.72, 96]} />
         <meshStandardMaterial color="#8cae77" roughness={0.78} />
       </mesh>
-      <mesh position={[0, 0.39, 0]} receiveShadow onClick={onGroundClick}>
+      <mesh
+        position={[0, 0.39, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        receiveShadow
+        onClick={onGroundClick}
+      >
         <circleGeometry args={[8.25, 96]} />
         <meshStandardMaterial color="#a9bf91" roughness={0.74} />
       </mesh>
 
-      <GardenTerraces />
-      <Temple />
-      <Staircase />
+      <GardenTerraces onGroundClick={onGroundClick} />
+      <MarbleWalkways onGroundClick={onGroundClick} />
+      <Temple onGroundClick={onGroundClick} />
+      <Staircase onGroundClick={onGroundClick} />
+      <TempleBalustrades />
       <Waterfalls />
       <CypressGrove />
       <FlowerBeds />
@@ -522,41 +585,97 @@ function FloatingTempleIsland({
   );
 }
 
-function Temple() {
-  const columns = Array.from({ length: 8 }, (_, index) => -3.5 + index);
+function MarbleWalkways({
+  onGroundClick,
+}: {
+  onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
+}) {
+  return (
+    <group position={[0, 0.73, 0]}>
+      <mesh position={[0, 0, 1.95]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[2.95, 0.08, 6.95]} />
+        <meshStandardMaterial color="#f8ecd6" roughness={0.42} metalness={0.05} />
+      </mesh>
+      <mesh position={[0, 0.03, -2.25]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[6.8, 0.09, 1.65]} />
+        <meshStandardMaterial color="#fff4df" roughness={0.36} metalness={0.07} />
+      </mesh>
+      {[-1, 1].map((side) => (
+        <mesh
+          key={side}
+          position={[side * 4.85, 0.04, -0.12]}
+          receiveShadow
+          castShadow
+          onClick={onGroundClick}
+        >
+          <boxGeometry args={[2.75, 0.08, 5.45]} />
+          <meshStandardMaterial color="#f3e5cf" roughness={0.48} metalness={0.04} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+function TempleBalustrades() {
+  const rails = [-1, 1];
+  return (
+    <group position={[0, 1.08, 1.58]}>
+      {rails.map((side) => (
+        <group key={side} position={[side * 2.12, 0, 0]}>
+          <mesh position={[0, 0.36, 0]} castShadow>
+            <boxGeometry args={[0.14, 0.24, 5.9]} />
+            <meshStandardMaterial color="#fff4df" roughness={0.34} metalness={0.08} />
+          </mesh>
+          {Array.from({ length: 8 }).map((_, index) => (
+            <mesh key={index} position={[0, 0.13, 2.65 - index * 0.74]} castShadow>
+              <cylinderGeometry args={[0.055, 0.07, 0.5, 14]} />
+              <meshStandardMaterial color="#f3e4cd" roughness={0.42} metalness={0.05} />
+            </mesh>
+          ))}
+        </group>
+      ))}
+    </group>
+  );
+}
+
+function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEvent>) => void }) {
+  const columns = Array.from({ length: 10 }, (_, index) => -4.05 + index * 0.9);
+  const sideColumns = [-4.55, 4.55];
 
   return (
-    <group position={[0, 0.7, -4.45]} scale={[1.16, 1.14, 1.08]}>
-      <mesh position={[0, 0.13, 0]} receiveShadow castShadow>
-        <boxGeometry args={[8.6, 0.28, 4.6]} />
-        <meshStandardMaterial color="#f2eadc" roughness={0.42} metalness={0.08} />
+    <group position={[0, 1.32, -4.05]} scale={[1.12, 1.08, 1.04]}>
+      <mesh position={[0, -0.18, 0.1]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[10.7, 0.36, 5.35]} />
+        <meshStandardMaterial color="#f9efd9" roughness={0.38} metalness={0.07} />
       </mesh>
-      <mesh position={[0, 2.25, -0.15]} castShadow receiveShadow>
-        <boxGeometry args={[8.2, 3.8, 3.55]} />
-        <meshStandardMaterial
-          color="#d9d0c1"
-          roughness={0.52}
-          metalness={0.04}
-          transparent
-          opacity={0.58}
-        />
+      <mesh position={[0, 0.08, 0.06]} receiveShadow castShadow onClick={onGroundClick}>
+        <boxGeometry args={[9.7, 0.24, 4.62]} />
+        <meshStandardMaterial color="#fff8ea" roughness={0.33} metalness={0.1} />
       </mesh>
-      <mesh position={[0, 4.3, 0.04]} castShadow>
-        <boxGeometry args={[9.1, 0.42, 4.8]} />
-        <meshStandardMaterial color="#fff3df" roughness={0.38} metalness={0.08} />
+      <mesh position={[0, 2.18, -0.62]} castShadow receiveShadow>
+        <boxGeometry args={[7.55, 3.55, 3.15]} />
+        <meshStandardMaterial color="#eadfcd" roughness={0.5} metalness={0.04} />
       </mesh>
-      <mesh position={[0, 4.78, 0]} rotation={[0, Math.PI / 4, 0]} castShadow>
-        <cylinderGeometry args={[3.75, 4.35, 1.15, 4]} />
-        <meshStandardMaterial color="#eadcc7" roughness={0.42} metalness={0.08} />
+      <mesh position={[0, 2.18, 1.08]} castShadow receiveShadow>
+        <boxGeometry args={[8.35, 3.3, 0.38]} />
+        <meshStandardMaterial color="#f7ecd8" roughness={0.4} metalness={0.08} />
       </mesh>
-      <mesh position={[0, 4.95, 2.5]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <cylinderGeometry args={[0, 1.25, 8.4, 3]} />
-        <meshStandardMaterial color="#f8ecd7" roughness={0.4} metalness={0.08} />
+      <mesh position={[0, 4.08, 0.05]} castShadow>
+        <boxGeometry args={[9.2, 0.42, 4.95]} />
+        <meshStandardMaterial color="#fff4df" roughness={0.32} metalness={0.1} />
+      </mesh>
+      <mesh position={[0, 4.62, 0.08]} rotation={[0, Math.PI / 4, 0]} castShadow>
+        <cylinderGeometry args={[3.95, 4.55, 1.04, 4]} />
+        <meshStandardMaterial color="#ead9bf" roughness={0.38} metalness={0.08} />
+      </mesh>
+      <mesh position={[0, 4.96, 1.72]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0, 1.12, 8.85, 3]} />
+        <meshStandardMaterial color="#fff0d5" roughness={0.36} metalness={0.08} />
       </mesh>
       {columns.map((x) => (
-        <group key={x} position={[x, 1.96, 2.32]}>
+        <group key={x} position={[x, 1.86, 1.65]}>
           <mesh castShadow receiveShadow>
-            <cylinderGeometry args={[0.24, 0.29, 3.45, 32]} />
+            <cylinderGeometry args={[0.2, 0.27, 3.32, 36]} />
             <meshStandardMaterial color="#fff7ea" roughness={0.34} metalness={0.08} />
           </mesh>
           <mesh position={[0, -1.75, 0]} castShadow>
@@ -569,25 +688,46 @@ function Temple() {
           </mesh>
         </group>
       ))}
-      <mesh position={[0, 2.1, 2.06]} castShadow receiveShadow>
-        <boxGeometry args={[1.1, 2.3, 0.18]} />
-        <meshStandardMaterial color="#352b28" roughness={0.55} transparent opacity={0.52} />
+      {sideColumns.map((x) => (
+        <group key={x} position={[x, 1.46, -0.2]}>
+          <mesh castShadow receiveShadow>
+            <cylinderGeometry args={[0.16, 0.22, 2.45, 28]} />
+            <meshStandardMaterial color="#f8eedb" roughness={0.38} metalness={0.08} />
+          </mesh>
+          <mesh position={[0, 1.42, 0]} castShadow>
+            <sphereGeometry args={[0.22, 18, 12]} />
+            <meshStandardMaterial color="#ffe8a8" emissive="#f1bb45" emissiveIntensity={0.22} />
+          </mesh>
+        </group>
+      ))}
+      <mesh position={[0, 1.98, 1.9]} castShadow receiveShadow>
+        <boxGeometry args={[1.28, 2.45, 0.2]} />
+        <meshStandardMaterial color="#211b1a" roughness={0.58} transparent opacity={0.74} />
       </mesh>
-      <mesh position={[0, 5.52, 2.45]}>
-        <torusGeometry args={[0.42, 0.035, 12, 48]} />
+      <pointLight position={[0, 2.25, 1.76]} intensity={4.2} color="#ffd982" distance={5.6} />
+      <mesh position={[0, 5.38, 1.58]}>
+        <torusGeometry args={[0.58, 0.045, 14, 72]} />
         <meshStandardMaterial
           color="#d8b86b"
-          emissive="#8f6a25"
-          emissiveIntensity={0.25}
-          metalness={0.55}
-          roughness={0.22}
+          emissive="#f2bd4b"
+          emissiveIntensity={0.55}
+          metalness={0.58}
+          roughness={0.2}
         />
+      </mesh>
+      <mesh position={[0, 5.4, 1.58]}>
+        <sphereGeometry args={[0.09, 18, 12]} />
+        <meshStandardMaterial color="#fff4bd" emissive="#ffd86b" emissiveIntensity={1.2} />
       </mesh>
     </group>
   );
 }
 
-function Staircase() {
+function Staircase({
+  onGroundClick,
+}: {
+  onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
+}) {
   return (
     <group position={[0, 0.58, 0.85]}>
       {Array.from({ length: 14 }).map((_, index) => (
@@ -596,6 +736,7 @@ function Staircase() {
           position={[0, index * 0.08, 4.15 - index * 0.46]}
           receiveShadow
           castShadow
+          onClick={onGroundClick}
         >
           <boxGeometry args={[2.9 + index * 0.18, 0.13, 0.42]} />
           <meshStandardMaterial
@@ -609,7 +750,11 @@ function Staircase() {
   );
 }
 
-function GardenTerraces() {
+function GardenTerraces({
+  onGroundClick,
+}: {
+  onGroundClick: (event: ThreeEvent<PointerEvent>) => void;
+}) {
   return (
     <group position={[0, 0.62, 0]}>
       {[
@@ -620,7 +765,14 @@ function GardenTerraces() {
         [-5.1, -2.2, 1.7, 0.8],
         [5.2, -2.25, 1.7, 0.8],
       ].map(([x, z, sx, sz], index) => (
-        <mesh key={index} position={[x, 0.05, z]} scale={[sx, 1, sz]} receiveShadow castShadow>
+        <mesh
+          key={index}
+          position={[x, 0.05, z]}
+          scale={[sx, 1, sz]}
+          receiveShadow
+          castShadow
+          onClick={onGroundClick}
+        >
           <cylinderGeometry args={[1, 1.08, 0.34, 48]} />
           <meshStandardMaterial color={index % 2 ? "#87a96f" : "#789a68"} roughness={0.76} />
         </mesh>
