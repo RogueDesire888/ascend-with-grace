@@ -168,18 +168,24 @@ function damp(current: number, target: number, lambda: number, delta: number) {
 }
 
 function getTerrainHeight(point: Point) {
-  const stairLane = Math.abs(point.x) < 4.7 && point.z <= STAIR_START_Z && point.z >= -2.25;
+  const firstStep = getStairStep(0);
+  const lastStep = getStairStep(STAIR_COUNT - 1);
+  const stairLane =
+    Math.abs(point.x) < STAIR_WIDTH / 2 + 0.25 &&
+    point.z <= firstStep.z + STAIR_STEP_DEPTH / 2 &&
+    point.z >= lastStep.z - STAIR_STEP_DEPTH / 2;
   if (stairLane) {
-    const stairProgress = clamp01(
-      (STAIR_START_Z - point.z) / (STAIR_STEP_DEPTH * (STAIR_COUNT + 1)),
+    const stepIndex = Math.min(
+      STAIR_COUNT - 1,
+      Math.max(0, Math.round((firstStep.z - point.z) / STAIR_STEP_DEPTH)),
     );
-    return SURFACE_Y + stairProgress * 1.56;
+    return getStairStep(stepIndex).y + 0.2;
   }
 
-  const templeTerrace = Math.abs(point.x) < 9.85 && point.z < -2.25 && point.z > -10.95;
-  if (templeTerrace) return SURFACE_Y + 1.5;
+  const templeTerrace = Math.abs(point.x) < 9.85 && point.z < -0.25 && point.z > -10.95;
+  if (templeTerrace) return STAIR_BASE_Y + STAIR_COUNT * STAIR_STEP_RISE + 0.14;
 
-  if (isInTempleInterior(point)) return SURFACE_Y + 1.54;
+  if (isInTempleInterior(point)) return STAIR_BASE_Y + STAIR_COUNT * STAIR_STEP_RISE + 0.16;
 
   const sideTerrace =
     Math.abs(point.x) > 5.85 && Math.abs(point.x) < 13.9 && point.z > -6.95 && point.z < 4.25;
