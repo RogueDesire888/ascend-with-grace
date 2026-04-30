@@ -663,6 +663,7 @@ function SanctuaryScene({
         opacity={0.42}
         color="#fff1ba"
       />
+      <SkyCloudBackdrop />
       <CloudSea />
       <FloatingTempleIsland
         activeZone={activeZone}
@@ -693,6 +694,7 @@ function FloatingTempleIsland({
         <coneGeometry args={[12.9, 5.85, 32, 5]} />
         <meshStandardMaterial color="#615b51" roughness={0.94} metalness={0.01} />
       </mesh>
+      <IslandRockDetail />
       <mesh position={[0, 0, -0.1]} receiveShadow onClick={onGroundClick}>
         <cylinderGeometry args={[14.9, 13.85, 0.84, 160]} />
         <meshStandardMaterial color="#91b982" roughness={0.72} />
@@ -715,10 +717,64 @@ function FloatingTempleIsland({
       <Staircase onGroundClick={onGroundClick} />
       <TempleBalustrades />
       <Waterfalls />
+      <WaterfallMist />
       <CypressGrove />
+      <HangingGardens />
       <FlowerBeds />
       <FlowerUrns />
       <QuestPortals activeZone={activeZone} onWalkTo={onWalkTo} />
+    </group>
+  );
+}
+
+function IslandRockDetail() {
+  const rocks = useMemo(
+    () =>
+      Array.from({ length: 64 }, (_, index) => {
+        const angle = (index / 64) * Math.PI * 2;
+        const radius = 10.4 + (index % 7) * 0.58;
+        const y = -0.95 - (index % 5) * 0.48;
+        const zOffset = index % 3 === 0 ? 1.5 : -0.3;
+        return [
+          Math.cos(angle) * radius,
+          y,
+          Math.sin(angle) * (radius * 0.78) + zOffset,
+          0.45 + (index % 4) * 0.18,
+          angle,
+        ] as const;
+      }),
+    [],
+  );
+
+  return (
+    <group>
+      {rocks.map(([x, y, z, scale, angle], index) => (
+        <mesh
+          key={index}
+          position={[x, y, z]}
+          rotation={[0.15 + (index % 3) * 0.18, angle, -0.12 + (index % 4) * 0.08]}
+          scale={[scale * 1.25, scale * 0.64, scale]}
+          castShadow
+          receiveShadow
+        >
+          <dodecahedronGeometry args={[1, 0]} />
+          <meshStandardMaterial
+            color={index % 2 ? "#9b9285" : "#70695f"}
+            roughness={0.92}
+            metalness={0.01}
+          />
+        </mesh>
+      ))}
+      {Array.from({ length: 8 }).map((_, index) => (
+        <mesh
+          key={`strata-${index}`}
+          position={[0, -0.78 - index * 0.45, 0.6 + index * 0.08]}
+          scale={[1 - index * 0.055, 1, 0.78 - index * 0.04]}
+        >
+          <torusGeometry args={[14.2, 0.025, 6, 160]} />
+          <meshStandardMaterial color="#b4aa9a" roughness={0.82} transparent opacity={0.34} />
+        </mesh>
+      ))}
     </group>
   );
 }
@@ -931,6 +987,7 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
         <cylinderGeometry args={[0, 1.48, 12.4, 3]} />
         <meshStandardMaterial color="#fff0d5" roughness={0.36} metalness={0.08} />
       </mesh>
+      <TempleRelief />
       {columns.map((x) => (
         <group key={x} position={[x, 1.86, 1.65]}>
           <mesh castShadow receiveShadow>
@@ -1007,6 +1064,55 @@ function Temple({ onGroundClick }: { onGroundClick: (event: ThreeEvent<PointerEv
             roughness={0.22}
           />
         </mesh>
+      ))}
+    </group>
+  );
+}
+
+function TempleRelief() {
+  const figures = Array.from({ length: 9 }, (_, index) => -3.75 + index * 0.94);
+
+  return (
+    <group position={[0, 5.68, 2.02]}>
+      <mesh position={[0, -0.08, 0.05]} castShadow>
+        <boxGeometry args={[8.7, 0.08, 0.09]} />
+        <meshStandardMaterial color="#d5bf99" roughness={0.38} metalness={0.18} />
+      </mesh>
+      {figures.map((x, index) => (
+        <group key={x} position={[x, -0.1 + Math.sin(index) * 0.06, 0.12]}>
+          <mesh castShadow>
+            <sphereGeometry args={[0.13, 12, 8]} />
+            <meshStandardMaterial color="#f8e8cc" roughness={0.32} metalness={0.1} />
+          </mesh>
+          <mesh position={[0, -0.2, 0]} rotation={[0, 0, (index % 2 ? -1 : 1) * 0.18]} castShadow>
+            <coneGeometry args={[0.16, 0.45, 8]} />
+            <meshStandardMaterial color="#ead2ad" roughness={0.34} metalness={0.12} />
+          </mesh>
+        </group>
+      ))}
+      {[-1, 1].map((side) => (
+        <group key={side} position={[side * 5.7, 0.06, 0.02]}>
+          <mesh rotation={[0, 0, side * 0.58]} castShadow>
+            <boxGeometry args={[0.08, 0.74, 0.08]} />
+            <meshStandardMaterial
+              color="#d8b86b"
+              emissive="#d29d32"
+              emissiveIntensity={0.12}
+              metalness={0.52}
+              roughness={0.24}
+            />
+          </mesh>
+          <mesh position={[side * 0.18, 0.35, 0]} castShadow>
+            <coneGeometry args={[0.16, 0.45, 5]} />
+            <meshStandardMaterial
+              color="#d8b86b"
+              emissive="#d29d32"
+              emissiveIntensity={0.22}
+              metalness={0.56}
+              roughness={0.2}
+            />
+          </mesh>
+        </group>
       ))}
     </group>
   );
@@ -1233,6 +1339,9 @@ function Waterfalls() {
     [10.6, 0.62, 7.85, 0.62, 4.9],
     [-8.8, 0.98, -9.9, 0.44, 3.6],
     [8.8, 0.98, -9.9, 0.44, 3.6],
+    [-13.45, 0.22, 1.25, 0.42, 4.15],
+    [13.45, 0.22, 1.05, 0.42, 4.15],
+    [0, 0.38, 11.85, 0.7, 6.6],
   ];
 
   return (
@@ -1244,12 +1353,16 @@ function Waterfalls() {
             <meshStandardMaterial
               color="#dff8ff"
               emissive="#bfeeff"
-              emissiveIntensity={0.42}
+              emissiveIntensity={0.62}
               transparent
-              opacity={0.54}
+              opacity={0.66}
               roughness={0.08}
               metalness={0.02}
             />
+          </mesh>
+          <mesh position={[0, height * 0.12, 0]} rotation={[0, 0, Math.sin(index + 2) * 0.12]}>
+            <cylinderGeometry args={[width * 0.18, width * 0.12, height * 0.94, 10, 1, true]} />
+            <meshBasicMaterial color="#ffffff" transparent opacity={0.38} depthWrite={false} />
           </mesh>
           <SceneSparkles
             count={24}
@@ -1260,6 +1373,34 @@ function Waterfalls() {
             opacity={0.5}
           />
         </group>
+      ))}
+    </group>
+  );
+}
+
+function WaterfallMist() {
+  const mist = useMemo(
+    () =>
+      Array.from({ length: 34 }, (_, index) => {
+        const angle = (index / 34) * Math.PI * 2;
+        const radius = 9.8 + (index % 5) * 1.05;
+        return [
+          Math.cos(angle) * radius,
+          -2.75 - (index % 3) * 0.36,
+          Math.sin(angle) * radius + 2.9,
+          0.85 + (index % 4) * 0.22,
+        ] as const;
+      }),
+    [],
+  );
+
+  return (
+    <group>
+      {mist.map(([x, y, z, scale], index) => (
+        <mesh key={index} position={[x, y, z]} scale={[scale * 1.8, scale * 0.34, scale]}>
+          <sphereGeometry args={[1, 14, 8]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.2} depthWrite={false} />
+        </mesh>
       ))}
     </group>
   );
@@ -1278,6 +1419,12 @@ function CypressGrove() {
     [5.4, -10.9, 1.42],
     [-2.6, -11.15, 1.26],
     [2.6, -11.15, 1.26],
+    [-13.2, 0.5, 1.56],
+    [13.2, 0.4, 1.6],
+    [-10.6, -8.2, 1.5],
+    [10.6, -8.2, 1.5],
+    [-6.2, 2.35, 1.15],
+    [6.2, 2.35, 1.15],
   ];
 
   return (
@@ -1291,6 +1438,41 @@ function CypressGrove() {
           <mesh position={[0, -0.28, 0]} castShadow>
             <cylinderGeometry args={[0.08, 0.12, 0.7, 10]} />
             <meshStandardMaterial color="#735c42" roughness={0.72} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
+function HangingGardens() {
+  const vines = useMemo(
+    () =>
+      Array.from({ length: 42 }, (_, index) => {
+        const side = index % 2 ? -1 : 1;
+        const arc = (index / 42) * Math.PI;
+        const x = side * (6.5 + Math.sin(arc * 3.2) * 5.5);
+        const z = -8.7 + Math.cos(arc * 2.7) * 2.2 + (index % 4) * 3.25;
+        return [x, z, 0.52 + (index % 5) * 0.18, 0.32 + (index % 3) * 0.14] as const;
+      }),
+    [],
+  );
+
+  return (
+    <group>
+      {vines.map(([x, z, length, sway], index) => (
+        <group key={index} position={[x, 0.48, z]} rotation={[0, 0, Math.sin(index) * 0.08]}>
+          <mesh position={[0, -length / 2, 0]} castShadow>
+            <cylinderGeometry args={[0.025, 0.012, length, 6]} />
+            <meshStandardMaterial color="#5b7f4e" roughness={0.78} />
+          </mesh>
+          <mesh
+            position={[Math.sin(index) * 0.08, -length - 0.02, 0]}
+            scale={[sway, sway * 0.28, sway]}
+            castShadow
+          >
+            <sphereGeometry args={[0.22, 8, 6]} />
+            <meshStandardMaterial color={index % 3 ? "#efb4c2" : "#cde6a7"} roughness={0.56} />
           </mesh>
         </group>
       ))}
@@ -1443,8 +1625,8 @@ function QuestPortals({
 function CloudSea() {
   const clouds = useMemo(() => {
     const positions: Array<[number, number, number, number]> = [];
-    for (let i = 0; i < 36; i += 1) {
-      const angle = (i / 36) * Math.PI * 2;
+    for (let i = 0; i < 54; i += 1) {
+      const angle = (i / 54) * Math.PI * 2;
       const radius = 17 + (i % 7) * 2.1;
       positions.push([
         Math.cos(angle) * radius,
@@ -1464,7 +1646,7 @@ function CloudSea() {
           <meshStandardMaterial
             color="#ffffff"
             transparent
-            opacity={0.42}
+            opacity={0.5}
             roughness={0.95}
             depthWrite={false}
           />
@@ -1474,6 +1656,41 @@ function CloudSea() {
         <circleGeometry args={[42, 128]} />
         <meshBasicMaterial color="#ffffff" transparent opacity={0.22} depthWrite={false} />
       </mesh>
+    </group>
+  );
+}
+
+function SkyCloudBackdrop() {
+  const cloudBanks = useMemo(
+    () =>
+      Array.from({ length: 44 }, (_, index) => {
+        const row = index % 4;
+        const x = -26 + (index % 11) * 5.2 + Math.sin(index * 1.7) * 1.4;
+        const y = 7.6 + row * 1.55 + Math.cos(index) * 0.5;
+        const z = -31 - row * 2.8;
+        const scale = 1.8 + (index % 5) * 0.45;
+        return [x, y, z, scale] as const;
+      }),
+    [],
+  );
+
+  return (
+    <group>
+      <mesh position={[0, 7.2, -37]} scale={[32, 11, 1]}>
+        <sphereGeometry args={[1, 32, 16]} />
+        <meshBasicMaterial color="#f8fbff" transparent opacity={0.16} depthWrite={false} />
+      </mesh>
+      {cloudBanks.map(([x, y, z, scale], index) => (
+        <mesh key={index} position={[x, y, z]} scale={[scale * 1.85, scale * 0.75, scale]}>
+          <sphereGeometry args={[1, 18, 10]} />
+          <meshBasicMaterial
+            color={index % 3 ? "#ffffff" : "#eef6ff"}
+            transparent
+            opacity={0.34}
+            depthWrite={false}
+          />
+        </mesh>
+      ))}
     </group>
   );
 }
