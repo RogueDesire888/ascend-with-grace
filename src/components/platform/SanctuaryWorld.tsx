@@ -25,7 +25,8 @@ import {
 } from "react";
 import * as THREE from "three";
 import { dailyQuests, mainQuests, skillTrees, weeklyQuests } from "./data";
-import floatingTempleSanctuary from "@/assets/floating-temple-sanctuary.png";
+import templeExteriorSanctuary from "@/assets/temple-exterior-sanctuary.png";
+import templeInteriorSanctuary from "@/assets/temple-interior-sanctuary.png";
 
 type ZoneKey = "overview" | "herbs" | "energy" | "movement" | "touch" | "spirit";
 type Point = { x: number; z: number };
@@ -240,6 +241,10 @@ export function SanctuaryWorld() {
   const selectedZone = zones.find((zone) => zone.key === activeZone);
   const selectedTree = skillTrees.find((tree) => tree.name === selectedZone?.tree) ?? skillTrees[1];
   const isInsideTemple = isInTempleInterior(avatarPosition);
+  const scenePlate = isInsideTemple ? templeInteriorSanctuary : templeExteriorSanctuary;
+  const scenePlateAlt = isInsideTemple
+    ? "Photorealistic circular marble temple interior with statues, roses, fountain, and sun rays"
+    : "Photorealistic floating marble temple island with waterfalls, gardens, and clouds";
   const zoneQuests = useMemo(
     () => allQuests.filter((quest) => quest.tree === selectedTree.name).slice(0, 3),
     [selectedTree.name],
@@ -382,18 +387,24 @@ export function SanctuaryWorld() {
           className={`relative mt-3 min-h-[35rem] flex-1 overflow-hidden rounded-[2rem] border border-primary/25 bg-background/10 shadow-[var(--shadow-aura)] lg:min-h-[40rem] ${celebration ? "ascension-celebrating" : ""}`}
         >
           <img
-            src={floatingTempleSanctuary}
-            alt="Floating marble temple sanctuary above luminous clouds"
-            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-[1.08] opacity-55 saturate-125 contrast-110 blur-0" : "scale-100 opacity-100 blur-0"}`}
+            src={scenePlate}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-xl saturate-125"
           />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,transparent_0_34%,color-mix(in_oklab,var(--background)_36%,transparent)_78%),linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--background)_8%,transparent)_42%,color-mix(in_oklab,var(--background)_24%,transparent))]" />
+          <img
+            src={scenePlate}
+            alt={scenePlateAlt}
+            className={`absolute inset-0 h-full w-full object-contain transition-[opacity,transform,filter] duration-[900ms] ${hasEntered ? "opacity-100 saturate-110 contrast-105" : "opacity-100"}`}
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,transparent_0_42%,color-mix(in_oklab,var(--background)_22%,transparent)_92%),linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_4%,transparent),transparent_42%,color-mix(in_oklab,var(--background)_16%,transparent))]" />
           {isMounted ? (
             <Canvas
               className="sanctuary-canvas"
               shadows
               dpr={[1, 1.9]}
               camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 120 }}
-              style={{ opacity: hasEntered ? 1 : 0.2 }}
+              style={{ opacity: hasEntered ? 0.44 : 0.12 }}
               gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
               onCreated={({ gl }) => {
                 gl.shadowMap.enabled = true;
