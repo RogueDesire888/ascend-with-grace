@@ -384,9 +384,9 @@ export function SanctuaryWorld() {
           <img
             src={floatingTempleSanctuary}
             alt="Floating marble temple sanctuary above luminous clouds"
-            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-105 opacity-15 blur-[1px]" : "scale-100 opacity-100 blur-0"}`}
+            className={`absolute inset-0 h-full w-full object-cover transition-[opacity,transform,filter] duration-[1800ms] ${hasEntered ? "scale-[1.08] opacity-55 saturate-125 contrast-110 blur-0" : "scale-100 opacity-100 blur-0"}`}
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--background)_10%,transparent)_42%,color-mix(in_oklab,var(--background)_22%,transparent))]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_42%,transparent_0_34%,color-mix(in_oklab,var(--background)_36%,transparent)_78%),linear-gradient(180deg,color-mix(in_oklab,var(--foreground)_8%,transparent),color-mix(in_oklab,var(--background)_8%,transparent)_42%,color-mix(in_oklab,var(--background)_24%,transparent))]" />
           {isMounted ? (
             <Canvas
               className="sanctuary-canvas"
@@ -399,7 +399,8 @@ export function SanctuaryWorld() {
                 gl.shadowMap.enabled = true;
                 gl.shadowMap.type = THREE.PCFSoftShadowMap;
                 gl.toneMapping = THREE.ACESFilmicToneMapping;
-                gl.toneMappingExposure = 1.08;
+                gl.toneMappingExposure = 1.22;
+                gl.outputColorSpace = THREE.SRGBColorSpace;
               }}
             >
               <Suspense fallback={null}>
@@ -638,12 +639,12 @@ function SanctuaryScene({
 
   return (
     <>
-      <color attach="background" args={["#dcecff"]} />
-      <fog attach="fog" args={["#dcecff", 28, 82]} />
-      <ambientLight intensity={1.05} />
+      <fog attach="fog" args={["#e9f4ff", 24, 76]} />
+      <hemisphereLight args={["#fff7e7", "#8aa0b8", 2.65]} />
+      <ambientLight intensity={0.58} />
       <directionalLight
-        position={[7, 11, 7]}
-        intensity={3.45}
+        position={[-7, 13, 9]}
+        intensity={5.8}
         castShadow
         shadow-mapSize={[4096, 4096]}
         shadow-camera-near={0.5}
@@ -653,7 +654,8 @@ function SanctuaryScene({
         shadow-camera-top={18}
         shadow-camera-bottom={-18}
       />
-      <pointLight position={[0, 5, -4]} intensity={8.4} color="#ffe5a6" distance={16} />
+      <directionalLight position={[8, 7, -12]} intensity={1.35} color="#a9d8ff" />
+      <pointLight position={[0, 5, -4]} intensity={10.4} color="#ffe5a6" distance={18} />
       <Environment preset="sunset" />
       <SceneSparkles
         count={78}
