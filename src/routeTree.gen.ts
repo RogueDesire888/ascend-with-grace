@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as YogaTherapyLabRouteImport } from './routes/yoga-therapy-lab'
 import { Route as SkillTreesRouteImport } from './routes/skill-trees'
 import { Route as SanctuaryRouteImport } from './routes/sanctuary'
 import { Route as QuestsRouteImport } from './routes/quests'
@@ -16,6 +17,11 @@ import { Route as LibraryRouteImport } from './routes/library'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as IndexRouteImport } from './routes/index'
 
+const YogaTherapyLabRoute = YogaTherapyLabRouteImport.update({
+  id: '/yoga-therapy-lab',
+  path: '/yoga-therapy-lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SkillTreesRoute = SkillTreesRouteImport.update({
   id: '/skill-trees',
   path: '/skill-trees',
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/quests': typeof QuestsRoute
   '/sanctuary': typeof SanctuaryRoute
   '/skill-trees': typeof SkillTreesRoute
+  '/yoga-therapy-lab': typeof YogaTherapyLabRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/quests': typeof QuestsRoute
   '/sanctuary': typeof SanctuaryRoute
   '/skill-trees': typeof SkillTreesRoute
+  '/yoga-therapy-lab': typeof YogaTherapyLabRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/quests': typeof QuestsRoute
   '/sanctuary': typeof SanctuaryRoute
   '/skill-trees': typeof SkillTreesRoute
+  '/yoga-therapy-lab': typeof YogaTherapyLabRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/quests'
     | '/sanctuary'
     | '/skill-trees'
+    | '/yoga-therapy-lab'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/quests'
     | '/sanctuary'
     | '/skill-trees'
+    | '/yoga-therapy-lab'
   id:
     | '__root__'
     | '/'
@@ -97,6 +108,7 @@ export interface FileRouteTypes {
     | '/quests'
     | '/sanctuary'
     | '/skill-trees'
+    | '/yoga-therapy-lab'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,10 +118,18 @@ export interface RootRouteChildren {
   QuestsRoute: typeof QuestsRoute
   SanctuaryRoute: typeof SanctuaryRoute
   SkillTreesRoute: typeof SkillTreesRoute
+  YogaTherapyLabRoute: typeof YogaTherapyLabRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/yoga-therapy-lab': {
+      id: '/yoga-therapy-lab'
+      path: '/yoga-therapy-lab'
+      fullPath: '/yoga-therapy-lab'
+      preLoaderRoute: typeof YogaTherapyLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/skill-trees': {
       id: '/skill-trees'
       path: '/skill-trees'
@@ -162,7 +182,17 @@ const rootRouteChildren: RootRouteChildren = {
   QuestsRoute: QuestsRoute,
   SanctuaryRoute: SanctuaryRoute,
   SkillTreesRoute: SkillTreesRoute,
+  YogaTherapyLabRoute: YogaTherapyLabRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
