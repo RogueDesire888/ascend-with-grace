@@ -45,6 +45,12 @@ export const Route = createRootRoute({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Ascend Healing Platform" },
+      { name: "description", content: "A gamified holistic healing platform where users transform into their highest self through interactive skill trees and quests." },
+      { property: "og:description", content: "A gamified holistic healing platform where users transform into their highest self through interactive skill trees and quests." },
+      { name: "twitter:description", content: "A gamified holistic healing platform where users transform into their highest self through interactive skill trees and quests." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d12abcb1-a1cd-4c71-a552-51cf0d5ad35e/id-preview-721a3cb9--1fbc5b28-4097-44a9-a4d6-77971ee66bd6.lovable.app-1777491908921.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d12abcb1-a1cd-4c71-a552-51cf0d5ad35e/id-preview-721a3cb9--1fbc5b28-4097-44a9-a4d6-77971ee66bd6.lovable.app-1777491908921.png" },
     ],
     links: [
       {
