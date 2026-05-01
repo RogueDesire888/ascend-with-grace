@@ -169,7 +169,20 @@ const glossary = [
 
 function TaiChiLab() {
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto w-full max-w-7xl space-y-12 px-4 py-8 sm:px-6 lg:px-8">
+      <QuestPath
+        treeKey="movement-arts"
+        treeLabel="Tai Chi Path"
+        classes={taiChiClasses}
+        eyebrow="A Game of Tai Chi Mastery"
+        title="☯ The Tai Chi Master's Path"
+        quote="“Stand like a mountain. Move like a river. Listen with the whole body.”"
+        levels={taiChiLevels}
+        badges={taiChiBadges}
+        panelClass="quest-panel-earth"
+        accentClass="text-earth"
+      />
+
       <article className="overflow-hidden rounded-lg border border-border/70 bg-card/80 shadow-[var(--shadow-soft)] backdrop-blur-xl">
         <header className="bg-[linear-gradient(135deg,#173635,#315d4d)] px-6 py-12 text-center text-white sm:px-10">
           <div className="mx-auto grid h-14 w-14 place-items-center rounded-full border border-white/30 bg-white/15">
