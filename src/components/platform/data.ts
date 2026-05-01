@@ -194,6 +194,7 @@ export const navItems = [
   { to: "/quests" as const, label: "Quests" },
   { to: "/skill-trees" as const, label: "Skill Trees" },
   { to: "/alchemists-path" as const, label: "Herbal Path" },
+  { to: "/smoothie-codex" as const, label: "Smoothie Codex" },
   { to: "/library" as const, label: "Library" },
   { to: "/community" as const, label: "Community" },
 ];
