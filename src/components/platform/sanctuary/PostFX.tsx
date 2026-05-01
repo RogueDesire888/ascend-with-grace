@@ -1,4 +1,13 @@
-import { EffectComposer, Bloom, Vignette, DepthOfField, SMAA, BrightnessContrast, HueSaturation } from "@react-three/postprocessing";
+import {
+  EffectComposer,
+  Bloom,
+  Vignette,
+  DepthOfField,
+  SMAA,
+  BrightnessContrast,
+  HueSaturation,
+  SSAO,
+} from "@react-three/postprocessing";
 import { BlendFunction, KernelSize } from "postprocessing";
 import { Fragment, type ReactElement } from "react";
 
@@ -8,8 +17,9 @@ type Props = { tier: QualityTier };
 
 /**
  * Cinematic post-processing pass for the Sanctuary.
- * Adds golden-hour bloom, vignette, gentle DoF and a warm color grade.
- * Quality tier controls which effects run.
+ * - SSAO adds the contact darkening that sells "real"
+ * - Bloom + golden grade for the sunset mood
+ * - DoF (cinematic only) softens the distant horizon
  */
 export function SanctuaryPostFX({ tier }: Props): ReactElement | null {
   if (tier === "lite") return null;
@@ -17,10 +27,22 @@ export function SanctuaryPostFX({ tier }: Props): ReactElement | null {
   const isCinematic = tier === "cinematic";
 
   return (
-    <EffectComposer multisampling={0} enableNormalPass={false}>
+    <EffectComposer multisampling={0} enableNormalPass>
       <SMAA />
+      <SSAO
+        blendFunction={BlendFunction.MULTIPLY}
+        samples={isCinematic ? 24 : 12}
+        radius={isCinematic ? 0.18 : 0.14}
+        intensity={isCinematic ? 22 : 14}
+        luminanceInfluence={0.6}
+        bias={0.04}
+        worldDistanceThreshold={20}
+        worldDistanceFalloff={2}
+        worldProximityThreshold={6}
+        worldProximityFalloff={1}
+      />
       <Bloom
-        intensity={isCinematic ? 0.85 : 0.55}
+        intensity={isCinematic ? 0.95 : 0.6}
         luminanceThreshold={0.78}
         luminanceSmoothing={0.32}
         mipmapBlur
@@ -36,8 +58,8 @@ export function SanctuaryPostFX({ tier }: Props): ReactElement | null {
       ) : (
         <Fragment />
       )}
-      <HueSaturation hue={0} saturation={isCinematic ? 0.12 : 0.06} />
-      <BrightnessContrast brightness={0.02} contrast={isCinematic ? 0.08 : 0.04} />
+      <HueSaturation hue={0} saturation={isCinematic ? 0.14 : 0.07} />
+      <BrightnessContrast brightness={0.02} contrast={isCinematic ? 0.1 : 0.05} />
       <Vignette
         offset={0.32}
         darkness={isCinematic ? 0.55 : 0.4}
