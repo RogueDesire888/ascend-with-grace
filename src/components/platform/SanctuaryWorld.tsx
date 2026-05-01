@@ -342,7 +342,7 @@ export function SanctuaryWorld() {
   }
 
   return (
-    <section className="sanctuary-world relative min-h-[calc(100vh-5rem)] overflow-hidden bg-background">
+    <section className="sanctuary-world relative min-h-[calc(100vh-5rem)] overflow-hidden bg-[#bfe6ff]">
       <div className="absolute inset-0 bg-[var(--gradient-sky-sanctuary)]" />
       <div className="sun-rays absolute inset-x-0 top-0 h-[34rem] opacity-90" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_44%,transparent_0_38%,color-mix(in_oklab,var(--background)_32%,transparent)_94%)]" />
@@ -631,6 +631,7 @@ function SanctuaryScene({
 
   return (
     <>
+      <color attach="background" args={["#bfe6ff"]} />
       <fog attach="fog" args={["#e9f4ff", 24, 76]} />
       <hemisphereLight args={["#fff7e7", "#8aa0b8", 2.65]} />
       <ambientLight intensity={0.58} />

@@ -36,7 +36,7 @@ function Index() {
       title: "Movement labs",
       copy: "Deep yoga therapy and Tai Chi knowledge bases turn the Movement path into a real study library, not just a quest label.",
       to: "/yoga-therapy-lab" as const,
-      cta: "Open Yoga Lab",
+      cta: "Explore Movement",
       Icon: HeartPulse,
     },
     {
