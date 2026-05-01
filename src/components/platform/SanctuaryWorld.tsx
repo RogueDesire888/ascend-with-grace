@@ -413,8 +413,8 @@ export function SanctuaryWorld() {
               onCreated={({ gl }) => {
                 gl.shadowMap.enabled = true;
                 gl.shadowMap.type = THREE.PCFSoftShadowMap;
-                gl.toneMapping = THREE.ACESFilmicToneMapping;
-                gl.toneMappingExposure = 1.32;
+                gl.toneMapping = THREE.AgXToneMapping;
+                gl.toneMappingExposure = 1.18;
                 gl.outputColorSpace = THREE.SRGBColorSpace;
               }}
             >
@@ -426,6 +426,7 @@ export function SanctuaryWorld() {
                   activeZone={activeZone}
                   keysPressed={keysPressed}
                   targetPosition={targetPosition}
+                  quality={quality}
                   onReady={handleSceneReady}
                   onTargetReached={handleTargetReached}
                   onWalkTo={walkTo}
@@ -519,6 +520,7 @@ function SanctuaryScene({
   activeZone,
   keysPressed,
   targetPosition,
+  quality,
   onReady,
   onTargetReached,
   onWalkTo,
@@ -530,6 +532,7 @@ function SanctuaryScene({
   activeZone: ZoneKey;
   keysPressed: RefObject<Set<string>>;
   targetPosition: Point | null;
+  quality: QualityTier;
   onReady: (api: SanctuaryWorldApi) => void;
   onTargetReached: () => void;
   onWalkTo: (zone: Zone) => void;
