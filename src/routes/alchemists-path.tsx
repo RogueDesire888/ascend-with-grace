@@ -28,7 +28,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { useTreeProgress, type LevelDef } from "@/lib/progress-store";
+import { useTreeProgress } from "@/lib/progress-store";
 
 export const Route = createFileRoute("/alchemists-path")({
   head: () => ({
