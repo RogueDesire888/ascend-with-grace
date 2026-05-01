@@ -15,7 +15,7 @@ export const Route = createFileRoute("/yoga/asanas/$slug")({
   loader: ({ params }) => {
     const asana = getAsana(params.slug);
     if (!asana) throw notFound();
-    return { asana };
+    return { asana } as const;
   },
   notFoundComponent: () => (
     <div className="rounded-2xl border border-border/50 bg-card/40 p-8 text-center">
