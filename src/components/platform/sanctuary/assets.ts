@@ -1,25 +1,38 @@
 /**
  * Asset URLs for the cinematic Sanctuary upgrade.
- * All assets are CC0 from Poly Haven (HDRI + PBR textures).
- * Files live in /public/assets/sanctuary/ so they're served as static URLs.
+ * CC0 assets from Poly Haven (HDRI + PBR textures).
+ * Imported through Vite so the build pipeline fingerprints and serves them.
  */
+
+import sky2k from "@/assets/sanctuary/hdri/sky_2k.hdr?url";
+import sky1k from "@/assets/sanctuary/hdri/sky_1k.hdr?url";
+
+import groundDiff from "@/assets/sanctuary/textures/ground_diff.jpg";
+import groundNor from "@/assets/sanctuary/textures/ground_nor.jpg";
+import groundRough from "@/assets/sanctuary/textures/ground_rough.jpg";
+
+import marbleDiff from "@/assets/sanctuary/textures/marble_diff.jpg";
+import marbleNor from "@/assets/sanctuary/textures/marble_nor.jpg";
+import marbleRough from "@/assets/sanctuary/textures/marble_rough.jpg";
+
+import waterNor from "@/assets/sanctuary/textures/water_nor.jpg";
 
 export const sanctuaryAssets = {
   hdri: {
-    high: "/assets/sanctuary/hdri/sky_2k.hdr",
-    low: "/assets/sanctuary/hdri/sky_1k.hdr",
+    high: sky2k,
+    low: sky1k,
   },
   ground: {
-    diff: "/assets/sanctuary/textures/ground_diff.jpg",
-    normal: "/assets/sanctuary/textures/ground_nor.jpg",
-    rough: "/assets/sanctuary/textures/ground_rough.jpg",
+    diff: groundDiff,
+    normal: groundNor,
+    rough: groundRough,
   },
   marble: {
-    diff: "/assets/sanctuary/textures/marble_diff.jpg",
-    normal: "/assets/sanctuary/textures/marble_nor.jpg",
-    rough: "/assets/sanctuary/textures/marble_rough.jpg",
+    diff: marbleDiff,
+    normal: marbleNor,
+    rough: marbleRough,
   },
   water: {
-    normal: "/assets/sanctuary/textures/water_nor.jpg",
+    normal: waterNor,
   },
 } as const;
