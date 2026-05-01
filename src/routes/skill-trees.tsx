@@ -1,30 +1,31 @@
+import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PageFrame, SkillWheel } from "@/components/platform/PlatformUI";
+import { ExternalLink } from "lucide-react";
+import { PageFrame } from "@/components/platform/PlatformUI";
 import { skillTrees } from "@/components/platform/data";
 import { Progress } from "@/components/ui/progress";
 import { useTreeProgress, type TreeKey } from "@/lib/progress-store";
-import { ExternalLink } from "lucide-react";
+import { TreeOfLife, type TreeNode } from "@/components/platform/TreeOfLife";
 
 export const Route = createFileRoute("/skill-trees")({
   head: () => ({
     meta: [
-      { title: "Five Healing Skill Trees — Ascend" },
+      { title: "Tree of Life — Five Healing Skill Trees | Ascend" },
       {
         name: "description",
         content:
-          "Explore interconnected levels for herbs, energy, movement, healing touch, and mind spirit practices.",
+          "A living tree of life. Each branch is a healing skill — herbs, energy, movement, touch, mind & spirit — growing from one shared trunk.",
       },
-      { property: "og:title", content: "Five Healing Skill Trees — Ascend" },
+      { property: "og:title", content: "Tree of Life — Skill Trees | Ascend" },
       {
         property: "og:description",
-        content: "A visual skill tree interface for holistic healing progress.",
+        content: "Tap a branch to follow your path. Roots gather every practice into one ascension.",
       },
     ],
   }),
   component: SkillTreesPage,
 });
 
-// Map static skill trees to live progress sources where wired.
 const liveTreeMap: Record<string, { key: TreeKey; levels: number; questsPerLevel: number[]; href: string; cta: string }> = {
   "Herbal Wisdom": {
     key: "herbal-wisdom",
@@ -36,36 +37,123 @@ const liveTreeMap: Record<string, { key: TreeKey; levels: number; questsPerLevel
   "Movement Arts": {
     key: "movement-arts",
     levels: 5,
-    // Yoga (4,4,5,4,4) + Tai Chi (4,4,4,4,4) — collected by tree
     questsPerLevel: [8, 8, 9, 8, 8],
     href: "/yoga-therapy-lab",
     cta: "Enter Yoga & Tai Chi Labs",
   },
 };
 
+// Tree-of-Life node positions inside viewBox 0 0 600 760.
+// Crown at top, two upper limbs, two lower limbs — symmetrical.
+const positions: Record<string, { x: number; y: number }> = {
+  "Mind & Spirit": { x: 300, y: 110 }, // crown
+  "Energy Mastery": { x: 470, y: 240 }, // upper right
+  "Movement Arts": { x: 130, y: 240 }, // upper left
+  "Herbal Wisdom": { x: 470, y: 470 }, // lower right
+  "Healing Touch": { x: 130, y: 470 }, // lower left
+};
+
 function SkillTreesPage() {
+  // Live progress for the two wired trees
+  const herbal = useTreeProgress("herbal-wisdom");
+  const movement = useTreeProgress("movement-arts");
+
+  const nodes: TreeNode[] = useMemo(
+    () =>
+      skillTrees.map((t) => {
+        const live = liveTreeMap[t.name];
+        let progress = t.progress;
+        if (live) {
+          const totalQuests = live.questsPerLevel.reduce((a, b) => a + b, 0);
+          const src = live.key === "herbal-wisdom" ? herbal.progress : movement.progress;
+          const completedQuests = Object.values(src.quests).filter(Boolean).length;
+          const completedLevels = Object.values(src.levels).filter(Boolean).length;
+          const xp = completedQuests * 25 + completedLevels * 100;
+          const xpMax = totalQuests * 25 + live.levels * 100;
+          progress = xpMax === 0 ? 0 : Math.round((xp / xpMax) * 100);
+        }
+        // Tone class — strip the bg/border parts, keep just the text-color
+        const tone = t.className.split(" ").find((c) => c.startsWith("text-")) ?? "text-primary";
+        return {
+          key: t.name,
+          name: t.name,
+          short: t.short,
+          Icon: t.Icon,
+          toneClass: tone,
+          progress,
+          ...positions[t.name]!,
+        };
+      }),
+    [herbal.progress, movement.progress],
+  );
+
+  const [selectedKey, setSelectedKey] = useState<string>("Mind & Spirit");
+  const selected = skillTrees.find((t) => t.name === selectedKey)!;
+  const selectedNode = nodes.find((n) => n.key === selectedKey)!;
+
+  // Roots = average across branches
+  const rootsProgress = nodes.reduce((sum, n) => sum + n.progress, 0) / Math.max(1, nodes.length);
+  const ascensionLevel = Math.max(1, Math.round(rootsProgress / 8));
+
   return (
     <PageFrame
-      eyebrow="Skill trees"
-      title="Every practice strengthens the whole healer within you."
+      eyebrow="The tree of life"
+      title="Five branches. One trunk. Roots that gather every practice."
     >
-      <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
-        <section className="sticky top-28 rounded-[2rem] border border-border/70 bg-card/75 p-6 shadow-[var(--shadow-soft)]">
-          <SkillWheel />
-          <p className="mt-6 text-center text-muted-foreground">
-            Your Ascension Level blends progress from all five trees, rewarding balance over
-            intensity.
-          </p>
-        </section>
-        <section className="grid gap-4">
-          {skillTrees.map((tree) => {
-            const live = liveTreeMap[tree.name];
-            return live ? (
-              <LiveSkillCard key={tree.name} tree={tree} live={live} />
-            ) : (
-              <StaticSkillCard key={tree.name} tree={tree} />
-            );
-          })}
+      <div className="space-y-8">
+        <p className="max-w-2xl text-muted-foreground">
+          Each branch is a path of healing. Tap a glowing fruit to walk that branch — your roots
+          remember everything.
+        </p>
+
+        <TreeOfLife
+          nodes={nodes}
+          selectedKey={selectedKey}
+          onSelect={setSelectedKey}
+          rootsLabel={`Ascension Lv ${ascensionLevel}`}
+          rootsProgress={rootsProgress}
+        />
+
+        {/* Selected branch detail */}
+        {liveTreeMap[selected.name] ? (
+          <LiveSkillCard tree={selected} live={liveTreeMap[selected.name]} progress={selectedNode.progress} />
+        ) : (
+          <StaticSkillCard tree={selected} />
+        )}
+
+        {/* Roots / legend strip */}
+        <section className="rounded-2xl border border-border/60 bg-card/50 p-5">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary">Roots</p>
+              <h3 className="mt-1 text-lg font-bold text-foreground">
+                Ascension Level {ascensionLevel}
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Balance across all five branches earns more glow than intensity in any one.
+              </p>
+            </div>
+            <span className="text-sm font-semibold text-foreground">
+              {Math.round(rootsProgress)}%
+            </span>
+          </div>
+          <Progress value={rootsProgress} className="mt-3 h-2" />
+          <div className="mt-4 flex flex-wrap gap-2">
+            {nodes.map((n) => (
+              <button
+                key={n.key}
+                onClick={() => setSelectedKey(n.key)}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition ${
+                  selectedKey === n.key
+                    ? "border-primary/60 bg-primary/15 text-foreground"
+                    : "border-border/60 bg-background/40 text-muted-foreground hover:border-primary/40"
+                }`}
+              >
+                <span className={`h-1.5 w-1.5 rounded-full ${n.toneClass} bg-current`} />
+                {n.short} · {Math.round(n.progress)}%
+              </button>
+            ))}
+          </div>
         </section>
       </div>
     </PageFrame>
@@ -75,27 +163,19 @@ function SkillTreesPage() {
 function LiveSkillCard({
   tree,
   live,
+  progress,
 }: {
   tree: (typeof skillTrees)[number];
   live: (typeof liveTreeMap)[string];
+  progress: number;
 }) {
-  const { progress } = useTreeProgress(live.key);
-  const completedLevels = Array.from({ length: live.levels }).filter((_, i) => {
-    const levelId = live.key === "herbal-wisdom" ? `level-${i + 1}` : null;
-    if (levelId && progress.levels[levelId]) return true;
-    // movement-arts has multiple namespaces (yoga-l*, tc-l*), don't count here.
-    return false;
-  }).length;
-
-  // Count completed quests across all keys belonging to this tree
+  const src = useTreeProgress(live.key);
   const totalQuests = live.questsPerLevel.reduce((a, b) => a + b, 0);
-  const completedQuests = Object.entries(progress.quests).filter(([, v]) => v).length;
-  const completedLevelsAll = Object.entries(progress.levels).filter(([, v]) => v).length;
-  const playerLevel = Math.min(live.levels, completedLevelsAll + 1);
-  const xp = completedQuests * 25 + completedLevelsAll * 100;
+  const completedQuests = Object.values(src.progress.quests).filter(Boolean).length;
+  const completedLevels = Object.values(src.progress.levels).filter(Boolean).length;
+  const playerLevel = Math.min(live.levels, completedLevels + 1);
+  const xp = completedQuests * 25 + completedLevels * 100;
   const xpMax = totalQuests * 25 + live.levels * 100;
-  const pct = xpMax === 0 ? 0 : Math.round((xp / xpMax) * 100);
-  void completedLevels;
 
   return (
     <article className="sanctuary-panel rounded-[1.75rem] border border-border/60 p-6">
@@ -115,15 +195,17 @@ function LiveSkillCard({
       </div>
       <div className="mt-5 space-y-2">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>Progress</span>
-          <span className="font-semibold text-foreground">{xp} / {xpMax} XP</span>
+          <span>Branch progress</span>
+          <span className="font-semibold text-foreground">{progress}%</span>
         </div>
-        <Progress value={pct} className="h-3" />
+        <Progress value={progress} className="h-3" />
         <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
           <span>
             Quests <span className="font-semibold text-foreground">{completedQuests}/{totalQuests}</span>
             {" · "}
-            Levels <span className="font-semibold text-foreground">{completedLevelsAll}/{live.levels}</span>
+            Levels <span className="font-semibold text-foreground">{completedLevels}/{live.levels}</span>
+            {" · "}
+            <span className="font-semibold text-foreground">{xp}/{xpMax} XP</span>
           </span>
           <span className="rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 font-semibold text-primary">
             Live
