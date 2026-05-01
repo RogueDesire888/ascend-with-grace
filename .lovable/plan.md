@@ -1,95 +1,112 @@
-## Bring the Herbal Path up to Breathwork-level depth
+## Goal
 
-The Breathwork section is a 9-page interactive **encyclopedia** with its own data layer (1,295 lines), Cmd+K search, belt-based progression, and dedicated subroutes (Start Here, Science, Techniques + per-technique pages, Goals + per-goal pages, Mastery, Community, Resources, Tools, About). The Herbal Path is currently a **single 780-line gamified roadmap** — narratively rich but flat, with no monograph library, no science section, no pharmacology depth, no community/teachers, no resource hub, no search, and no per-herb pages.
+Transform the single-page **Smoothie Codex** (`/smoothie-codex`) into an elite encyclopedic module — same depth and structure as the new Herbal Path and Breathwork sections — and give it its **own dedicated dropdown** in the header (separate from the Alchemy menu).
 
-This plan rebuilds Herbal Path into a parallel encyclopedia: the existing 5-level "game" becomes the *Mastery Path* page inside a much larger structure.
-
-### New architecture
-
-Convert `/alchemists-path` into a layout route with a sub-nav (matching `/breathwork`):
+## New architecture
 
 ```text
-/alchemists-path                  -> layout (header, sub-nav, search, rank chip)
-  /start-here                     -> orientation, herbalist's code, safety, how to use the codex
-  /materia-medica                 -> the 60+ herb library (filterable by system, energetics, action)
-  /materia-medica/$slug           -> deep monograph per herb
-  /science                        -> phytochemistry, pharmacology, clinical evidence
-  /goals                          -> herbs by goal (sleep, immunity, digestion, hormones, mood, skin, joints, energy)
-  /goals/$goalId                  -> protocols + recommended herbs + recipes per goal
-  /mastery                        -> the existing 5-level Alchemist's Path (Novice → Grand Alchemist) ← preserved
-  /traditions                     -> Western, TCM, Ayurveda, Eclectic, Wise Woman, Spagyric — comparative depth
-  /preparations                   -> tea/infusion/decoction/tincture/glycerite/oxymel/oil/salve/syrup/spagyric — full method pages
-  /safety                         -> contraindications, herb-drug interactions, pregnancy, sustainability/at-risk plants
-  /community                      -> teachers, schools, herbalists to know, guilds
-  /resources                      -> books, journals, podcasts, suppliers, wildcrafting ethics
-  /tools                          -> dose calculator, tincture ratio (folk + weight-based), formula builder, harvest moon calendar
+/smoothie/
+  start-here              Welcome, philosophy of the blender, your first elixir
+  ingredients             Encyclopedia of 80+ ingredients (fruits, greens, proteins,
+                          fats, superfoods, liquids, boosters) with nutrition,
+                          benefits, swaps, sourcing, seasonality
+  ingredients/$slug       Per-ingredient deep dive (macro/micro profile, ORAC,
+                          glycemic load, pairings, contraindications)
+  science                 Nutrient density, bioavailability, blending vs juicing,
+                          fibre, polyphenols, the cold-chain, glycemic response
+  recipes                 60+ curated recipes filterable by goal, season, diet
+  recipes/$slug           Full recipe page (ratios, prep, nutrient breakdown,
+                          variations, story)
+  goals                   Smoothies by goal — energy, gut, recovery, immunity,
+                          skin, focus, sleep, weight, hormonal, kids
+  goals/$goalId           Goal detail with curated recipes + 7-day rotation
+  builder                 Interactive smoothie architect (base/liquid/protein/
+                          fat/fibre/superfood/sweetener) with live macro estimate
+  mastery                 Existing 5-level game preserved verbatim
+  rituals                 Morning, post-workout, evening, fasting-window,
+                          seasonal cleanse rituals
+  pantry                  Build-your-pantry shopping lists by budget tier and
+                          dietary pattern (omnivore / plant-based / keto / AIP)
+  community               Featured creators, recipe contributors, regional
+                          smoothie traditions (Brazilian açaí, Indian lassi,
+                          Filipino halo-halo blends, etc.)
+  resources               Books, blenders compared, equipment, podcasts, studies
+  tools                   Macro calculator, ratio architect, glycemic estimator,
+                          freezer-prep planner
 ```
 
-### New data layer: `src/lib/herbal-data.ts`
+## Header navigation
 
-Single source of truth, mirroring `breathwork-data.ts` shape:
+Add a **new "Smoothies" dropdown** in `src/components/platform/AppShell.tsx` (both desktop and mobile), placed next to Alchemy. The current Smoothie Codex link inside the **Alchemy** dropdown will be removed so the section stands on its own.
 
-- **`herbs: Herb[]`** — 60+ monographs: latin name, common names, family, parts used, energetics (hot/cold, dry/damp, tense/lax), taste, actions (e.g. nervine, adaptogen, alterative, hepatic, demulcent…), affinities (organ systems), key constituents (with role: e.g. apigenin → GABAA modulator), traditional uses (Western/TCM/Ayurvedic), evidence-based uses with citations, preparations + dose ranges, contraindications, herb-drug interactions, sustainability status (UpS at-risk list), harvest season, related herbs.
-- **`actions: HerbalAction[]`** — ~30 entries (adaptogen, alterative, anodyne, anxiolytic, bitter, carminative, cholagogue, demulcent, diaphoretic, emmenagogue, expectorant, hepatic, hypotensive, immunomodulator, nervine, nootropic, vulnerary…) with definitions and exemplar herbs.
-- **`constituents: Constituent[]`** — phytochemical classes (alkaloids, flavonoids, iridoids, mucilage, OPCs, saponins, terpenes, salicylates, glycosides…) with mechanism notes.
-- **`preparations: Preparation[]`** — 12 prep methods with menstruum, ratio, time, yield, shelf life, when to choose.
-- **`traditions: Tradition[]`** — Western Vitalism, Wise Woman, Eclectic/Physiomedicalist, TCM, Ayurveda, Unani, Spagyric/Hermetic — with diagnostic frame, signature herbs, and key teachers.
-- **`goals: HerbalGoal[]`** — 10 goal categories (sleep, anxiety, immunity, digestion, women's hormones, men's vitality, skin, joints, cardiovascular, cognition) with herb shortlist + sample protocol + recipe.
-- **`studies: Study[]`** — 30+ peer-reviewed citations (chamomile/GAD, ashwagandha/cortisol, valerian/sleep latency, turmeric/CRP, hawthorn/CHF, St John's Wort/depression equivalence, etc.) with year, journal, dosing.
-- **`teachers: Teacher[]`** — Susun Weed, Rosemary Gladstar, Matthew Wood, Stephen Buhner, Paul Bergner, jim mcdonald, Aviva Romm, Kerry Bone, Michael Tierra, kg Stiles, etc.
-- **`schools: School[]`** — Sage Mountain, Herbal Academy, ChestnutHerbs, CSCH, Bastyr, etc.
-- **`books: Book[]`** — 25+ canonical texts (Materia Medica by Wood, Medical Herbalism by Hoffmann, PDR for Herbal Medicines, Healing Wise, Adaptogens by Winston…).
-- **`interactions: Interaction[]`** — major herb-drug interactions (SJW/SSRIs, garlic/anticoagulants, kava/CYP450, ginkgo/warfarin, licorice/diuretics…).
-- **`atRisk: AtRiskPlant[]`** — UpS at-risk and to-watch list with sustainable alternatives.
-- **`searchAll(query)`** — unified search returning hits across herbs, actions, constituents, goals, preparations, traditions.
-- **`getHerb(slug)`, `getGoal(id)`** — typed lookups.
+Final header dropdowns: Tai Chi · Yoga · Alchemy · **Smoothies** · Breathwork.
 
-### New progress layer: `src/lib/herbal-progress.ts`
+## Data layer
 
-Reuse the breathwork progress pattern. Ranks (chip in header, like the breathwork "belt"):
+**`src/lib/smoothie-data.ts`** — single static encyclopedia with these exports:
 
-- Seedling → Gardener → Apprentice → Apothecary → Vitalist → Grand Alchemist
-- Tracks: monographs studied, preparations crafted, mastery quests completed (links to existing tree-progress store so the gamified roadmap state is preserved).
+- `ingredients: Ingredient[]` — 80+ entries with `slug, name, category, emoji, nutrients{calories, protein, fat, carbs, fibre, sugar, key micronutrients}, benefits[], pairings[], swaps[], season[], sourcing, contraindications[]`
+- `categories: IngredientCategory[]` — fruits, leafy greens, cruciferous, proteins, healthy fats, superfoods, liquids, sweeteners, spices, boosters
+- `recipes: Recipe[]` — 60+ recipes with goals, macros, season, difficulty, story
+- `goals: SmoothieGoal[]` — 10 goals with summary, recipe slugs, weekly rotation, "why it works"
+- `rituals: Ritual[]` — 6 ritual templates (timing, intention, recipe pairing)
+- `nutrients: NutrientFact[]` — vitamins/minerals/phytonutrients with what-it-does and best food sources
+- `studies: Study[]` — 15–20 peer-reviewed entries on whole-food smoothies, blending vs juicing, fibre intake, polyphenol bioavailability
+- `equipment: Blender[]` — comparison of common blenders (Vitamix, Blendtec, NutriBullet, Ninja, immersion) with strengths and price tier
+- `books: Book[]` — foundational reading
+- `pantryTiers: PantryTier[]` — budget / standard / premium starter pantries
+- `searchAll(query)` — Cmd+K search across ingredients, recipes, goals, nutrients, studies
+- `getIngredient(slug)`, `getRecipe(slug)`, `getGoal(id)` lookups
+- `ranks: Rank[]` — 6-tier rank ladder (Sprout → Blender Apprentice → Recipe Architect → Macro Sage → Phytonutrient Scholar → Grand Smoothie Sage)
 
-### Page-by-page treatment (Breathwork-equivalent depth)
+## Progress store
 
-Each page follows the established pattern: hero, narrative essay sections, parchment-style cards, stat sidebars, cross-links.
+Extend **`src/lib/smoothie-progress.ts`** (or replace its internals) to track:
 
-- **Start Here** — Herbalist's code, how to use the codex, three on-ramps (calm, immunity, daily tonic), safety primer, glossary preview.
-- **Materia Medica index** — searchable/filterable grid of 60+ herbs with chips for energetics + actions + tradition.
-- **Materia Medica per-herb** — full monograph: botany, parts used, energetics wheel, constituents → mechanism, traditional vs modern uses, dose ranges per preparation, contraindications, interactions, sustainability flag, recipes featuring it, related herbs, citations.
-- **Science** — phytochemistry essay (alkaloids → flavonoids → terpenes), pharmacology (CYP450, P-glycoprotein, bioavailability), evidence hierarchy, 30+ study cards, "what the data actually shows" critical-appraisal section.
-- **Goals index + per-goal** — symptom-driven entry; each goal page lists 5–7 candidate herbs with rationale, a 4-week protocol, daily ritual, and a featured recipe.
-- **Mastery** — the existing 5-level Alchemist's Path, lifted intact (XP, character sheet, badges, quests, level accordion). This preserves all current functionality and progress data.
-- **Traditions** — comparative essay across Western/Wise Woman/Eclectic/TCM/Ayurveda/Spagyric with side-by-side diagnostic frames and signature herbs.
-- **Preparations** — long-form method pages for each prep (folk vs weight-based tinctures, dual extraction, percolation, oxymel, glycerite, spagyric calcination steps), with ratios, ingredient tables, and shelf-life.
-- **Safety** — contraindications matrix, herb-drug interaction table, pregnancy/lactation guide, pediatric dosing (Clark/Young rules), at-risk plants & ethical sourcing.
-- **Community** — 10+ teacher cards, schools, guilds (AHG, NIMH), online circles.
-- **Resources** — 25+ books, journals, podcasts, suppliers (Mountain Rose, Pacific Botanicals, Strictly Medicinal seeds), foraging field guides.
-- **Tools** — Dose calculator (Clark/Young + adult mg/kg), Tincture builder (folk + 1:2/1:5 weight-volume), Formula builder (synergists/adjuvants/correctives/vehicles), Harvest moon calendar, Energetics matcher (input symptom pattern → suggested herbs).
+- `recipesMade: Record<slug, boolean>`
+- `ingredientsLogged: Record<slug, boolean>`
+- `goalsActive: Record<id, boolean>`
+- `streakDays: { date: string }[]` for daily blend streaks
+- `customRecipes: SavedRecipe[]` from the builder
+- existing `levels` / `quests` map preserved for the mastery game
 
-### Header treatment (matches Breathwork)
+Add `currentRank(progress)` mirroring `currentRank` in `herbal-progress.ts` based on recipes made + ingredients logged.
 
-- Sub-nav across the 11 pages, scroll-x on mobile.
-- Rank chip ("Apprentice · 12/60 monographs · 4/12 preps").
-- Cmd+K search dialog wired to `searchAll()` from herbal-data.
+## Layout shell
 
-### Navigation update
+**`src/routes/smoothie.tsx`** — layout route mirroring `breathwork.tsx` / `alchemists-path.tsx`:
 
-In `src/components/platform/data.ts`, update `alchemyItems` so the dropdown lists all new sub-pages (Start Here, Materia Medica, Goals, Mastery, Science, Traditions, Preparations, Safety, Community, Resources, Tools), keeping `/smoothie-codex` as a sibling entry.
+- header strip with module label + rank badge + ⌘K search dialog
+- horizontal scroll nav of all sub-routes
+- `<Outlet />` for child pages
+- root redirect message pointing to Start Here
 
-### Backward compatibility
+## Sub-routes
 
-- The current `/alchemists-path` URL keeps working (becomes the layout shell that redirects/links to Start Here, same as Breathwork does).
-- All existing tree-progress data (`useTreeProgress("herbal-wisdom")`) is preserved — the 5-level game just moves to `/alchemists-path/mastery`.
-- `/smoothie-codex` is untouched.
+Each page follows the same visual grammar as the new Herbal Path pages — semantic tokens only (no hardcoded colors), `bg-card/40` panels, leaf/citrus accent token, lucide icons. Notable interactions:
 
-### Out of scope
+- **builder**: live macro estimate as you click ingredients, save to `customRecipes`, share-friendly summary card
+- **tools**: macro calculator (per-100g math), ratio architect (40% base / 25% liquid / 15% protein / 10% fat / 10% boosters defaults), glycemic estimator (low/med/high based on ingredient GL sums), 7-day freezer-prep planner
+- **mastery**: existing 5-level Codex page lifted into `/smoothie/mastery` so nothing is lost
 
-- No backend, no AI lookups — fully static authored content (same as Breathwork).
-- No image generation in this pass; iconography reuses lucide.
-- Smoothie Codex stays as-is (separate codex; not promoted to encyclopedia).
+## Migration & redirects
 
-### Volume estimate
+- Move existing `src/routes/smoothie-codex.tsx` content into `src/routes/smoothie.mastery.tsx` (route `/smoothie/mastery`).
+- Replace `src/routes/smoothie-codex.tsx` with a small redirect component that navigates to `/smoothie/start-here` so existing links keep working.
+- Update `alchemyItems` in `src/components/platform/data.ts` to drop the Smoothie Codex entry.
+- Add `smoothieItems` array (all 13 sub-route entries) and import it in `AppShell.tsx`.
 
-~1,400 lines of new data in `herbal-data.ts`, ~80 lines in `herbal-progress.ts`, ~12 new route files averaging 150–250 lines each. Comparable to the Breathwork buildout.
+## Quality bar
+
+- TypeScript strict — no `any`, all routes typed.
+- Every route has its own `head()` with unique title + description + og tags.
+- Every detail route has `loader`, `notFoundComponent`, `errorComponent`.
+- Recipes and ingredients use the same monograph density as the herbal materia medica (real numbers, real benefits, real contraindications — no filler).
+- Cmd+K search works across the whole module.
+- Rank tracker badge in the layout updates as the user marks recipes made.
+
+## Non-goals
+
+- No backend/persistence beyond `localStorage` (matches Herbal & Breathwork modules).
+- No image generation — emoji + typography carry the visual identity, like the existing codex.
+- No e-commerce links for blenders — comparison only.

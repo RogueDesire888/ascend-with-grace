@@ -235,7 +235,21 @@ export const alchemyItems = [
   { to: "/alchemists-path/community" as const, label: "Community" },
   { to: "/alchemists-path/resources" as const, label: "Resources" },
   { to: "/alchemists-path/tools" as const, label: "Tools" },
-  { to: "/smoothie-codex" as const, label: "Smoothie Codex" },
+];
+
+export const smoothieItems = [
+  { to: "/smoothie/start-here" as const, label: "Start Here" },
+  { to: "/smoothie/ingredients" as const, label: "Ingredients" },
+  { to: "/smoothie/recipes" as const, label: "Recipes" },
+  { to: "/smoothie/goals" as const, label: "By Goal" },
+  { to: "/smoothie/builder" as const, label: "Builder" },
+  { to: "/smoothie/science" as const, label: "Science" },
+  { to: "/smoothie/rituals" as const, label: "Rituals" },
+  { to: "/smoothie/pantry" as const, label: "Pantry" },
+  { to: "/smoothie/mastery" as const, label: "Mastery" },
+  { to: "/smoothie/community" as const, label: "Community" },
+  { to: "/smoothie/resources" as const, label: "Resources" },
+  { to: "/smoothie/tools" as const, label: "Tools" },
 ];
 
 export const breathworkItems = [
