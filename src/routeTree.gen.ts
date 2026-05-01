@@ -52,7 +52,17 @@ import { Route as BreathworkMasteryRouteImport } from './routes/breathwork.maste
 import { Route as BreathworkGoalsRouteImport } from './routes/breathwork.goals'
 import { Route as BreathworkCommunityRouteImport } from './routes/breathwork.community'
 import { Route as BreathworkAboutRouteImport } from './routes/breathwork.about'
+import { Route as AlchemistsPathTraditionsRouteImport } from './routes/alchemists-path.traditions'
+import { Route as AlchemistsPathToolsRouteImport } from './routes/alchemists-path.tools'
+import { Route as AlchemistsPathStartHereRouteImport } from './routes/alchemists-path.start-here'
+import { Route as AlchemistsPathScienceRouteImport } from './routes/alchemists-path.science'
+import { Route as AlchemistsPathSafetyRouteImport } from './routes/alchemists-path.safety'
+import { Route as AlchemistsPathResourcesRouteImport } from './routes/alchemists-path.resources'
+import { Route as AlchemistsPathPreparationsRouteImport } from './routes/alchemists-path.preparations'
+import { Route as AlchemistsPathMateriaMedicaRouteImport } from './routes/alchemists-path.materia-medica'
 import { Route as AlchemistsPathMasteryRouteImport } from './routes/alchemists-path.mastery'
+import { Route as AlchemistsPathGoalsRouteImport } from './routes/alchemists-path.goals'
+import { Route as AlchemistsPathCommunityRouteImport } from './routes/alchemists-path.community'
 import { Route as YogaGoalsGoalIdRouteImport } from './routes/yoga.goals.$goalId'
 import { Route as YogaAsanasSlugRouteImport } from './routes/yoga.asanas.$slug'
 import { Route as TaiChiPosturesSlugRouteImport } from './routes/tai-chi.postures.$slug'
@@ -61,6 +71,8 @@ import { Route as TaiChiFormsSlugRouteImport } from './routes/tai-chi.forms.$slu
 import { Route as BreathworkTechniquesTraditionsRouteImport } from './routes/breathwork.techniques.traditions'
 import { Route as BreathworkTechniquesSlugRouteImport } from './routes/breathwork.techniques.$slug'
 import { Route as BreathworkGoalsGoalIdRouteImport } from './routes/breathwork.goals.$goalId'
+import { Route as AlchemistsPathMateriaMedicaSlugRouteImport } from './routes/alchemists-path.materia-medica.$slug'
+import { Route as AlchemistsPathGoalsGoalIdRouteImport } from './routes/alchemists-path.goals.$goalId'
 
 const YogaTherapyLabRoute = YogaTherapyLabRouteImport.update({
   id: '/yoga-therapy-lab',
@@ -277,9 +289,62 @@ const BreathworkAboutRoute = BreathworkAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => BreathworkRoute,
 } as any)
+const AlchemistsPathTraditionsRoute =
+  AlchemistsPathTraditionsRouteImport.update({
+    id: '/traditions',
+    path: '/traditions',
+    getParentRoute: () => AlchemistsPathRoute,
+  } as any)
+const AlchemistsPathToolsRoute = AlchemistsPathToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => AlchemistsPathRoute,
+} as any)
+const AlchemistsPathStartHereRoute = AlchemistsPathStartHereRouteImport.update({
+  id: '/start-here',
+  path: '/start-here',
+  getParentRoute: () => AlchemistsPathRoute,
+} as any)
+const AlchemistsPathScienceRoute = AlchemistsPathScienceRouteImport.update({
+  id: '/science',
+  path: '/science',
+  getParentRoute: () => AlchemistsPathRoute,
+} as any)
+const AlchemistsPathSafetyRoute = AlchemistsPathSafetyRouteImport.update({
+  id: '/safety',
+  path: '/safety',
+  getParentRoute: () => AlchemistsPathRoute,
+} as any)
+const AlchemistsPathResourcesRoute = AlchemistsPathResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => AlchemistsPathRoute,
+} as any)
+const AlchemistsPathPreparationsRoute =
+  AlchemistsPathPreparationsRouteImport.update({
+    id: '/preparations',
+    path: '/preparations',
+    getParentRoute: () => AlchemistsPathRoute,
+  } as any)
+const AlchemistsPathMateriaMedicaRoute =
+  AlchemistsPathMateriaMedicaRouteImport.update({
+    id: '/materia-medica',
+    path: '/materia-medica',
+    getParentRoute: () => AlchemistsPathRoute,
+  } as any)
 const AlchemistsPathMasteryRoute = AlchemistsPathMasteryRouteImport.update({
   id: '/mastery',
   path: '/mastery',
+  getParentRoute: () => AlchemistsPathRoute,
+} as any)
+const AlchemistsPathGoalsRoute = AlchemistsPathGoalsRouteImport.update({
+  id: '/goals',
+  path: '/goals',
+  getParentRoute: () => AlchemistsPathRoute,
+} as any)
+const AlchemistsPathCommunityRoute = AlchemistsPathCommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
   getParentRoute: () => AlchemistsPathRoute,
 } as any)
 const YogaGoalsGoalIdRoute = YogaGoalsGoalIdRouteImport.update({
@@ -324,6 +389,18 @@ const BreathworkGoalsGoalIdRoute = BreathworkGoalsGoalIdRouteImport.update({
   path: '/$goalId',
   getParentRoute: () => BreathworkGoalsRoute,
 } as any)
+const AlchemistsPathMateriaMedicaSlugRoute =
+  AlchemistsPathMateriaMedicaSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => AlchemistsPathMateriaMedicaRoute,
+  } as any)
+const AlchemistsPathGoalsGoalIdRoute =
+  AlchemistsPathGoalsGoalIdRouteImport.update({
+    id: '/$goalId',
+    path: '/$goalId',
+    getParentRoute: () => AlchemistsPathGoalsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -339,7 +416,17 @@ export interface FileRoutesByFullPath {
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
+  '/alchemists-path/community': typeof AlchemistsPathCommunityRoute
+  '/alchemists-path/goals': typeof AlchemistsPathGoalsRouteWithChildren
   '/alchemists-path/mastery': typeof AlchemistsPathMasteryRoute
+  '/alchemists-path/materia-medica': typeof AlchemistsPathMateriaMedicaRouteWithChildren
+  '/alchemists-path/preparations': typeof AlchemistsPathPreparationsRoute
+  '/alchemists-path/resources': typeof AlchemistsPathResourcesRoute
+  '/alchemists-path/safety': typeof AlchemistsPathSafetyRoute
+  '/alchemists-path/science': typeof AlchemistsPathScienceRoute
+  '/alchemists-path/start-here': typeof AlchemistsPathStartHereRoute
+  '/alchemists-path/tools': typeof AlchemistsPathToolsRoute
+  '/alchemists-path/traditions': typeof AlchemistsPathTraditionsRoute
   '/breathwork/about': typeof BreathworkAboutRoute
   '/breathwork/community': typeof BreathworkCommunityRoute
   '/breathwork/goals': typeof BreathworkGoalsRouteWithChildren
@@ -370,6 +457,8 @@ export interface FileRoutesByFullPath {
   '/yoga/resources': typeof YogaResourcesRoute
   '/yoga/start-here': typeof YogaStartHereRoute
   '/yoga/tools': typeof YogaToolsRoute
+  '/alchemists-path/goals/$goalId': typeof AlchemistsPathGoalsGoalIdRoute
+  '/alchemists-path/materia-medica/$slug': typeof AlchemistsPathMateriaMedicaSlugRoute
   '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
   '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
   '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
@@ -393,7 +482,17 @@ export interface FileRoutesByTo {
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
+  '/alchemists-path/community': typeof AlchemistsPathCommunityRoute
+  '/alchemists-path/goals': typeof AlchemistsPathGoalsRouteWithChildren
   '/alchemists-path/mastery': typeof AlchemistsPathMasteryRoute
+  '/alchemists-path/materia-medica': typeof AlchemistsPathMateriaMedicaRouteWithChildren
+  '/alchemists-path/preparations': typeof AlchemistsPathPreparationsRoute
+  '/alchemists-path/resources': typeof AlchemistsPathResourcesRoute
+  '/alchemists-path/safety': typeof AlchemistsPathSafetyRoute
+  '/alchemists-path/science': typeof AlchemistsPathScienceRoute
+  '/alchemists-path/start-here': typeof AlchemistsPathStartHereRoute
+  '/alchemists-path/tools': typeof AlchemistsPathToolsRoute
+  '/alchemists-path/traditions': typeof AlchemistsPathTraditionsRoute
   '/breathwork/about': typeof BreathworkAboutRoute
   '/breathwork/community': typeof BreathworkCommunityRoute
   '/breathwork/goals': typeof BreathworkGoalsRouteWithChildren
@@ -424,6 +523,8 @@ export interface FileRoutesByTo {
   '/yoga/resources': typeof YogaResourcesRoute
   '/yoga/start-here': typeof YogaStartHereRoute
   '/yoga/tools': typeof YogaToolsRoute
+  '/alchemists-path/goals/$goalId': typeof AlchemistsPathGoalsGoalIdRoute
+  '/alchemists-path/materia-medica/$slug': typeof AlchemistsPathMateriaMedicaSlugRoute
   '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
   '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
   '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
@@ -448,7 +549,17 @@ export interface FileRoutesById {
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
+  '/alchemists-path/community': typeof AlchemistsPathCommunityRoute
+  '/alchemists-path/goals': typeof AlchemistsPathGoalsRouteWithChildren
   '/alchemists-path/mastery': typeof AlchemistsPathMasteryRoute
+  '/alchemists-path/materia-medica': typeof AlchemistsPathMateriaMedicaRouteWithChildren
+  '/alchemists-path/preparations': typeof AlchemistsPathPreparationsRoute
+  '/alchemists-path/resources': typeof AlchemistsPathResourcesRoute
+  '/alchemists-path/safety': typeof AlchemistsPathSafetyRoute
+  '/alchemists-path/science': typeof AlchemistsPathScienceRoute
+  '/alchemists-path/start-here': typeof AlchemistsPathStartHereRoute
+  '/alchemists-path/tools': typeof AlchemistsPathToolsRoute
+  '/alchemists-path/traditions': typeof AlchemistsPathTraditionsRoute
   '/breathwork/about': typeof BreathworkAboutRoute
   '/breathwork/community': typeof BreathworkCommunityRoute
   '/breathwork/goals': typeof BreathworkGoalsRouteWithChildren
@@ -479,6 +590,8 @@ export interface FileRoutesById {
   '/yoga/resources': typeof YogaResourcesRoute
   '/yoga/start-here': typeof YogaStartHereRoute
   '/yoga/tools': typeof YogaToolsRoute
+  '/alchemists-path/goals/$goalId': typeof AlchemistsPathGoalsGoalIdRoute
+  '/alchemists-path/materia-medica/$slug': typeof AlchemistsPathMateriaMedicaSlugRoute
   '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
   '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
   '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
@@ -504,7 +617,17 @@ export interface FileRouteTypes {
     | '/tai-chi-lab'
     | '/yoga'
     | '/yoga-therapy-lab'
+    | '/alchemists-path/community'
+    | '/alchemists-path/goals'
     | '/alchemists-path/mastery'
+    | '/alchemists-path/materia-medica'
+    | '/alchemists-path/preparations'
+    | '/alchemists-path/resources'
+    | '/alchemists-path/safety'
+    | '/alchemists-path/science'
+    | '/alchemists-path/start-here'
+    | '/alchemists-path/tools'
+    | '/alchemists-path/traditions'
     | '/breathwork/about'
     | '/breathwork/community'
     | '/breathwork/goals'
@@ -535,6 +658,8 @@ export interface FileRouteTypes {
     | '/yoga/resources'
     | '/yoga/start-here'
     | '/yoga/tools'
+    | '/alchemists-path/goals/$goalId'
+    | '/alchemists-path/materia-medica/$slug'
     | '/breathwork/goals/$goalId'
     | '/breathwork/techniques/$slug'
     | '/breathwork/techniques/traditions'
@@ -558,7 +683,17 @@ export interface FileRouteTypes {
     | '/tai-chi-lab'
     | '/yoga'
     | '/yoga-therapy-lab'
+    | '/alchemists-path/community'
+    | '/alchemists-path/goals'
     | '/alchemists-path/mastery'
+    | '/alchemists-path/materia-medica'
+    | '/alchemists-path/preparations'
+    | '/alchemists-path/resources'
+    | '/alchemists-path/safety'
+    | '/alchemists-path/science'
+    | '/alchemists-path/start-here'
+    | '/alchemists-path/tools'
+    | '/alchemists-path/traditions'
     | '/breathwork/about'
     | '/breathwork/community'
     | '/breathwork/goals'
@@ -589,6 +724,8 @@ export interface FileRouteTypes {
     | '/yoga/resources'
     | '/yoga/start-here'
     | '/yoga/tools'
+    | '/alchemists-path/goals/$goalId'
+    | '/alchemists-path/materia-medica/$slug'
     | '/breathwork/goals/$goalId'
     | '/breathwork/techniques/$slug'
     | '/breathwork/techniques/traditions'
@@ -612,7 +749,17 @@ export interface FileRouteTypes {
     | '/tai-chi-lab'
     | '/yoga'
     | '/yoga-therapy-lab'
+    | '/alchemists-path/community'
+    | '/alchemists-path/goals'
     | '/alchemists-path/mastery'
+    | '/alchemists-path/materia-medica'
+    | '/alchemists-path/preparations'
+    | '/alchemists-path/resources'
+    | '/alchemists-path/safety'
+    | '/alchemists-path/science'
+    | '/alchemists-path/start-here'
+    | '/alchemists-path/tools'
+    | '/alchemists-path/traditions'
     | '/breathwork/about'
     | '/breathwork/community'
     | '/breathwork/goals'
@@ -643,6 +790,8 @@ export interface FileRouteTypes {
     | '/yoga/resources'
     | '/yoga/start-here'
     | '/yoga/tools'
+    | '/alchemists-path/goals/$goalId'
+    | '/alchemists-path/materia-medica/$slug'
     | '/breathwork/goals/$goalId'
     | '/breathwork/techniques/$slug'
     | '/breathwork/techniques/traditions'
@@ -972,11 +1121,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BreathworkAboutRouteImport
       parentRoute: typeof BreathworkRoute
     }
+    '/alchemists-path/traditions': {
+      id: '/alchemists-path/traditions'
+      path: '/traditions'
+      fullPath: '/alchemists-path/traditions'
+      preLoaderRoute: typeof AlchemistsPathTraditionsRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
+    '/alchemists-path/tools': {
+      id: '/alchemists-path/tools'
+      path: '/tools'
+      fullPath: '/alchemists-path/tools'
+      preLoaderRoute: typeof AlchemistsPathToolsRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
+    '/alchemists-path/start-here': {
+      id: '/alchemists-path/start-here'
+      path: '/start-here'
+      fullPath: '/alchemists-path/start-here'
+      preLoaderRoute: typeof AlchemistsPathStartHereRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
+    '/alchemists-path/science': {
+      id: '/alchemists-path/science'
+      path: '/science'
+      fullPath: '/alchemists-path/science'
+      preLoaderRoute: typeof AlchemistsPathScienceRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
+    '/alchemists-path/safety': {
+      id: '/alchemists-path/safety'
+      path: '/safety'
+      fullPath: '/alchemists-path/safety'
+      preLoaderRoute: typeof AlchemistsPathSafetyRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
+    '/alchemists-path/resources': {
+      id: '/alchemists-path/resources'
+      path: '/resources'
+      fullPath: '/alchemists-path/resources'
+      preLoaderRoute: typeof AlchemistsPathResourcesRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
+    '/alchemists-path/preparations': {
+      id: '/alchemists-path/preparations'
+      path: '/preparations'
+      fullPath: '/alchemists-path/preparations'
+      preLoaderRoute: typeof AlchemistsPathPreparationsRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
+    '/alchemists-path/materia-medica': {
+      id: '/alchemists-path/materia-medica'
+      path: '/materia-medica'
+      fullPath: '/alchemists-path/materia-medica'
+      preLoaderRoute: typeof AlchemistsPathMateriaMedicaRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
     '/alchemists-path/mastery': {
       id: '/alchemists-path/mastery'
       path: '/mastery'
       fullPath: '/alchemists-path/mastery'
       preLoaderRoute: typeof AlchemistsPathMasteryRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
+    '/alchemists-path/goals': {
+      id: '/alchemists-path/goals'
+      path: '/goals'
+      fullPath: '/alchemists-path/goals'
+      preLoaderRoute: typeof AlchemistsPathGoalsRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
+    '/alchemists-path/community': {
+      id: '/alchemists-path/community'
+      path: '/community'
+      fullPath: '/alchemists-path/community'
+      preLoaderRoute: typeof AlchemistsPathCommunityRouteImport
       parentRoute: typeof AlchemistsPathRoute
     }
     '/yoga/goals/$goalId': {
@@ -1035,15 +1254,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BreathworkGoalsGoalIdRouteImport
       parentRoute: typeof BreathworkGoalsRoute
     }
+    '/alchemists-path/materia-medica/$slug': {
+      id: '/alchemists-path/materia-medica/$slug'
+      path: '/$slug'
+      fullPath: '/alchemists-path/materia-medica/$slug'
+      preLoaderRoute: typeof AlchemistsPathMateriaMedicaSlugRouteImport
+      parentRoute: typeof AlchemistsPathMateriaMedicaRoute
+    }
+    '/alchemists-path/goals/$goalId': {
+      id: '/alchemists-path/goals/$goalId'
+      path: '/$goalId'
+      fullPath: '/alchemists-path/goals/$goalId'
+      preLoaderRoute: typeof AlchemistsPathGoalsGoalIdRouteImport
+      parentRoute: typeof AlchemistsPathGoalsRoute
+    }
   }
 }
 
+interface AlchemistsPathGoalsRouteChildren {
+  AlchemistsPathGoalsGoalIdRoute: typeof AlchemistsPathGoalsGoalIdRoute
+}
+
+const AlchemistsPathGoalsRouteChildren: AlchemistsPathGoalsRouteChildren = {
+  AlchemistsPathGoalsGoalIdRoute: AlchemistsPathGoalsGoalIdRoute,
+}
+
+const AlchemistsPathGoalsRouteWithChildren =
+  AlchemistsPathGoalsRoute._addFileChildren(AlchemistsPathGoalsRouteChildren)
+
+interface AlchemistsPathMateriaMedicaRouteChildren {
+  AlchemistsPathMateriaMedicaSlugRoute: typeof AlchemistsPathMateriaMedicaSlugRoute
+}
+
+const AlchemistsPathMateriaMedicaRouteChildren: AlchemistsPathMateriaMedicaRouteChildren =
+  {
+    AlchemistsPathMateriaMedicaSlugRoute: AlchemistsPathMateriaMedicaSlugRoute,
+  }
+
+const AlchemistsPathMateriaMedicaRouteWithChildren =
+  AlchemistsPathMateriaMedicaRoute._addFileChildren(
+    AlchemistsPathMateriaMedicaRouteChildren,
+  )
+
 interface AlchemistsPathRouteChildren {
+  AlchemistsPathCommunityRoute: typeof AlchemistsPathCommunityRoute
+  AlchemistsPathGoalsRoute: typeof AlchemistsPathGoalsRouteWithChildren
   AlchemistsPathMasteryRoute: typeof AlchemistsPathMasteryRoute
+  AlchemistsPathMateriaMedicaRoute: typeof AlchemistsPathMateriaMedicaRouteWithChildren
+  AlchemistsPathPreparationsRoute: typeof AlchemistsPathPreparationsRoute
+  AlchemistsPathResourcesRoute: typeof AlchemistsPathResourcesRoute
+  AlchemistsPathSafetyRoute: typeof AlchemistsPathSafetyRoute
+  AlchemistsPathScienceRoute: typeof AlchemistsPathScienceRoute
+  AlchemistsPathStartHereRoute: typeof AlchemistsPathStartHereRoute
+  AlchemistsPathToolsRoute: typeof AlchemistsPathToolsRoute
+  AlchemistsPathTraditionsRoute: typeof AlchemistsPathTraditionsRoute
 }
 
 const AlchemistsPathRouteChildren: AlchemistsPathRouteChildren = {
+  AlchemistsPathCommunityRoute: AlchemistsPathCommunityRoute,
+  AlchemistsPathGoalsRoute: AlchemistsPathGoalsRouteWithChildren,
   AlchemistsPathMasteryRoute: AlchemistsPathMasteryRoute,
+  AlchemistsPathMateriaMedicaRoute:
+    AlchemistsPathMateriaMedicaRouteWithChildren,
+  AlchemistsPathPreparationsRoute: AlchemistsPathPreparationsRoute,
+  AlchemistsPathResourcesRoute: AlchemistsPathResourcesRoute,
+  AlchemistsPathSafetyRoute: AlchemistsPathSafetyRoute,
+  AlchemistsPathScienceRoute: AlchemistsPathScienceRoute,
+  AlchemistsPathStartHereRoute: AlchemistsPathStartHereRoute,
+  AlchemistsPathToolsRoute: AlchemistsPathToolsRoute,
+  AlchemistsPathTraditionsRoute: AlchemistsPathTraditionsRoute,
 }
 
 const AlchemistsPathRouteWithChildren = AlchemistsPathRoute._addFileChildren(
