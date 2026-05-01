@@ -4,14 +4,104 @@ import {
   CalendarDays,
   CheckCircle2,
   Compass,
+  Flame,
   HeartPulse,
   Infinity,
   Library,
+  Mountain,
   ScrollText,
   Shield,
   Sparkles,
+  Star,
   Users,
+  Waves,
+  Wind,
 } from "lucide-react";
+import { QuestPath, type QuestLevel, type QuestBadge } from "@/components/platform/QuestPath";
+
+const taiChiLevels: QuestLevel[] = [
+  {
+    id: "tc-l1",
+    number: 1,
+    title: "Shape",
+    subtitle: "Memorize the form, soften the shoulders",
+    quote: "“Stand like a mountain, move like a river.”",
+    Icon: Mountain,
+    quests: [
+      "Stand in Wuji posture for 5 minutes daily for 7 days.",
+      "Memorize the first 8 movements of a short form.",
+      "Complete the short form once without stopping.",
+      "Identify and name the 8 gates (Peng, Lu, Ji, An, Cai, Lie, Zhou, Kao).",
+    ],
+  },
+  {
+    id: "tc-l2",
+    number: 2,
+    title: "Breath",
+    subtitle: "Coordinate breath with rising and sinking",
+    quote: "“Breath leads qi; qi leads movement.”",
+    Icon: Wind,
+    quests: [
+      "Practice natural abdominal breathing for 10 minutes daily.",
+      "Sync breath with openings and closings of the form.",
+      "Complete the form with synchronized breath, no gasping.",
+      "Hold single-hand contact (push hands) for 3 minutes with a partner or wall.",
+    ],
+  },
+  {
+    id: "tc-l3",
+    number: 3,
+    title: "Energy",
+    subtitle: "Develop jin and listening energy",
+    quote: "“Soft outside, structured within.”",
+    Icon: Waves,
+    quests: [
+      "Train silk-reeling (chan si jin) circles for 10 minutes daily for 2 weeks.",
+      "Practice fixed-step push hands focusing on listening (ting jin).",
+      "Feel a clear silk-reeling sensation in solo form.",
+      "Redirect a partner's force in fixed step without forcing.",
+    ],
+  },
+  {
+    id: "tc-l4",
+    number: 4,
+    title: "Spirit",
+    subtitle: "Intention leads movement",
+    quote: "“The eyes carry the intent; the body follows.”",
+    Icon: Star,
+    quests: [
+      "Practice the form with eyes closed and remain stable.",
+      "Lead a movement with intention (yi) before muscle.",
+      "Neutralize most moving-step pushes from a partner.",
+      "Sit in stillness for 15 minutes after each form.",
+    ],
+  },
+  {
+    id: "tc-l5",
+    number: 5,
+    title: "Return to Simplicity",
+    subtitle: "Wu wei — moving without forcing",
+    quote: "“When the opponent is hard, I am soft. When they move, I follow.”",
+    Icon: Infinity,
+    quests: [
+      "Practice spontaneous movement without fixed sequence.",
+      "Yield and redirect automatically in freestyle push hands.",
+      "Maintain a daily practice for 30 days unbroken.",
+      "Teach a beginner the first 3 movements with patience.",
+    ],
+  },
+];
+
+const taiChiBadges: QuestBadge[] = [
+  { id: "tc-mountain-stance", name: "Mountain Stance", level: 1, Icon: Mountain },
+  { id: "tc-breath-keeper", name: "Breath Keeper", level: 2, Icon: Wind },
+  { id: "tc-silk-reeler", name: "Silk Reeler", level: 3, Icon: Waves },
+  { id: "tc-quiet-mind", name: "Quiet Mind", level: 4, Icon: Star },
+  { id: "tc-flowing-water", name: "Flowing Water", level: 5, Icon: Infinity },
+];
+
+const taiChiClasses = ["Beginner", "Student", "Practitioner", "Adept", "Master"];
+
 
 export const Route = createFileRoute("/tai-chi-lab")({
   head: () => ({
