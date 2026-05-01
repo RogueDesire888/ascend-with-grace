@@ -16,7 +16,10 @@ import {
   Wind,
 } from "lucide-react";
 import { SanctuaryPostFX, detectDefaultTier, type QualityTier } from "./sanctuary/PostFX";
-import sanctuarySkybox from "@/assets/sanctuary-skybox.jpg";
+import { GroundOverlay } from "./sanctuary/GroundOverlay";
+import { GrassField } from "./sanctuary/GrassField";
+import { ReflectivePond } from "./sanctuary/ReflectivePond";
+import { sanctuaryAssets } from "./sanctuary/assets";
 import {
   Suspense,
   useEffect,
