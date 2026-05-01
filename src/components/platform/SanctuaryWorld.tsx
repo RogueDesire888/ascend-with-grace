@@ -25,8 +25,8 @@ import {
 } from "react";
 import * as THREE from "three";
 import { dailyQuests, mainQuests, skillTrees, weeklyQuests } from "./data";
-import templeExteriorSanctuary from "@/assets/temple-exterior-sanctuary.png";
-import templeInteriorSanctuary from "@/assets/temple-interior-sanctuary.png";
+import templeExteriorSanctuary from "@/assets/temple-exterior-sanctuary.jpg";
+import templeInteriorSanctuary from "@/assets/temple-interior-sanctuary.jpg";
 
 type ZoneKey = "overview" | "herbs" | "energy" | "movement" | "touch" | "spirit";
 type Point = { x: number; z: number };
