@@ -2,6 +2,35 @@ import { Link } from "@tanstack/react-router";
 import { ChevronDown, Sparkles } from "lucide-react";
 import { movementItems, navItems } from "./data";
 
+function MovementMenu() {
+  return (
+    <div className="group relative">
+      <button
+        type="button"
+        className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
+      >
+        Movement <ChevronDown className="h-4 w-4" />
+      </button>
+      <div className="invisible absolute left-1/2 top-full z-50 min-w-56 -translate-x-1/2 pt-3 opacity-0 transition-all group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+        <div className="sanctuary-panel rounded-lg border border-border/60 p-2 shadow-[var(--shadow-aura)]">
+          {movementItems.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="block rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
+              activeProps={{
+                className: "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]",
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -32,42 +61,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             aria-label="Primary navigation"
           >
             {navItems.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                activeOptions={{ exact: item.to === "/" }}
-                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
-                activeProps={{
-                  className: "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]",
-                }}
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="group relative">
-              <button
-                type="button"
-                className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
-              >
-                Movement <ChevronDown className="h-4 w-4" />
-              </button>
-              <div className="invisible absolute left-1/2 top-full z-50 min-w-56 -translate-x-1/2 pt-3 opacity-0 transition-all group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <div className="sanctuary-panel rounded-lg border border-border/60 p-2 shadow-[var(--shadow-aura)]">
-                  {movementItems.map((item) => (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      className="block rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
-                      activeProps={{
-                        className: "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]",
-                      }}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
+              <div key={item.to} className="contents">
+                <Link
+                  to={item.to}
+                  activeOptions={{ exact: item.to === "/" }}
+                  className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
+                  activeProps={{
+                    className: "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]",
+                  }}
+                >
+                  {item.label}
+                </Link>
+                {item.to === "/skill-trees" ? <MovementMenu /> : null}
               </div>
-            </div>
+            ))}
           </nav>
           <Link
             to="/sanctuary"

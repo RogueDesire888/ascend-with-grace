@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarDays, CheckCircle2, HeartPulse, Sparkles } from "lucide-react";
 import sanctuaryImage from "@/assets/celestial-garden-sanctuary.png";
 import {
   ElementCards,
@@ -31,6 +31,37 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const valueCards = [
+    {
+      title: "Movement labs",
+      copy: "Deep yoga therapy and Tai Chi knowledge bases turn the Movement path into a real study library, not just a quest label.",
+      to: "/yoga-therapy-lab" as const,
+      cta: "Open Yoga Lab",
+      Icon: HeartPulse,
+    },
+    {
+      title: "Daily practice loop",
+      copy: "Short rituals, XP, glow, and streaks give members a reason to return and make steady progress every day.",
+      to: "/quests" as const,
+      cta: "See Quests",
+      Icon: CalendarDays,
+    },
+    {
+      title: "Mastery map",
+      copy: "Skill trees organize herbs, energy, movement, touch, and spirit into a clear journey from beginner to advanced practice.",
+      to: "/skill-trees" as const,
+      cta: "View Skill Trees",
+      Icon: Sparkles,
+    },
+    {
+      title: "Resource library",
+      copy: "Guides, audio, and practice references give the platform a curriculum layer beyond the 3D sanctuary experience.",
+      to: "/library" as const,
+      cta: "Browse Library",
+      Icon: BookOpen,
+    },
+  ];
+
   return (
     <>
       <section className="relative mx-auto min-h-[calc(100vh-5rem)] w-full max-w-[94rem] px-4 py-6 sm:px-6 lg:px-8">
@@ -81,6 +112,41 @@ function Index() {
 
       <section className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <ElementCards />
+      </section>
+
+      <section className="mx-auto w-full max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+        <div className="mb-7 max-w-3xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-primary">
+            More than a beautiful world
+          </p>
+          <h2 className="mt-3 text-3xl font-bold text-foreground sm:text-4xl">
+            A practice platform with study, structure, and daily momentum.
+          </h2>
+          <p className="mt-4 text-muted-foreground">
+            The sanctuary is the emotional center, but the value comes from what members can do
+            with it: learn, practice, track, and return to a guided path.
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {valueCards.map(({ title, copy, to, cta, Icon }) => (
+            <div
+              key={title}
+              className="sanctuary-panel rounded-[1.6rem] border border-border/70 p-5"
+            >
+              <div className="grid h-11 w-11 place-items-center rounded-full bg-primary/15 text-primary">
+                <Icon className="h-5 w-5" />
+              </div>
+              <h3 className="mt-4 text-lg font-bold text-foreground">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{copy}</p>
+              <Link
+                to={to}
+                className="mt-5 inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/45 px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
+              >
+                {cta} <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="mx-auto grid w-full max-w-7xl gap-8 px-4 pb-20 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:px-8">
