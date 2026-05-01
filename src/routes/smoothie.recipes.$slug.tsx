@@ -36,7 +36,8 @@ export const Route = createFileRoute("/smoothie/recipes/$slug")({
 });
 
 function RecipeDetail() {
-  const { recipe: r } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const r = getRecipe(slug)!;
   const { progress, toggleRecipe } = useSmoothieProgress();
   const made = !!progress.recipes[r.slug];
 

@@ -35,7 +35,8 @@ export const Route = createFileRoute("/smoothie/goals/$goalId")({
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function GoalDetail() {
-  const { goal: g } = Route.useLoaderData();
+  const { goalId } = Route.useParams();
+  const g = getGoal(goalId)!;
 
   return (
     <article className="space-y-8">
