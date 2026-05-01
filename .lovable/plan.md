@@ -1,69 +1,89 @@
 ## Goal
 
-Add an immersive, game-like "Path of Herbal Mastery" experience as a **new dedicated page** at `/alchemists-path`, linked from the main navigation so it lives natively alongside the existing yoga and Tai Chi labs. A new page (rather than an embedded section on the homepage) is the right fit because the content is large, route-based pages already exist for similar long-form material, and TanStack Start expects shareable sections to have their own route for SSR/SEO.
+Make the skill tree page reflect real player progress, and turn the Yoga + Tai Chi labs into the Movement Arts equivalent of the Alchemist's Path.
 
-## New Navigation Entry
+- Herbal Path progress drives the **Herbal Wisdom** branch on `/skill-trees`.
+- New gamified Yoga and Tai Chi experiences drive the **Movement Arts** branch.
 
-Add an "Herbal Path" item to `src/components/platform/data.ts` under `navItems` (placed before "Library" so it sits among the practice tools). The existing `AppShell` then renders it automatically in both desktop and mobile nav.
+## 1. Shared progress store
 
-## New Route: `src/routes/alchemists-path.tsx`
+New file `src/lib/progress-store.ts`:
 
-Single self-contained page with proper `head()` metadata (title, description, og tags). Inherits all global theme tokens (colors, radii, shadows, fonts) and layers a parchment/grimoire aesthetic on top.
+- localStorage-backed singleton with React hook `useTreeProgress(treeKey)`.
+- Tracks per-tree: `completedQuests` (Set of keys), `completedLevels` (Set of ids), derived `level`, `xp`, `progress %`, `nextQuest`.
+- Exposes `toggleQuest`, `toggleLevel`, `getTreeSummary(key)` for the skill tree page.
+- Trees keyed by: `herbal-wisdom`, `movement-arts` (extensible to others later).
+- Emits a `storage`-style custom event so the skill tree page re-renders live when the user completes a quest in another tab/route.
+- SSR-safe (`typeof window` guards, hydrate inside `useEffect`).
 
-### Page Structure (top → bottom)
+XP / level formula (single shared rule):
+- 25 XP per quest, 100 XP per level marked complete.
+- Display level = number of completed level capstones + 1 (capped at 5).
+- Progress bar % = XP toward next level (XP within current bracket / 100).
+- `nextQuest` = first unchecked quest in the lowest incomplete level.
 
-1. **Hero Header** — Title "🌿 THE ALCHEMIST'S PATH", subtitle "A Game of Herbal Mastery", the "First, do no harm…" quote in serif italics, and a "Begin Your Journey" button that smooth-scrolls to Level 1 (anchor `#level-1`).
+## 2. Wire Herbal Path into the store
 
-2. **Character Sheet Card** — Profile-card layout with: Class, Level, XP bar (using the existing shadcn `Progress` component), Core Stats (Observation, Intuition, Patience, Precision shown as labeled bars), and Inventory list with small icons.
+In `src/routes/alchemists-path.tsx`:
 
-3. **Progression Roadmap** — Horizontal 5-step path (Novice → Apprentice → Journeyman → Adept → Grand Alchemist) connected by a dotted/glowing line. Each milestone is a clickable badge that smooth-scrolls to the matching level accordion. Wraps to vertical stack on mobile.
+- Replace the local `useState`/`useEffect` localStorage block with `useTreeProgress("herbal-wisdom")`.
+- Migrate existing storage key `alchemists-path-progress-v1` once on first load so users don't lose progress.
+- Quest keys keep their existing `level-N-q-i` shape so checklist state persists.
 
-4. **Expandable Levels 1–5** — Built on shadcn `Accordion` (type="single", collapsible, so only one opens at a time). Each level contains:
-   - Flavor quote in serif italics
-   - **Quests & Skills** as a checklist (each item is a checkbox; state persists in `localStorage` under `alchemists-path-progress`)
-   - **Herbs/Recipes** in a responsive grid of parchment cards (Name, *Latin name* italic, Benefits, Vitamins/Minerals)
-   - "Mark Level Complete" toggle button (also persisted)
+## 3. Gamify Yoga Therapy Lab
 
-   Content preserved verbatim from the brief:
-   - L1: Nettle, Chamomile, Peppermint, Calendula, Dandelion + safety rules + identification quest
-   - L2: Nourishment Infusion, Sleepy Blend, Digestive Decoction, Calendula Steam + electrolyte challenge
-   - L3: Tinctures/oils/salves/syrups Folk Method + first-aid kit recipes
-   - L4: Energetics, four humors, dual extraction, vitamin-herb synergy + 7-day wellness challenge
-   - L5: Spagyric process, fermentation, plant spirit connection + Philosopher's Stone final quest
+`src/routes/yoga-therapy-lab.tsx` becomes a quest-driven experience that **keeps all existing reference content** (8 limbs, libraries, conditions, generator, training, CPD) but adds a game layer on top.
 
-5. **Achievement Badges Grid** — Responsive grid of 6 unlockable badges (Wild Forager, Apothecary, Vitalist, Plant Whisperer, Grand Alchemist, plus a 6th milestone like "First Harvest"), each a circular icon (lucide: Leaf, FlaskConical, Sparkles, etc.) on a parchment disc with a label. Locked badges render desaturated until the corresponding level is marked complete.
+New page structure:
 
-6. **Closing Quote** — Centered serif block: "May your teas be strong, your tinctures potent, and your heart ever-green."
+1. **Hero / Character Sheet** mirroring Alchemist's Path style but with a dawn / sky aesthetic using the existing `--air` and `--spirit` tokens (no parchment — this is its own visual sibling).
+2. **Movement Arts XP bar** — the same `useTreeProgress("movement-arts")` summary the Tai Chi lab also writes to, so progress from either page advances the shared branch.
+3. **Roadmap of 5 Yoga Levels**:
+   - L1 Grounding — breath awareness, mountain pose, box breathing
+   - L2 Flow — sun salutation, dirgha breath
+   - L3 Strength & Balance — warrior series, tree pose
+   - L4 Therapy — pick a condition from the existing data and design a 1-week protocol with the generator
+   - L5 Integration — daily 20-min self-practice for 7 days, write a yama reflection
+4. **Expandable level accordions** with quest checklists and "Mark Level Complete" — same UX pattern as Alchemist's Path.
+5. **Existing reference sections** (Philosophy, Libraries, Conditions, Generator, Training, CPD) preserved and rendered below the quest section, so the lab still works as a reference. The current top-tab nav stays as in-page anchors.
+6. **Achievement badges** (Breath Keeper, Sun Walker, Steady Warrior, Healer's Eye, Daily Devotee).
 
-### Interactive Behavior
+## 4. Gamify Tai Chi Lab
 
-- Smooth scroll between roadmap → level sections (CSS `scroll-behavior: smooth` is already enabled globally).
-- Accordion handles single-open behavior.
-- All checkbox + completion state stored in a single `localStorage` JSON object, hydrated in `useEffect` (SSR-safe).
-- Sections fade-in on viewport entry via an `IntersectionObserver` hook applying `animate-fade-in` (already defined in the project's animation utilities).
+`src/routes/tai-chi-lab.tsx` gets the same treatment with a water/earth tone.
 
-## Grimoire Aesthetic (CSS additions)
+- **5 Mastery Levels** mapped 1:1 to the existing "Five Levels of Mastery" content (Shape, Breath, Energy, Spirit, Return to Simplicity) — the existing reference text becomes the level descriptions.
+- Each level gets 4–5 quests derived from the existing milestones table (e.g. L1: "Complete short form without omissions", "Stand in Wuji 5 minutes daily for a week", "Memorize the 8 gates by name").
+- Same character sheet + roadmap + accordion + badges layout, sharing `useTreeProgress("movement-arts")`.
+- All existing TOC sections (Origins, Styles, Lineage, Martial Core, Health, Ecosystem, Schedules, Glossary, Unending Path) kept below the quest section.
 
-Add scoped utility classes to `src/styles.css` (no theme variable changes — preserves global look):
+Because both labs read/write the same `movement-arts` tree, completing a yoga quest and a tai chi quest both grow the same Movement Arts branch on `/skill-trees`.
 
-- `.parchment-card` — layered radial-gradient background mixing `--card` with warm amber/brown tones using `color-mix`, subtle SVG noise for texture, gold-tinted border (`color-mix(--primary 60%, var(--coral-glow))`), and inner shadow for an aged-paper feel.
-- `.grimoire-heading` — applies `font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif` and a soft text-shadow. Loaded via Google Fonts `<link>` added to the root route's `head().links`.
-- `.gold-accent` — utility for `color: color-mix(in oklab, var(--primary) 70%, var(--coral-glow))`.
-- `.path-step` and `.path-line` — for the roadmap connector styling.
+## 5. Skill tree page reflects live progress
 
-Body text continues to use the site's Inter font; only headings and quotes use the serif.
+`src/routes/skill-trees.tsx` + `src/components/platform/PlatformUI.tsx`:
 
-## Technical Notes
+- `SkillProgressCard` and `SkillWheel` consume the live `useTreeProgress` summaries.
+- For trees not yet wired (Energy, Touch, Mind & Spirit) keep the existing static data as a fallback so nothing visually breaks.
+- Card shows live `Lv`, `progress %`, and `nextQuest` pulled from the store. A small "Open path" button links to `/alchemists-path` (Herbal Wisdom), `/yoga-therapy-lab` and `/tai-chi-lab` (Movement Arts).
+- `SkillWheel` outer node for Herbs and Motion gets a subtle `--shadow-glow` ring scaled to its progress so the tree visibly "grows".
 
-- Route file uses `createFileRoute("/alchemists-path")` with `head()` meta.
-- Reuses existing shadcn primitives: `Accordion`, `Checkbox`, `Progress`, `Card`, `Button`, `Badge`.
-- All colors via design tokens (`--primary`, `--card`, `--coral-glow`, `--leaf-glow`, `--sun-glow`) — no hardcoded hex values.
-- `localStorage` access guarded with `typeof window !== "undefined"` for SSR safety.
-- No backend, no new dependencies.
+## 6. Files Touched
 
-## Files Touched
+**New**
+- `src/lib/progress-store.ts`
 
-- **New:** `src/routes/alchemists-path.tsx`
-- **Edit:** `src/components/platform/data.ts` (add nav item)
-- **Edit:** `src/styles.css` (append parchment/grimoire utility classes)
-- **Edit:** `src/routes/__root.tsx` (add Google Fonts serif `<link>` to `head().links`)
+**Edit**
+- `src/routes/alchemists-path.tsx` — swap local state for shared store + one-time migration
+- `src/routes/yoga-therapy-lab.tsx` — add hero/character sheet/roadmap/levels/badges above existing content
+- `src/routes/tai-chi-lab.tsx` — same treatment, levels mapped to existing mastery content
+- `src/components/platform/PlatformUI.tsx` — `SkillProgressCard` + `SkillWheel` read live tree summaries
+- `src/routes/skill-trees.tsx` — pass live data and add "Open path" CTAs
+- `src/styles.css` — small additions for movement-themed cards (sky/earth variants of `parchment-card`) so yoga and tai chi don't reuse the grimoire skin literally
+
+## 7. Technical Notes
+
+- All design uses existing semantic tokens (`--primary`, `--air`, `--water`, `--earth`, `--spirit`, `--shadow-glow`); no hardcoded hex.
+- Store hook subscribes via `window.addEventListener("storage", …)` plus a custom in-tab event so cross-route updates propagate without a full reload.
+- All new sections use the existing `reveal-on-view` IntersectionObserver pattern and Shadcn `Accordion`, `Checkbox`, `Progress`, `Button`, `Badge`.
+- No new dependencies, no backend.

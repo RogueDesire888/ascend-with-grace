@@ -6,17 +6,25 @@ import {
   Brain,
   CheckCircle2,
   ClipboardList,
+  Compass,
+  Eye,
+  Flame,
+  Flower2,
   GraduationCap,
   HeartPulse,
   Home,
+  Leaf,
   Library,
+  Mountain,
   NotebookPen,
   Search,
   Settings2,
   Sparkles,
+  Sun,
   Wind,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { QuestPath, type QuestLevel, type QuestBadge } from "@/components/platform/QuestPath";
 
 export const Route = createFileRoute("/yoga-therapy-lab")({
   head: () => ({
@@ -165,6 +173,90 @@ const pranayama = [
   ["Kapalabhati", "Stimulating breath; avoid with uncontrolled hypertension or pregnancy."],
 ];
 
+const yogaLevels: QuestLevel[] = [
+  {
+    id: "yoga-l1",
+    number: 1,
+    title: "Grounding",
+    subtitle: "Breath, posture, and presence",
+    quote: "“Sthira sukham asanam — steadiness and ease.”",
+    Icon: Mountain,
+    quests: [
+      "Sit in easy pose for 5 minutes daily for one week.",
+      "Practice Dirgha (three-part breath) for 10 rounds, 3 times.",
+      "Hold Tadasana (Mountain) for 1 minute, scanning posture top to bottom.",
+      "Journal one observation about your body each day for 7 days.",
+    ],
+  },
+  {
+    id: "yoga-l2",
+    number: 2,
+    title: "Flow",
+    subtitle: "Sun salutations & breath linking",
+    quote: "“Move as the breath, breathe as the movement.”",
+    Icon: Sun,
+    quests: [
+      "Learn Surya Namaskar A (Sun Salutation A) end to end.",
+      "Complete 3 rounds linking each movement to one breath.",
+      "Practice Cat-Cow daily for 7 days as a warm-up.",
+      "Add a 5-minute Savasana to every session.",
+    ],
+  },
+  {
+    id: "yoga-l3",
+    number: 3,
+    title: "Strength & Balance",
+    subtitle: "Warriors, balance, and edges",
+    quote: "“The pose begins where you want to leave it.”",
+    Icon: Flame,
+    quests: [
+      "Hold Warrior I and Warrior II for 5 breaths on each side.",
+      "Balance in Tree pose (Vrksasana) for 30 seconds each side.",
+      "Try Half Moon (Ardha Chandrasana) with a wall or block.",
+      "Practice Nadi Shodhana (alternate nostril) for 5 minutes.",
+      "Build a 20-minute home practice and complete it 3 times.",
+    ],
+  },
+  {
+    id: "yoga-l4",
+    number: 4,
+    title: "Therapeutic Eye",
+    subtitle: "Condition-aware design",
+    quote: "“The right posture in the wrong body is still the wrong posture.”",
+    Icon: HeartPulse,
+    quests: [
+      "Pick one condition from the Conditions library and study its citation.",
+      "Use the Sequence Generator to draft a 4-week protocol.",
+      "Identify two contraindications you must respect for that condition.",
+      "Teach the sequence (or self-practice it) once and journal what you learned.",
+    ],
+  },
+  {
+    id: "yoga-l5",
+    number: 5,
+    title: "Integration",
+    subtitle: "A living daily practice",
+    quote: "“Yoga is the journey of the self, through the self, to the self.”",
+    Icon: Flower2,
+    quests: [
+      "Maintain a 20-minute self-practice 5 days/week for 2 weeks.",
+      "Write a Yama reflection in the Training section.",
+      "Lead a friend or family member through a 15-minute gentle sequence.",
+      "Choose a personal mantra and pair it with breath for 7 days.",
+    ],
+  },
+];
+
+const yogaBadges: QuestBadge[] = [
+  { id: "yoga-breath-keeper", name: "Breath Keeper", level: 1, Icon: Wind },
+  { id: "yoga-sun-walker", name: "Sun Walker", level: 2, Icon: Sun },
+  { id: "yoga-steady-warrior", name: "Steady Warrior", level: 3, Icon: Flame },
+  { id: "yoga-healers-eye", name: "Healer's Eye", level: 4, Icon: Eye },
+  { id: "yoga-daily-devotee", name: "Daily Devotee", level: 5, Icon: Flower2 },
+];
+
+const yogaClasses = ["Seeker", "Student", "Practitioner", "Therapist", "Teacher"];
+
 function YogaTherapyLab() {
   const [activeSection, setActiveSection] = useState<LabSection>("home");
   const [search, setSearch] = useState("");
@@ -200,18 +292,31 @@ function YogaTherapyLab() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto w-full max-w-7xl space-y-12 px-4 py-8 sm:px-6 lg:px-8">
+      <QuestPath
+        treeKey="movement-arts"
+        treeLabel="Yoga Path"
+        classes={yogaClasses}
+        eyebrow="A Game of Yoga Mastery"
+        title="🧘 The Yoga Practitioner's Path"
+        quote="“First, do no harm. Second, find your breath. Third, let the practice change you.”"
+        levels={yogaLevels}
+        badges={yogaBadges}
+        panelClass="quest-panel-air"
+        accentClass="text-air"
+      />
+
       <section className="overflow-hidden rounded-lg border border-border/70 bg-card/80 shadow-[var(--shadow-soft)] backdrop-blur-xl">
         <div className="border-b border-border/60 bg-background/70 px-5 py-4 sm:px-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
                 <Sparkles className="h-4 w-4" />
-                Yoga Therapy Lab
+                Yoga Reference Lab
               </div>
-              <h1 className="mt-3 text-3xl font-bold text-foreground sm:text-4xl">
-                Evidence-informed yoga resources for teachers and practitioners.
-              </h1>
+              <h2 className="mt-3 text-2xl font-bold text-foreground sm:text-3xl">
+                Evidence-informed reference for teachers and practitioners.
+              </h2>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-end">
               {sections.map(({ id, label, Icon }) => (
