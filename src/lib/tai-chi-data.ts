@@ -2635,6 +2635,7 @@ export function searchAll(query: string): SearchHit[] {
     }
   }
 
+  // Glossary search is appended at module load below.
   return hits.slice(0, 24);
 }
 
