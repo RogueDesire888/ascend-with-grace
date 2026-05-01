@@ -17,8 +17,21 @@ import { Route as SanctuaryRouteImport } from './routes/sanctuary'
 import { Route as QuestsRouteImport } from './routes/quests'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as CommunityRouteImport } from './routes/community'
+import { Route as BreathworkRouteImport } from './routes/breathwork'
 import { Route as AlchemistsPathRouteImport } from './routes/alchemists-path'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BreathworkToolsRouteImport } from './routes/breathwork.tools'
+import { Route as BreathworkTechniquesRouteImport } from './routes/breathwork.techniques'
+import { Route as BreathworkStartHereRouteImport } from './routes/breathwork.start-here'
+import { Route as BreathworkScienceRouteImport } from './routes/breathwork.science'
+import { Route as BreathworkResourcesRouteImport } from './routes/breathwork.resources'
+import { Route as BreathworkMasteryRouteImport } from './routes/breathwork.mastery'
+import { Route as BreathworkGoalsRouteImport } from './routes/breathwork.goals'
+import { Route as BreathworkCommunityRouteImport } from './routes/breathwork.community'
+import { Route as BreathworkAboutRouteImport } from './routes/breathwork.about'
+import { Route as BreathworkTechniquesTraditionsRouteImport } from './routes/breathwork.techniques.traditions'
+import { Route as BreathworkTechniquesSlugRouteImport } from './routes/breathwork.techniques.$slug'
+import { Route as BreathworkGoalsGoalIdRouteImport } from './routes/breathwork.goals.$goalId'
 
 const YogaTherapyLabRoute = YogaTherapyLabRouteImport.update({
   id: '/yoga-therapy-lab',
@@ -60,6 +73,11 @@ const CommunityRoute = CommunityRouteImport.update({
   path: '/community',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BreathworkRoute = BreathworkRouteImport.update({
+  id: '/breathwork',
+  path: '/breathwork',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AlchemistsPathRoute = AlchemistsPathRouteImport.update({
   id: '/alchemists-path',
   path: '/alchemists-path',
@@ -70,10 +88,73 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BreathworkToolsRoute = BreathworkToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => BreathworkRoute,
+} as any)
+const BreathworkTechniquesRoute = BreathworkTechniquesRouteImport.update({
+  id: '/techniques',
+  path: '/techniques',
+  getParentRoute: () => BreathworkRoute,
+} as any)
+const BreathworkStartHereRoute = BreathworkStartHereRouteImport.update({
+  id: '/start-here',
+  path: '/start-here',
+  getParentRoute: () => BreathworkRoute,
+} as any)
+const BreathworkScienceRoute = BreathworkScienceRouteImport.update({
+  id: '/science',
+  path: '/science',
+  getParentRoute: () => BreathworkRoute,
+} as any)
+const BreathworkResourcesRoute = BreathworkResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => BreathworkRoute,
+} as any)
+const BreathworkMasteryRoute = BreathworkMasteryRouteImport.update({
+  id: '/mastery',
+  path: '/mastery',
+  getParentRoute: () => BreathworkRoute,
+} as any)
+const BreathworkGoalsRoute = BreathworkGoalsRouteImport.update({
+  id: '/goals',
+  path: '/goals',
+  getParentRoute: () => BreathworkRoute,
+} as any)
+const BreathworkCommunityRoute = BreathworkCommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => BreathworkRoute,
+} as any)
+const BreathworkAboutRoute = BreathworkAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => BreathworkRoute,
+} as any)
+const BreathworkTechniquesTraditionsRoute =
+  BreathworkTechniquesTraditionsRouteImport.update({
+    id: '/traditions',
+    path: '/traditions',
+    getParentRoute: () => BreathworkTechniquesRoute,
+  } as any)
+const BreathworkTechniquesSlugRoute =
+  BreathworkTechniquesSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => BreathworkTechniquesRoute,
+  } as any)
+const BreathworkGoalsGoalIdRoute = BreathworkGoalsGoalIdRouteImport.update({
+  id: '/$goalId',
+  path: '/$goalId',
+  getParentRoute: () => BreathworkGoalsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alchemists-path': typeof AlchemistsPathRoute
+  '/breathwork': typeof BreathworkRouteWithChildren
   '/community': typeof CommunityRoute
   '/library': typeof LibraryRoute
   '/quests': typeof QuestsRoute
@@ -82,10 +163,23 @@ export interface FileRoutesByFullPath {
   '/smoothie-codex': typeof SmoothieCodexRoute
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
+  '/breathwork/about': typeof BreathworkAboutRoute
+  '/breathwork/community': typeof BreathworkCommunityRoute
+  '/breathwork/goals': typeof BreathworkGoalsRouteWithChildren
+  '/breathwork/mastery': typeof BreathworkMasteryRoute
+  '/breathwork/resources': typeof BreathworkResourcesRoute
+  '/breathwork/science': typeof BreathworkScienceRoute
+  '/breathwork/start-here': typeof BreathworkStartHereRoute
+  '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
+  '/breathwork/tools': typeof BreathworkToolsRoute
+  '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
+  '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
+  '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alchemists-path': typeof AlchemistsPathRoute
+  '/breathwork': typeof BreathworkRouteWithChildren
   '/community': typeof CommunityRoute
   '/library': typeof LibraryRoute
   '/quests': typeof QuestsRoute
@@ -94,11 +188,24 @@ export interface FileRoutesByTo {
   '/smoothie-codex': typeof SmoothieCodexRoute
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
+  '/breathwork/about': typeof BreathworkAboutRoute
+  '/breathwork/community': typeof BreathworkCommunityRoute
+  '/breathwork/goals': typeof BreathworkGoalsRouteWithChildren
+  '/breathwork/mastery': typeof BreathworkMasteryRoute
+  '/breathwork/resources': typeof BreathworkResourcesRoute
+  '/breathwork/science': typeof BreathworkScienceRoute
+  '/breathwork/start-here': typeof BreathworkStartHereRoute
+  '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
+  '/breathwork/tools': typeof BreathworkToolsRoute
+  '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
+  '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
+  '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alchemists-path': typeof AlchemistsPathRoute
+  '/breathwork': typeof BreathworkRouteWithChildren
   '/community': typeof CommunityRoute
   '/library': typeof LibraryRoute
   '/quests': typeof QuestsRoute
@@ -107,12 +214,25 @@ export interface FileRoutesById {
   '/smoothie-codex': typeof SmoothieCodexRoute
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
+  '/breathwork/about': typeof BreathworkAboutRoute
+  '/breathwork/community': typeof BreathworkCommunityRoute
+  '/breathwork/goals': typeof BreathworkGoalsRouteWithChildren
+  '/breathwork/mastery': typeof BreathworkMasteryRoute
+  '/breathwork/resources': typeof BreathworkResourcesRoute
+  '/breathwork/science': typeof BreathworkScienceRoute
+  '/breathwork/start-here': typeof BreathworkStartHereRoute
+  '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
+  '/breathwork/tools': typeof BreathworkToolsRoute
+  '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
+  '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
+  '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/alchemists-path'
+    | '/breathwork'
     | '/community'
     | '/library'
     | '/quests'
@@ -121,10 +241,23 @@ export interface FileRouteTypes {
     | '/smoothie-codex'
     | '/tai-chi-lab'
     | '/yoga-therapy-lab'
+    | '/breathwork/about'
+    | '/breathwork/community'
+    | '/breathwork/goals'
+    | '/breathwork/mastery'
+    | '/breathwork/resources'
+    | '/breathwork/science'
+    | '/breathwork/start-here'
+    | '/breathwork/techniques'
+    | '/breathwork/tools'
+    | '/breathwork/goals/$goalId'
+    | '/breathwork/techniques/$slug'
+    | '/breathwork/techniques/traditions'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/alchemists-path'
+    | '/breathwork'
     | '/community'
     | '/library'
     | '/quests'
@@ -133,10 +266,23 @@ export interface FileRouteTypes {
     | '/smoothie-codex'
     | '/tai-chi-lab'
     | '/yoga-therapy-lab'
+    | '/breathwork/about'
+    | '/breathwork/community'
+    | '/breathwork/goals'
+    | '/breathwork/mastery'
+    | '/breathwork/resources'
+    | '/breathwork/science'
+    | '/breathwork/start-here'
+    | '/breathwork/techniques'
+    | '/breathwork/tools'
+    | '/breathwork/goals/$goalId'
+    | '/breathwork/techniques/$slug'
+    | '/breathwork/techniques/traditions'
   id:
     | '__root__'
     | '/'
     | '/alchemists-path'
+    | '/breathwork'
     | '/community'
     | '/library'
     | '/quests'
@@ -145,11 +291,24 @@ export interface FileRouteTypes {
     | '/smoothie-codex'
     | '/tai-chi-lab'
     | '/yoga-therapy-lab'
+    | '/breathwork/about'
+    | '/breathwork/community'
+    | '/breathwork/goals'
+    | '/breathwork/mastery'
+    | '/breathwork/resources'
+    | '/breathwork/science'
+    | '/breathwork/start-here'
+    | '/breathwork/techniques'
+    | '/breathwork/tools'
+    | '/breathwork/goals/$goalId'
+    | '/breathwork/techniques/$slug'
+    | '/breathwork/techniques/traditions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlchemistsPathRoute: typeof AlchemistsPathRoute
+  BreathworkRoute: typeof BreathworkRouteWithChildren
   CommunityRoute: typeof CommunityRoute
   LibraryRoute: typeof LibraryRoute
   QuestsRoute: typeof QuestsRoute
@@ -218,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/breathwork': {
+      id: '/breathwork'
+      path: '/breathwork'
+      fullPath: '/breathwork'
+      preLoaderRoute: typeof BreathworkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/alchemists-path': {
       id: '/alchemists-path'
       path: '/alchemists-path'
@@ -232,12 +398,150 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/breathwork/tools': {
+      id: '/breathwork/tools'
+      path: '/tools'
+      fullPath: '/breathwork/tools'
+      preLoaderRoute: typeof BreathworkToolsRouteImport
+      parentRoute: typeof BreathworkRoute
+    }
+    '/breathwork/techniques': {
+      id: '/breathwork/techniques'
+      path: '/techniques'
+      fullPath: '/breathwork/techniques'
+      preLoaderRoute: typeof BreathworkTechniquesRouteImport
+      parentRoute: typeof BreathworkRoute
+    }
+    '/breathwork/start-here': {
+      id: '/breathwork/start-here'
+      path: '/start-here'
+      fullPath: '/breathwork/start-here'
+      preLoaderRoute: typeof BreathworkStartHereRouteImport
+      parentRoute: typeof BreathworkRoute
+    }
+    '/breathwork/science': {
+      id: '/breathwork/science'
+      path: '/science'
+      fullPath: '/breathwork/science'
+      preLoaderRoute: typeof BreathworkScienceRouteImport
+      parentRoute: typeof BreathworkRoute
+    }
+    '/breathwork/resources': {
+      id: '/breathwork/resources'
+      path: '/resources'
+      fullPath: '/breathwork/resources'
+      preLoaderRoute: typeof BreathworkResourcesRouteImport
+      parentRoute: typeof BreathworkRoute
+    }
+    '/breathwork/mastery': {
+      id: '/breathwork/mastery'
+      path: '/mastery'
+      fullPath: '/breathwork/mastery'
+      preLoaderRoute: typeof BreathworkMasteryRouteImport
+      parentRoute: typeof BreathworkRoute
+    }
+    '/breathwork/goals': {
+      id: '/breathwork/goals'
+      path: '/goals'
+      fullPath: '/breathwork/goals'
+      preLoaderRoute: typeof BreathworkGoalsRouteImport
+      parentRoute: typeof BreathworkRoute
+    }
+    '/breathwork/community': {
+      id: '/breathwork/community'
+      path: '/community'
+      fullPath: '/breathwork/community'
+      preLoaderRoute: typeof BreathworkCommunityRouteImport
+      parentRoute: typeof BreathworkRoute
+    }
+    '/breathwork/about': {
+      id: '/breathwork/about'
+      path: '/about'
+      fullPath: '/breathwork/about'
+      preLoaderRoute: typeof BreathworkAboutRouteImport
+      parentRoute: typeof BreathworkRoute
+    }
+    '/breathwork/techniques/traditions': {
+      id: '/breathwork/techniques/traditions'
+      path: '/traditions'
+      fullPath: '/breathwork/techniques/traditions'
+      preLoaderRoute: typeof BreathworkTechniquesTraditionsRouteImport
+      parentRoute: typeof BreathworkTechniquesRoute
+    }
+    '/breathwork/techniques/$slug': {
+      id: '/breathwork/techniques/$slug'
+      path: '/$slug'
+      fullPath: '/breathwork/techniques/$slug'
+      preLoaderRoute: typeof BreathworkTechniquesSlugRouteImport
+      parentRoute: typeof BreathworkTechniquesRoute
+    }
+    '/breathwork/goals/$goalId': {
+      id: '/breathwork/goals/$goalId'
+      path: '/$goalId'
+      fullPath: '/breathwork/goals/$goalId'
+      preLoaderRoute: typeof BreathworkGoalsGoalIdRouteImport
+      parentRoute: typeof BreathworkGoalsRoute
+    }
   }
 }
+
+interface BreathworkGoalsRouteChildren {
+  BreathworkGoalsGoalIdRoute: typeof BreathworkGoalsGoalIdRoute
+}
+
+const BreathworkGoalsRouteChildren: BreathworkGoalsRouteChildren = {
+  BreathworkGoalsGoalIdRoute: BreathworkGoalsGoalIdRoute,
+}
+
+const BreathworkGoalsRouteWithChildren = BreathworkGoalsRoute._addFileChildren(
+  BreathworkGoalsRouteChildren,
+)
+
+interface BreathworkTechniquesRouteChildren {
+  BreathworkTechniquesSlugRoute: typeof BreathworkTechniquesSlugRoute
+  BreathworkTechniquesTraditionsRoute: typeof BreathworkTechniquesTraditionsRoute
+}
+
+const BreathworkTechniquesRouteChildren: BreathworkTechniquesRouteChildren = {
+  BreathworkTechniquesSlugRoute: BreathworkTechniquesSlugRoute,
+  BreathworkTechniquesTraditionsRoute: BreathworkTechniquesTraditionsRoute,
+}
+
+const BreathworkTechniquesRouteWithChildren =
+  BreathworkTechniquesRoute._addFileChildren(BreathworkTechniquesRouteChildren)
+
+interface BreathworkRouteChildren {
+  BreathworkAboutRoute: typeof BreathworkAboutRoute
+  BreathworkCommunityRoute: typeof BreathworkCommunityRoute
+  BreathworkGoalsRoute: typeof BreathworkGoalsRouteWithChildren
+  BreathworkMasteryRoute: typeof BreathworkMasteryRoute
+  BreathworkResourcesRoute: typeof BreathworkResourcesRoute
+  BreathworkScienceRoute: typeof BreathworkScienceRoute
+  BreathworkStartHereRoute: typeof BreathworkStartHereRoute
+  BreathworkTechniquesRoute: typeof BreathworkTechniquesRouteWithChildren
+  BreathworkToolsRoute: typeof BreathworkToolsRoute
+}
+
+const BreathworkRouteChildren: BreathworkRouteChildren = {
+  BreathworkAboutRoute: BreathworkAboutRoute,
+  BreathworkCommunityRoute: BreathworkCommunityRoute,
+  BreathworkGoalsRoute: BreathworkGoalsRouteWithChildren,
+  BreathworkMasteryRoute: BreathworkMasteryRoute,
+  BreathworkResourcesRoute: BreathworkResourcesRoute,
+  BreathworkScienceRoute: BreathworkScienceRoute,
+  BreathworkStartHereRoute: BreathworkStartHereRoute,
+  BreathworkTechniquesRoute: BreathworkTechniquesRouteWithChildren,
+  BreathworkToolsRoute: BreathworkToolsRoute,
+}
+
+const BreathworkRouteWithChildren = BreathworkRoute._addFileChildren(
+  BreathworkRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlchemistsPathRoute: AlchemistsPathRoute,
+  BreathworkRoute: BreathworkRouteWithChildren,
   CommunityRoute: CommunityRoute,
   LibraryRoute: LibraryRoute,
   QuestsRoute: QuestsRoute,
