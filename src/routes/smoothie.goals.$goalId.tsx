@@ -14,7 +14,7 @@ export const Route = createFileRoute("/smoothie/goals/$goalId")({
   loader: ({ params }) => {
     const g = getGoal(params.goalId);
     if (!g) throw notFound();
-    return g;
+    return { goal: g };
   },
   notFoundComponent: () => (
     <div className="rounded-3xl border border-border/50 bg-card/40 p-10 text-center">
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/smoothie/goals/$goalId")({
 const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function GoalDetail() {
-  const g = Route.useLoaderData();
+  const { goal: g } = Route.useLoaderData();
 
   return (
     <article className="space-y-8">

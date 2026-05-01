@@ -19,7 +19,7 @@ export const Route = createFileRoute("/smoothie/ingredients/$slug")({
   loader: ({ params }) => {
     const i = getIngredient(params.slug);
     if (!i) throw notFound();
-    return i;
+    return { ingredient: i };
   },
   notFoundComponent: () => (
     <div className="rounded-3xl border border-border/50 bg-card/40 p-10 text-center">
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/smoothie/ingredients/$slug")({
 });
 
 function IngredientDetail() {
-  const i = Route.useLoaderData();
+  const { ingredient: i } = Route.useLoaderData();
   const cat = getCategory(i.category);
   const { progress, toggleIngredient } = useSmoothieProgress();
   const tried = !!progress.ingredientsLogged[i.slug];

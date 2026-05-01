@@ -16,7 +16,7 @@ export const Route = createFileRoute("/smoothie/recipes/$slug")({
   loader: ({ params }) => {
     const r = getRecipe(params.slug);
     if (!r) throw notFound();
-    return r;
+    return { recipe: r };
   },
   notFoundComponent: () => (
     <div className="rounded-3xl border border-border/50 bg-card/40 p-10 text-center">
@@ -36,7 +36,7 @@ export const Route = createFileRoute("/smoothie/recipes/$slug")({
 });
 
 function RecipeDetail() {
-  const r = Route.useLoaderData();
+  const { recipe: r } = Route.useLoaderData();
   const { progress, toggleRecipe } = useSmoothieProgress();
   const made = !!progress.recipes[r.slug];
 
