@@ -16,6 +16,7 @@ import { Route as SanctuaryRouteImport } from './routes/sanctuary'
 import { Route as QuestsRouteImport } from './routes/quests'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as CommunityRouteImport } from './routes/community'
+import { Route as AlchemistsPathRouteImport } from './routes/alchemists-path'
 import { Route as IndexRouteImport } from './routes/index'
 
 const YogaTherapyLabRoute = YogaTherapyLabRouteImport.update({
@@ -53,6 +54,11 @@ const CommunityRoute = CommunityRouteImport.update({
   path: '/community',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlchemistsPathRoute = AlchemistsPathRouteImport.update({
+  id: '/alchemists-path',
+  path: '/alchemists-path',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,6 +67,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alchemists-path': typeof AlchemistsPathRoute
   '/community': typeof CommunityRoute
   '/library': typeof LibraryRoute
   '/quests': typeof QuestsRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alchemists-path': typeof AlchemistsPathRoute
   '/community': typeof CommunityRoute
   '/library': typeof LibraryRoute
   '/quests': typeof QuestsRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alchemists-path': typeof AlchemistsPathRoute
   '/community': typeof CommunityRoute
   '/library': typeof LibraryRoute
   '/quests': typeof QuestsRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/alchemists-path'
     | '/community'
     | '/library'
     | '/quests'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/alchemists-path'
     | '/community'
     | '/library'
     | '/quests'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/alchemists-path'
     | '/community'
     | '/library'
     | '/quests'
@@ -125,6 +137,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlchemistsPathRoute: typeof AlchemistsPathRoute
   CommunityRoute: typeof CommunityRoute
   LibraryRoute: typeof LibraryRoute
   QuestsRoute: typeof QuestsRoute
@@ -185,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/alchemists-path': {
+      id: '/alchemists-path'
+      path: '/alchemists-path'
+      fullPath: '/alchemists-path'
+      preLoaderRoute: typeof AlchemistsPathRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -197,6 +217,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlchemistsPathRoute: AlchemistsPathRoute,
   CommunityRoute: CommunityRoute,
   LibraryRoute: LibraryRoute,
   QuestsRoute: QuestsRoute,
