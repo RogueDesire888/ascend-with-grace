@@ -1861,6 +1861,14 @@ function MovementHud({
           >
             {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
           </button>
+          <button
+            onClick={onCycleQuality}
+            className="grid h-9 place-items-center rounded-full border border-border/60 bg-background/35 px-3 text-[11px] font-bold uppercase tracking-wider text-foreground"
+            aria-label={`Graphics quality: ${qualityLabel}. Click to cycle.`}
+            title={`Graphics: ${qualityLabel}`}
+          >
+            <span className="flex items-center gap-1.5"><Sun className="h-3.5 w-3.5 text-primary" />{qualityLabel}</span>
+          </button>
         </div>
       </div>
       <div className="sanctuary-panel hidden rounded-2xl border border-border/60 p-3 shadow-[var(--shadow-soft)] md:block">
