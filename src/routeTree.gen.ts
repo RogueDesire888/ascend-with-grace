@@ -42,6 +42,7 @@ import { Route as TaiChiHistoryRouteImport } from './routes/tai-chi.history'
 import { Route as TaiChiGoalsRouteImport } from './routes/tai-chi.goals'
 import { Route as TaiChiFormsRouteImport } from './routes/tai-chi.forms'
 import { Route as TaiChiCommunityRouteImport } from './routes/tai-chi.community'
+import { Route as TaiChiAnatomyRouteImport } from './routes/tai-chi.anatomy'
 import { Route as BreathworkToolsRouteImport } from './routes/breathwork.tools'
 import { Route as BreathworkTechniquesRouteImport } from './routes/breathwork.techniques'
 import { Route as BreathworkStartHereRouteImport } from './routes/breathwork.start-here'
@@ -225,6 +226,11 @@ const TaiChiCommunityRoute = TaiChiCommunityRouteImport.update({
   path: '/community',
   getParentRoute: () => TaiChiRoute,
 } as any)
+const TaiChiAnatomyRoute = TaiChiAnatomyRouteImport.update({
+  id: '/anatomy',
+  path: '/anatomy',
+  getParentRoute: () => TaiChiRoute,
+} as any)
 const BreathworkToolsRoute = BreathworkToolsRouteImport.update({
   id: '/tools',
   path: '/tools',
@@ -336,6 +342,7 @@ export interface FileRoutesByFullPath {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/tai-chi/anatomy': typeof TaiChiAnatomyRoute
   '/tai-chi/community': typeof TaiChiCommunityRoute
   '/tai-chi/forms': typeof TaiChiFormsRouteWithChildren
   '/tai-chi/goals': typeof TaiChiGoalsRouteWithChildren
@@ -388,6 +395,7 @@ export interface FileRoutesByTo {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/tai-chi/anatomy': typeof TaiChiAnatomyRoute
   '/tai-chi/community': typeof TaiChiCommunityRoute
   '/tai-chi/forms': typeof TaiChiFormsRouteWithChildren
   '/tai-chi/goals': typeof TaiChiGoalsRouteWithChildren
@@ -441,6 +449,7 @@ export interface FileRoutesById {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/tai-chi/anatomy': typeof TaiChiAnatomyRoute
   '/tai-chi/community': typeof TaiChiCommunityRoute
   '/tai-chi/forms': typeof TaiChiFormsRouteWithChildren
   '/tai-chi/goals': typeof TaiChiGoalsRouteWithChildren
@@ -495,6 +504,7 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/tai-chi/anatomy'
     | '/tai-chi/community'
     | '/tai-chi/forms'
     | '/tai-chi/goals'
@@ -547,6 +557,7 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/tai-chi/anatomy'
     | '/tai-chi/community'
     | '/tai-chi/forms'
     | '/tai-chi/goals'
@@ -599,6 +610,7 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/tai-chi/anatomy'
     | '/tai-chi/community'
     | '/tai-chi/forms'
     | '/tai-chi/goals'
@@ -878,6 +890,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TaiChiCommunityRouteImport
       parentRoute: typeof TaiChiRoute
     }
+    '/tai-chi/anatomy': {
+      id: '/tai-chi/anatomy'
+      path: '/anatomy'
+      fullPath: '/tai-chi/anatomy'
+      preLoaderRoute: typeof TaiChiAnatomyRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
     '/breathwork/tools': {
       id: '/breathwork/tools'
       path: '/tools'
@@ -1078,6 +1097,7 @@ const TaiChiGoalsRouteWithChildren = TaiChiGoalsRoute._addFileChildren(
 )
 
 interface TaiChiRouteChildren {
+  TaiChiAnatomyRoute: typeof TaiChiAnatomyRoute
   TaiChiCommunityRoute: typeof TaiChiCommunityRoute
   TaiChiFormsRoute: typeof TaiChiFormsRouteWithChildren
   TaiChiGoalsRoute: typeof TaiChiGoalsRouteWithChildren
@@ -1092,6 +1112,7 @@ interface TaiChiRouteChildren {
 }
 
 const TaiChiRouteChildren: TaiChiRouteChildren = {
+  TaiChiAnatomyRoute: TaiChiAnatomyRoute,
   TaiChiCommunityRoute: TaiChiCommunityRoute,
   TaiChiFormsRoute: TaiChiFormsRouteWithChildren,
   TaiChiGoalsRoute: TaiChiGoalsRouteWithChildren,
