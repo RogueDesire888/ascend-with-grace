@@ -1,6 +1,6 @@
 import { EffectComposer, Bloom, Vignette, DepthOfField, SMAA, BrightnessContrast, HueSaturation } from "@react-three/postprocessing";
 import { BlendFunction, KernelSize } from "postprocessing";
-import { Fragment } from "react";
+import { Fragment, type ReactElement } from "react";
 
 export type QualityTier = "cinematic" | "balanced" | "lite";
 
@@ -11,7 +11,7 @@ type Props = { tier: QualityTier };
  * Adds golden-hour bloom, vignette, gentle DoF and a warm color grade.
  * Quality tier controls which effects run.
  */
-export function SanctuaryPostFX({ tier }: Props): JSX.Element | null {
+export function SanctuaryPostFX({ tier }: Props): ReactElement | null {
   if (tier === "lite") return null;
 
   const isCinematic = tier === "cinematic";
