@@ -2576,7 +2576,7 @@ export const goals: HerbalGoal[] = [
       name: "Steady Heart Daily Tonic",
       ingredients: ["1 oz dried oatstraw", "1 oz dried lemon balm", "1 qt boiling water"],
       method: "Combine in a quart jar, fill with boiling water, cover and steep 4 hours. Strain and sip throughout the day.",
-    ],
+    },
   },
   {
     id: "immunity",
@@ -2593,7 +2593,7 @@ export const goals: HerbalGoal[] = [
       name: "Winter Wellness Syrup",
       ingredients: ["1 cup dried elderberries", "4 cups water", "2 cinnamon sticks", "1 inch fresh ginger sliced", "1 cup raw honey"],
       method: "Simmer berries, water, cinnamon, and ginger 30 minutes, reducing by half. Strain, cool to body temp, stir in honey. Refrigerate; 1 tbsp daily for prevention or every 2 hours acutely.",
-    ],
+    },
   },
   {
     id: "digestion",
