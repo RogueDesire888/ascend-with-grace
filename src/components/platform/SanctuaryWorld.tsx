@@ -652,13 +652,15 @@ function SanctuaryScene({
 
   return (
     <>
-      <color attach="background" args={["#bfe6ff"]} />
-      <fog attach="fog" args={["#e9f4ff", 24, 76]} />
-      <hemisphereLight args={["#fff7e7", "#8aa0b8", 2.65]} />
-      <ambientLight intensity={0.58} />
+      <color attach="background" args={["#f4c79a"]} />
+      <fog attach="fog" args={["#f5d0a4", 22, 70]} />
+      <hemisphereLight args={["#ffe6c2", "#7a5a4b", 1.6]} />
+      <ambientLight intensity={0.42} color="#ffd9a8" />
+      {/* Warm key light — sun direction matched to the painterly skybox */}
       <directionalLight
         position={[-7, 13, 9]}
-        intensity={5.8}
+        intensity={5.4}
+        color="#ffd9a0"
         castShadow
         shadow-mapSize={[4096, 4096]}
         shadow-camera-near={0.5}
@@ -668,16 +670,19 @@ function SanctuaryScene({
         shadow-camera-top={18}
         shadow-camera-bottom={-18}
       />
-      <directionalLight position={[8, 7, -12]} intensity={1.35} color="#a9d8ff" />
-      <pointLight position={[0, 5, -4]} intensity={10.4} color="#ffe5a6" distance={18} />
-      <Environment preset="sunset" />
+      {/* Cool fill from opposite side */}
+      <directionalLight position={[8, 7, -12]} intensity={0.9} color="#c8b6e6" />
+      {/* Golden rim accent */}
+      <directionalLight position={[0, 6, -14]} intensity={1.4} color="#ffb072" />
+      <pointLight position={[0, 5, -4]} intensity={9.2} color="#ffd28a" distance={18} />
+      <Environment files={sanctuarySkybox} background backgroundBlurriness={0.06} environmentIntensity={1.15} />
       <SceneSparkles
-        count={78}
-        scale={[25, 8, 25]}
-        size={2.2}
-        speed={0.18}
-        opacity={0.42}
-        color="#fff1ba"
+        count={120}
+        scale={[28, 9, 28]}
+        size={2.6}
+        speed={0.22}
+        opacity={0.55}
+        color="#ffe6a8"
       />
       <SkyCloudBackdrop />
       <CloudSea />
