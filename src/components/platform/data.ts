@@ -193,7 +193,6 @@ export const navItems = [
   { to: "/sanctuary" as const, label: "Sanctuary" },
   { to: "/quests" as const, label: "Quests" },
   { to: "/skill-trees" as const, label: "Skill Trees" },
-  { to: "/library" as const, label: "Library" },
   { to: "/community" as const, label: "Community" },
 ];
 
@@ -205,6 +204,18 @@ export const movementItems = [
 export const alchemyItems = [
   { to: "/alchemists-path" as const, label: "Herbal Path" },
   { to: "/smoothie-codex" as const, label: "Smoothie Codex" },
+];
+
+export const breathworkItems = [
+  { to: "/breathwork/start-here" as const, label: "Start Here" },
+  { to: "/breathwork/science" as const, label: "Science of Breath" },
+  { to: "/breathwork/techniques" as const, label: "Library of Techniques" },
+  { to: "/breathwork/goals" as const, label: "Breathwork by Goal" },
+  { to: "/breathwork/mastery" as const, label: "The Path to Mastery" },
+  { to: "/breathwork/community" as const, label: "Community & Guidance" },
+  { to: "/breathwork/resources" as const, label: "Resource Hub" },
+  { to: "/breathwork/tools" as const, label: "Tools & Tech" },
+  { to: "/breathwork/about" as const, label: "About & Contribute" },
 ];
 
 export { HeartHandshake };

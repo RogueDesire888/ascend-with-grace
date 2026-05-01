@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { alchemyItems, movementItems, navItems } from "./data";
+import { alchemyItems, breathworkItems, movementItems, navItems } from "./data";
 
 const leadingNavItems = navItems.slice(0, 4);
 const trailingNavItems = navItems.slice(4);
@@ -99,6 +99,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             ))}
             <NavDropdown label="Movement" items={movementItems} triggerClassName={desktopTrigger} />
             <NavDropdown label="Alchemy" items={alchemyItems} triggerClassName={desktopTrigger} />
+            <NavDropdown label="Breathwork" items={breathworkItems} triggerClassName={desktopTrigger} />
             {trailingNavItems.map((item) => (
               <Link
                 key={item.to}
@@ -139,6 +140,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="shrink-0">
             <NavDropdown label="Alchemy" items={alchemyItems} triggerClassName={mobileTrigger} />
+          </div>
+          <div className="shrink-0">
+            <NavDropdown label="Breathwork" items={breathworkItems} triggerClassName={mobileTrigger} />
           </div>
           {trailingNavItems.map((item) => (
             <Link
