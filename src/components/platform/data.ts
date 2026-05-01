@@ -207,6 +207,7 @@ export const taiChiItems = [
   { to: "/tai-chi/goals" as const, label: "Tai Chi by Goal" },
   { to: "/tai-chi/mastery" as const, label: "Path to Mastery" },
   { to: "/tai-chi/principles" as const, label: "Principles & Classics" },
+  { to: "/tai-chi/anatomy" as const, label: "Anatomy & Biomechanics" },
   { to: "/tai-chi/science" as const, label: "Health Science" },
   { to: "/tai-chi/community" as const, label: "Community & Teachers" },
   { to: "/tai-chi/resources" as const, label: "Resource Hub" },

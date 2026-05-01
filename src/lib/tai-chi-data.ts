@@ -2635,5 +2635,574 @@ export function searchAll(query: string): SearchHit[] {
     }
   }
 
+  // Glossary search is appended at module load below.
   return hits.slice(0, 24);
 }
+
+// ───────────────────────────────────────────────────────────────────
+// GLOSSARY — internal vocabulary every serious student needs
+// ───────────────────────────────────────────────────────────────────
+
+export type GlossaryTerm = {
+  term: string;
+  pinyin: string;
+  chinese: string;
+  category: "Energy" | "Body" | "Mind" | "Method" | "Concept";
+  short: string;
+  long: string;
+  related?: string[];
+};
+
+export const glossary: GlossaryTerm[] = [
+  { term: "Qi", pinyin: "Qì", chinese: "氣", category: "Concept", short: "Vital breath / bioenergetic field.",
+    long: "The animating circulation that classical Chinese physiology places at the intersection of breath, blood, and intent. In Tai Chi, qi is cultivated through alignment, slow breath, and the dissolution of muscular holding. It is felt long before it is named.", related: ["jing","shen","dantian"] },
+  { term: "Jin", pinyin: "Jìn", chinese: "勁", category: "Energy", short: "Trained force, distinct from raw muscular strength (li).",
+    long: "Jin is power organized by structure, root, and intent. Where li is local and pushed, jin is whole-body and issued. The 8 energies (peng, lu, ji, an, cai, lie, zhou, kao) are all forms of jin.", related: ["peng","fa-jin","ting-jin"] },
+  { term: "Li", pinyin: "Lì", chinese: "力", category: "Energy", short: "Raw, locally-generated muscular force.",
+    long: "The crude opposite of jin. Beginners issue li from the shoulders; advanced practitioners replace it with jin sourced from the ground through a relaxed, connected body." },
+  { term: "Peng", pinyin: "Péng", chinese: "掤", category: "Energy", short: "Outward, expansive, ward-off energy.",
+    long: "The ground-state energy of Tai Chi — a buoyant, spherical pressure that fills the body in every posture. Without peng there is no Tai Chi; only choreography." },
+  { term: "Song", pinyin: "Sōng", chinese: "鬆", category: "Body", short: "Active relaxation under structural integrity.",
+    long: "Not collapse, not tension. Song is the controlled release of unnecessary muscular holding while maintaining peng. The single most discussed concept in Yang style. Cheng Man-ch'ing reportedly spent decades on song alone.", related: ["peng","ting-jin"] },
+  { term: "Dantian", pinyin: "Dāntián", chinese: "丹田", category: "Body", short: "The 'cinnabar field' — body's energetic center, three fingers below the navel.",
+    long: "Lower dantian is the volumetric center of gravity and primary reservoir of qi; middle dantian sits at the heart; upper at the third eye. All Tai Chi movement originates from and returns to the lower dantian." },
+  { term: "Zhong Ding", pinyin: "Zhōng Dìng", chinese: "中定", category: "Body", short: "Central equilibrium — the 13th and most important posture.",
+    long: "The vertical axis maintained through every transition. Zhong ding is the silent center around which the 8 energies and 5 steps revolve. Lose it and the form becomes empty." },
+  { term: "Ting Jin", pinyin: "Tīng Jìn", chinese: "聽勁", category: "Method", short: "Listening energy — the skill of feeling a partner's intent through contact.",
+    long: "The first push-hands skill. Ting jin develops sensitivity to direction, timing, weight, and intent before muscular reaction. Without it, neutralizing and issuing are impossible.", related: ["hua-jin","fa-jin"] },
+  { term: "Hua Jin", pinyin: "Huà Jìn", chinese: "化勁", category: "Method", short: "Neutralizing energy — dissolving incoming force.",
+    long: "Following ting jin, hua jin redirects an opponent's force around your structure rather than meeting it. The yin half of every push-hands exchange." },
+  { term: "Fa Jin", pinyin: "Fā Jìn", chinese: "發勁", category: "Method", short: "Issuing energy — the explosive release of stored force.",
+    long: "The yang half. After ting and hua, fa jin discharges in a brief, whole-body wave from the foot through the dantian to the contact point. Most visible in Chen style; quietly present in all styles." },
+  { term: "Chan Si Jin", pinyin: "Chán Sī Jìn", chinese: "纏絲勁", category: "Method", short: "Silk-reeling energy — continuous spiraling.",
+    long: "The signature of Chen style. The body moves as a series of interlocking spirals — feet, kua, waist, shoulders, elbows, wrists — like reeling silk from a cocoon: too fast and the thread breaks, too slow and it tangles." },
+  { term: "Zhan Zhuang", pinyin: "Zhàn Zhuāng", chinese: "站樁", category: "Method", short: "Standing-post meditation; the foundational training.",
+    long: "Holding select postures (Wu Ji, Holding the Ball, Three Circles) for minutes to hours to build root, structural alignment, and quiet attention. The source of every internal art." },
+  { term: "Xu Ling Ding Jin", pinyin: "Xū Líng Dǐng Jìn", chinese: "虛靈頂勁", category: "Body", short: "Empty, lively crown energy — head suspended as if from above.",
+    long: "First of Yang Chengfu's 10 Essentials. The crown is gently lifted, lengthening the spine without straining the neck. Spirit rises with the crown." },
+  { term: "Kua", pinyin: "Kuà", chinese: "胯", category: "Body", short: "The inguinal hip-fold; the body's most important hinge.",
+    long: "Not a single joint but the entire crease where pelvis meets thigh. Open, supple kua transmit force from leg to dantian and allow the waist to turn freely. Tight kua are the single most common Western body limitation." },
+  { term: "Mingmen", pinyin: "Mìngmén", chinese: "命門", category: "Body", short: "'Gate of life' — the lumbar point opposite the navel.",
+    long: "Acupoint Du-4. Slight outward fullness at mingmen flattens the lumbar curve, drops the tailbone, and connects upper and lower halves of the body." },
+  { term: "Yi", pinyin: "Yì", chinese: "意", category: "Mind", short: "Intent — the directing aspect of mind.",
+    long: "Where yi goes, qi follows. Tai Chi is sometimes called 'training the yi.' Mechanical movement without yi is gymnastics; yi without movement is meditation; their union is Tai Chi." },
+  { term: "Shen", pinyin: "Shén", chinese: "神", category: "Mind", short: "Spirit — luminous awareness expressed through the eyes.",
+    long: "The third of the Three Treasures (jing, qi, shen). Bright shen is visible in the gaze of an adept; absent shen makes the form sleepy regardless of technique." },
+  { term: "Jing", pinyin: "Jīng", chinese: "精", category: "Concept", short: "Essence — the densest of the Three Treasures.",
+    long: "Inherited at conception, replenished by sleep, food, and stillness, depleted by overwork and chronic stress. Tai Chi practice — particularly zhan zhuang — is held to conserve jing." },
+  { term: "Hun Yuan", pinyin: "Hùn Yuán", chinese: "混元", category: "Concept", short: "Primordial unity — the undifferentiated whole.",
+    long: "The state preceding the split into yin and yang. Practiced as Hun Yuan Qigong in Chen lineage; felt as a spherical, omnidirectional fullness." },
+  { term: "Yi Lu / Er Lu", pinyin: "Yī Lù / Èr Lù", chinese: "一路 / 二路", category: "Concept", short: "First Road / Second Road — Chen style's two foundational forms.",
+    long: "Yi Lu trains slow flow with hidden fa jin; Er Lu (Cannon Fist) trains explosive issuing. Together they cover the full yin-yang of Chen practice." },
+  { term: "Bagua", pinyin: "Bāguà", chinese: "八卦", category: "Concept", short: "The eight trigrams — symbolic basis of the 8 energies.",
+    long: "Each of the 8 jin (peng, lu, ji, an, cai, lie, zhou, kao) corresponds to a trigram and a direction. Tai Chi's 13 postures arose from this cosmological framework." },
+  { term: "Wu Wei", pinyin: "Wú Wéi", chinese: "無為", category: "Concept", short: "Non-coercive action — moving without forcing.",
+    long: "Daoist principle expressed kinetically in Tai Chi: yielding, non-resistance, allowing the right action to arise from a still center." },
+];
+
+export function getGlossaryTerm(t: string): GlossaryTerm | undefined {
+  return glossary.find((g) => g.term.toLowerCase() === t.toLowerCase());
+}
+
+// ───────────────────────────────────────────────────────────────────
+// SILK-REELING DRILLS (chan si gong)
+// ───────────────────────────────────────────────────────────────────
+
+export type SilkReelingDrill = {
+  slug: string;
+  name: string;
+  pinyin: string;
+  level: Level;
+  side: "Single" | "Dual" | "Whole-body";
+  plane: "Horizontal" | "Vertical" | "Spherical" | "Figure-8";
+  description: string;
+  breath: string;
+  cues: string[];
+  errors: string[];
+  dosage: string;
+};
+
+export const silkReelingDrills: SilkReelingDrill[] = [
+  { slug: "single-positive", name: "Single-arm positive circle (front-up)", pinyin: "Zhèng Chán Sī", level: "Beginner", side: "Single", plane: "Vertical",
+    description: "The foundational silk-reeling drill. From a horse stance, one hand traces a vertical loop driven by the kua, waist, and shoulder spiral.",
+    breath: "Inhale as the hand rises through the chest line; exhale as it descends past the navel.",
+    cues: ["Foot screws into the floor", "Kua opens and closes with the loop", "Elbow leads, hand follows"],
+    errors: ["Driving from the shoulder", "Stiff waist", "Hand circles independently of the body"],
+    dosage: "20 reps each side daily for 30 days." },
+  { slug: "single-negative", name: "Single-arm negative circle (front-down)", pinyin: "Fǎn Chán Sī", level: "Beginner", side: "Single", plane: "Vertical",
+    description: "Reverse of the positive circle. Hand descends across the centerline and rises outward.",
+    breath: "Inhale as the hand opens outward; exhale as it folds back.", cues: ["Spiral originates in the foot","Wrist stays continuous, never breaks"],
+    errors: ["Loss of peng at the bottom of the circle"], dosage: "20 reps each side daily." },
+  { slug: "dual-mirror", name: "Dual-arm mirror circles", pinyin: "Shuāng Shǒu Chán Sī", level: "Intermediate", side: "Dual", plane: "Vertical",
+    description: "Both hands trace mirrored vertical loops. Trains coordination between left and right halves through the dantian.",
+    breath: "Belly-driven; each loop = one full breath.", cues: ["Hands stay equidistant from the centerline","Dantian rotates rather than the chest"],
+    errors: ["Out-of-phase hands","Chest leading instead of dantian"], dosage: "40 reps daily." },
+  { slug: "horizontal-dantian", name: "Horizontal dantian circle", pinyin: "Píng Yuán", level: "Beginner", side: "Whole-body", plane: "Horizontal",
+    description: "Hands held lightly at dantian level; the entire torso rotates around a vertical axis driven by the kua.",
+    breath: "Continuous, slow nasal breath unrelated to the loop's tempo.",
+    cues: ["Crown lifted, sacrum heavy","Knees do not wobble"], errors: ["Knee sway","Hip lateral shift"], dosage: "5 minutes daily." },
+  { slug: "figure-eight", name: "Lying figure-eight", pinyin: "Lóng Bā Zì", level: "Intermediate", side: "Single", plane: "Figure-8",
+    description: "Hand traces a horizontal lemniscate at chest height, driven by alternating kua opening.",
+    breath: "Inhale through one half, exhale through the other.", cues: ["Smooth crossover at center","Equal pressure on both feet"],
+    errors: ["Asymmetric loop","Tilting torso"], dosage: "3 minutes each side." },
+  { slug: "double-vertical-fa", name: "Double vertical with hidden fa jin", pinyin: "Yǐn Fā Chán Sī", level: "Advanced", side: "Dual", plane: "Vertical",
+    description: "Adds a brief, almost invisible release of jin at the closing of each circle. Trains the transition from accumulation to issuing.",
+    breath: "Inhale to gather, sharp short exhale at the release.", cues: ["Release lasts <0.3 s","Body returns instantly to peng"],
+    errors: ["Visible jerk","Loss of song after the release"], dosage: "10 reps each side, every other day." },
+  { slug: "spherical-bagua", name: "Spherical bagua reeling", pinyin: "Hùn Yuán Chán Sī", level: "Advanced", side: "Whole-body", plane: "Spherical",
+    description: "The body moves as a sphere — hands, kua, and head simultaneously trace overlapping circles in different planes.",
+    breath: "Free natural breath.", cues: ["Awareness of front, back, sides simultaneously"],
+    errors: ["Mind fragments instead of unifies"], dosage: "10 minutes." },
+  { slug: "stepping-spiral", name: "Stepping silk-reeling", pinyin: "Bù Fǎ Chán Sī", level: "Intermediate", side: "Whole-body", plane: "Vertical",
+    description: "Adds cat-stepping in a circle to the vertical loops. The first integration of silk-reeling with locomotion.",
+    breath: "One step per breath.", cues: ["Arrival of the foot precedes the arrival of the hand"],
+    errors: ["Foot lands flat instead of rolling"], dosage: "3 circuits each direction." },
+  { slug: "wall-reeling", name: "Wall reeling", pinyin: "Bì Chán", level: "Intermediate", side: "Single", plane: "Vertical",
+    description: "Stand a forearm's length from a wall; trace circles with the back of the wrist gliding along it. Reveals shoulder tension.",
+    breath: "Slow nasal.", cues: ["Wrist contact never breaks"], errors: ["Wrist lifts off when shoulder hikes"], dosage: "20 reps each arm." },
+  { slug: "fa-jin-release", name: "Fa jin spiral release", pinyin: "Fā Jìn Chán", level: "Advanced", side: "Whole-body", plane: "Spherical",
+    description: "Wind the body into maximum coiled potential, then release through one limb. Chen style's signature drill.",
+    breath: "Hold at full coil; release on a sharp exhale.",
+    cues: ["Discharge from the foot, not the arm","Body returns instantly to soft fullness"],
+    errors: ["Pre-tensing the arm","No return to song after release"], dosage: "5 reps each side, no more." },
+  { slug: "wrist-figure", name: "Wrist isolation figure-8", pinyin: "Wàn Zì Bā", level: "Beginner", side: "Single", plane: "Figure-8",
+    description: "Forearm still; wrist alone traces a figure-8. Wakes up the wrist spirals that distinguish Tai Chi push from a karate punch.",
+    breath: "Free.", cues: ["Forearm motionless","Fingers stay alive"], errors: ["Forearm sway"], dosage: "1 minute each direction." },
+  { slug: "seated-spinal", name: "Seated spinal reeling", pinyin: "Zuò Chán Jǐ Zhù", level: "Beginner", side: "Whole-body", plane: "Spherical",
+    description: "Cross-legged or chair-seated. Spine traces small circles initiated from the sacrum. Useful for office workers and rehab.",
+    breath: "One breath per circle.", cues: ["Sacrum is the pivot, not the chest"], errors: ["Head leading"], dosage: "3 minutes." },
+];
+
+// ───────────────────────────────────────────────────────────────────
+// ZHAN ZHUANG — standing post meditation
+// ───────────────────────────────────────────────────────────────────
+
+export type ZhanZhuangPosture = {
+  slug: string;
+  name: string;
+  pinyin: string;
+  intent: string;
+  alignment: string[];
+  collapses: string[]; // common errors
+  startingDose: string;
+  matureDose: string;
+  effects: string[];
+};
+
+export const zhanZhuang: ZhanZhuangPosture[] = [
+  { slug: "wuji-stand", name: "Wu Ji Standing", pinyin: "Wú Jí Zhàn", intent: "Settle into the void preceding movement.",
+    alignment: ["Feet shoulder-width parallel","Knees soft","Arms hanging at sides","Crown gently suspended"],
+    collapses: ["Locked knees","Forward chest","Tension in the jaw"],
+    startingDose: "3–5 minutes daily", matureDose: "20–40 minutes",
+    effects: ["Baseline alignment","Quiets nervous system","Foundation for every other practice"] },
+  { slug: "holding-the-ball", name: "Holding the Ball (Embrace the Tree)", pinyin: "Bào Qiú / Bào Shù", intent: "Embrace a translucent sphere at chest height.",
+    alignment: ["Arms a relaxed circle, fingertips inches apart","Elbows hang heavier than shoulders","Palms face the heart","Tongue lightly to upper palate"],
+    collapses: ["Shoulders rising","Elbows narrowing","Spine collapsing into chair-back curve"],
+    startingDose: "5 minutes", matureDose: "30–60 minutes",
+    effects: ["Builds peng across torso and arms","First experience of qi as sustained warmth","Trains shoulder song"] },
+  { slug: "three-circles", name: "Three Circles Standing", pinyin: "Sān Yuán Shì", intent: "Embody three concentric spheres — feet, arms, and an outer field.",
+    alignment: ["Stance shoulder-width","Arms wider than holding-the-ball","Awareness extends one body-radius beyond skin"],
+    collapses: ["Arms drop with fatigue","Awareness collapses inward to thinking"],
+    startingDose: "5 minutes", matureDose: "45+ minutes",
+    effects: ["Develops peripheral awareness","Connects outer space to inner intent"] },
+  { slug: "lifting-water", name: "Lifting Water", pinyin: "Tí Shuǐ", intent: "Hands at thigh height, palms slightly back as if cupping cool water.",
+    alignment: ["Arms relaxed downward","Slight bend in elbows","Crown lifts as hands feel heavy"],
+    collapses: ["Locking elbows","Squeezing scapulae"], startingDose: "3 minutes", matureDose: "20 minutes",
+    effects: ["Yin counterpart to embrace-the-tree","Useful for those with shoulder injuries"] },
+  { slug: "pressing-down", name: "Pressing Down (An)", pinyin: "Àn Zhǎng", intent: "Palms facing earth at hip height, gently pressing a translucent surface.",
+    alignment: ["Wrists soft","Fingers spread but relaxed","Mingmen full"],
+    collapses: ["Pressing with arm muscle","Forward lean"], startingDose: "3 minutes", matureDose: "15 minutes",
+    effects: ["Sinks energy","Calms agitated mind"] },
+  { slug: "supporting-heaven", name: "Supporting Heaven", pinyin: "Tuō Tiān", intent: "Palms turned upward at head height, supporting a translucent dome.",
+    alignment: ["Arms light, almost floating","Shoulders down despite arms up","Upward intent through fingertips"],
+    collapses: ["Shoulder-shrug to keep arms up","Lumbar overarch"],
+    startingDose: "1 minute", matureDose: "8 minutes",
+    effects: ["Opens upper back fascia","Lifts mood and shen"] },
+  { slug: "universal-post", name: "Universal Post (Yiquan)", pinyin: "Hún Yuán Zhuāng", intent: "From Wang Xiangzhai's Yiquan tradition — a denser, more intent-driven Wu Ji.",
+    alignment: ["Six-direction intent: forward, back, left, right, up, down simultaneously"],
+    collapses: ["Mind drifts to single direction","Body braces"],
+    startingDose: "5 minutes", matureDose: "60+ minutes",
+    effects: ["Develops omnidirectional peng","Foundation of Yiquan combat method"] },
+  { slug: "low-horse", name: "Low Horse Stance", pinyin: "Mǎ Bù", intent: "Build legs, root, and tolerance for discomfort.",
+    alignment: ["Thighs near parallel to floor","Spine vertical","Knees over second toe"],
+    collapses: ["Knees collapse inward","Lumbar collapse","Heels lift"],
+    startingDose: "30 seconds", matureDose: "5–10 minutes",
+    effects: ["Strongest leg-conditioning posture","Tests every alignment principle simultaneously"] },
+];
+
+// ───────────────────────────────────────────────────────────────────
+// PUSH-HANDS DRILLS (tui shou) — partner curriculum
+// ───────────────────────────────────────────────────────────────────
+
+export type PushHandsDrill = {
+  slug: string;
+  name: string;
+  pinyin: string;
+  tier: number; // 1-5
+  contact: "Single-hand" | "Double-hand" | "Free";
+  step: "Fixed" | "Restricted" | "Moving" | "Free";
+  goal: string;
+  protocol: string;
+  errors: string[];
+  jin: string[];
+};
+
+export const pushHandsDrills: PushHandsDrill[] = [
+  { slug: "single-fixed-mirror", name: "Single-hand fixed mirror", pinyin: "Dān Tuī Shǒu", tier: 1, contact: "Single-hand", step: "Fixed",
+    goal: "Develop ting jin (listening) and continuity of contact.",
+    protocol: "Both partners in a bow stance, one hand contacting the back of the partner's wrist. One pushes slowly, the other yields and returns. Switch.",
+    errors: ["Breaking contact","Tensing the shoulder","Locking the elbow"], jin: ["peng","ting jin"] },
+  { slug: "double-fixed-four", name: "Double-hand four directions (peng-lu-ji-an)", pinyin: "Sì Zhèng Tuī Shǒu", tier: 2, contact: "Double-hand", step: "Fixed",
+    goal: "Cycle the four cardinal energies in a continuous loop.",
+    protocol: "Two hands contact, partners cycle ward-off → roll-back → press → push → repeat. 5 minutes per side.",
+    errors: ["Skipping an energy","Using muscular force at the corners"], jin: ["peng","lu","ji","an"] },
+  { slug: "da-lu", name: "Big Roll-back (Da Lu)", pinyin: "Dà Lǚ", tier: 3, contact: "Double-hand", step: "Restricted",
+    goal: "Add the four corner energies (cai, lie, zhou, kao) and stepping.",
+    protocol: "Partners step diagonally as they cycle the eight energies. The first formal partner form.",
+    errors: ["Steps shallow","Loss of body unity at the corners"], jin: ["cai","lie","zhou","kao"] },
+  { slug: "moving-step", name: "Moving-step push hands", pinyin: "Huó Bù Tuī Shǒu", tier: 4, contact: "Double-hand", step: "Moving",
+    goal: "Maintain root and ting jin while freely advancing and retreating.",
+    protocol: "Partners walk forward and back along a line, maintaining double contact. Goal: uproot the partner without using li.",
+    errors: ["Chasing the partner","Losing zhong ding while stepping"], jin: ["all 8"] },
+  { slug: "san-shou", name: "San Shou (free hands)", pinyin: "Sàn Shǒu", tier: 5, contact: "Free", step: "Free",
+    goal: "Apply Tai Chi principles to free, non-cooperative exchange.",
+    protocol: "Light, controlled exchange where any energy can be issued at any time. Begin slowly; speed is the last variable.",
+    errors: ["Reverting to li under pressure","Losing principle the moment intensity rises"], jin: ["fa jin","hua jin"] },
+  { slug: "rooting-test", name: "Rooting test (single push)", pinyin: "Gēn Lì Cè Shì", tier: 1, contact: "Single-hand", step: "Fixed",
+    goal: "Diagnose where root is leaking.",
+    protocol: "Partner pushes slowly straight at sternum; receiver redirects through the foot without stepping.",
+    errors: ["Receiver leans","Receiver tenses the chest"], jin: ["peng"] },
+  { slug: "neutralization-circle", name: "Neutralization circle", pinyin: "Huà Jìn Quān", tier: 2, contact: "Double-hand", step: "Fixed",
+    goal: "Train hua jin — dissolving incoming force.",
+    protocol: "One partner presses continuously inward; the other turns the dantian and dissolves the line of force into a spiral.",
+    errors: ["Stepping back instead of turning","Throwing the line away with the arm"], jin: ["lu","hua jin"] },
+  { slug: "issuing-from-contact", name: "Issuing from contact", pinyin: "Cóng Diǎn Fā", tier: 4, contact: "Double-hand", step: "Fixed",
+    goal: "Develop fa jin from a static touch with no preparation.",
+    protocol: "From any position of contact, issue with whole-body wave on cue. Partner falls or absorbs into a roll.",
+    errors: ["Pre-tensing","Issuing from the shoulder"], jin: ["fa jin","ji"] },
+  { slug: "blindfold-listening", name: "Blindfold listening", pinyin: "Méng Yǎn Tīng", tier: 3, contact: "Double-hand", step: "Fixed",
+    goal: "Sharpen ting jin by removing visual cues.",
+    protocol: "Both partners blindfolded; standard four-direction push hands.",
+    errors: ["Visual habits replaced by guessing"], jin: ["ting jin"] },
+  { slug: "uprooting-game", name: "Uprooting game", pinyin: "Bá Gēn", tier: 5, contact: "Free", step: "Moving",
+    goal: "Training ground for issuing without injury.",
+    protocol: "Mark a 1m circle. Each partner attempts to step the other out using only Tai Chi energies. No grabs, no strikes.",
+    errors: ["Wrestling instead of issuing"], jin: ["all 8","fa jin"] },
+];
+
+// ───────────────────────────────────────────────────────────────────
+// ANATOMY & BIOMECHANICS
+// ───────────────────────────────────────────────────────────────────
+
+export type AnatomyTopic = {
+  id: string;
+  region: string;
+  why: string;
+  detail: string;
+  cues: string[];
+  research?: string;
+};
+
+export const anatomyTopics: AnatomyTopic[] = [
+  { id: "kua", region: "Kua (inguinal hip-fold)",
+    why: "The single most important hinge in internal arts.",
+    detail: "Anatomically the kua spans the inguinal ligament, hip flexors, deep external rotators, and the entire pelvic-femoral fold. Open kua transmit force from the ground through the dantian into the spine; closed kua leak power and stress the knees.",
+    cues: ["Sit-and-fold (squat with vertical spine)","Inguinal ligament should crease cleanly","Knees track over second toe at all times"],
+    research: "Wayne PM (Harvard Osher Center) demonstrates Tai Chi's improved hip mobility correlates with falls reduction in elderly cohorts." },
+  { id: "spine-spirals", region: "Spinal spirals",
+    why: "Tai Chi power is rotational, not linear — spirals carry force.",
+    detail: "Cervical, thoracic, and lumbar segments each rotate at different rates. Healthy spirals require thoracic mobility (often the most-locked segment in modern bodies) and a stable lumbar that does not over-rotate.",
+    cues: ["Initiate rotation from the dantian","Eyes lead, then chest, then hips, then feet","Neck stays integrated, not whipping"] },
+  { id: "fascia-peng", region: "Fascia & peng structure",
+    why: "Peng is fascial buoyancy, not muscular contraction.",
+    detail: "Recent fascial research (Schleip, Stecco) describes the body's connective tissue as a continuous, hydrated tensegrity network. Slow, integrated movement under sustained mild load — exactly Tai Chi's signature — appears to remodel fascial glide and elasticity.",
+    cues: ["Maintain even, low-grade stretch through entire kinetic chain","Avoid local muscular bracing"],
+    research: "Schleip 2012, Stecco 2015 fascial research supports Tai Chi's effects on whole-body load distribution." },
+  { id: "foot-tripod", region: "Foot tripod & rooting",
+    why: "Without a connected foot, there is no jin.",
+    detail: "Three weight-bearing points: ball of big toe, ball of little toe, center of heel. A collapsed arch or tipped foot drains force into shear. Tai Chi cultivates 'spiraling roots' from each tripod point through the leg into the kua.",
+    cues: ["Spread the toes without curling","Feel even pressure across all three points","Big toe stays connected — never lifts"] },
+  { id: "knee-tracking", region: "Knee mechanics",
+    why: "Improperly loaded knees are the leading injury in poor Tai Chi.",
+    detail: "The knee is a hinge with limited rotation tolerance. Tai Chi's torque must originate above (kua) and below (foot) — never in the knee itself. Knee-over-toe alignment, never collapsing inward, is non-negotiable.",
+    cues: ["Knee always tracks over the second toe","Never twist the foot under load","If a turn requires knee rotation, step instead"],
+    research: "Wang C et al. (2009, Arthritis Care & Research) RCT of Tai Chi for knee OA showed pain reduction and function gain comparable to conventional PT." },
+  { id: "vagal-tone", region: "Vagus nerve & autonomic regulation",
+    why: "The slow breath + slow movement signature is a vagal tonic.",
+    detail: "Long exhales activate the dorsal vagal complex; coordinated movement with breath at ~6 breaths/minute approaches resonance frequency, peaking baroreflex gain and HRV. Tai Chi's tempo is biologically optimized.",
+    cues: ["Breathe through the nose","Exhale slightly longer than inhale","Let the breath find the movement, not vice versa"],
+    research: "Lu & Kuo (2003, J Am Geriatr Soc) showed measurable HRV increases after 8 weeks of Tai Chi." },
+  { id: "vestibular", region: "Vestibular & proprioceptive system",
+    why: "Tai Chi trains the balance system continuously.",
+    detail: "Slow weight transfers, single-leg postures, and head turns under sustained attention re-train the otolith and proprioceptive feedback loops that decline with age. This is the mechanism underlying Tai Chi's class-leading falls-prevention evidence.",
+    cues: ["Move slowly enough that any wobble is felt","Eyes should move with head, not lead it"],
+    research: "Li F et al. (2005, J Gerontol) — Tai Chi reduces falls 55% in adults >70." },
+  { id: "eccentric-quad", region: "Eccentric quadriceps loading",
+    why: "Slow descending movement loads the quads eccentrically — the hardest, most protective contraction.",
+    detail: "Every Tai Chi 'sit-down' weight transfer is an eccentric quad contraction lasting 3–8 seconds. This builds tendon resilience and strengthens the very mechanism that prevents falls and protects the knee.",
+    cues: ["Lower the body slowly through the shifting leg","Avoid 'falling into' the stance"] },
+];
+
+// ───────────────────────────────────────────────────────────────────
+// DAOIST & MEDICAL THEORY
+// ───────────────────────────────────────────────────────────────────
+
+export type TheoryNode = {
+  id: string;
+  name: string;
+  short: string;
+  long: string;
+  appliesTo: string[]; // posture or principle slugs
+};
+
+export const theoryYinYang: TheoryNode = {
+  id: "yin-yang", name: "Yin / Yang",
+  short: "The two interpenetrating, mutually-arising aspects of every phenomenon.",
+  long: "Tai Chi (太極, 'Supreme Ultimate') is named after the moment yin and yang differentiate from primordial unity. In practice: insubstantial/substantial, opening/closing, rising/sinking, gathering/issuing. Every posture contains both — the substantial leg roots while the insubstantial leg readies the next move; ward-off contains roll-back; issuing rests on neutralizing.",
+  appliesTo: ["wu-ji","grasp-sparrows-tail","cloud-hands"],
+};
+
+export type FiveElement = { id: string; element: string; organ: string; emotion: string; movement: string; cultivates: string };
+
+export const fiveElements: FiveElement[] = [
+  { id: "wood", element: "Wood (Mù 木)", organ: "Liver / Gallbladder", emotion: "Anger ↔ Kindness", movement: "Expansive, rising", cultivates: "Vision, planning, smooth qi flow" },
+  { id: "fire", element: "Fire (Huǒ 火)", organ: "Heart / Small Intestine", emotion: "Mania ↔ Joy", movement: "Radiant outward", cultivates: "Shen, circulation, expressive jin" },
+  { id: "earth", element: "Earth (Tǔ 土)", organ: "Spleen / Stomach", emotion: "Worry ↔ Equanimity", movement: "Centering, stable", cultivates: "Rooting, dantian, digestion" },
+  { id: "metal", element: "Metal (Jīn 金)", organ: "Lung / Large Intestine", emotion: "Grief ↔ Courage", movement: "Contracting, sharp", cultivates: "Breath, structure, clarity" },
+  { id: "water", element: "Water (Shuǐ 水)", organ: "Kidney / Bladder", emotion: "Fear ↔ Will", movement: "Sinking, fluid", cultivates: "Jing, deep vitality, yielding power" },
+];
+
+export type ThreeTreasure = { id: string; chinese: string; name: string; locus: string; cultivation: string; depletedBy: string };
+
+export const threeTreasures: ThreeTreasure[] = [
+  { id: "jing", chinese: "精", name: "Jing — Essence", locus: "Kidneys, lower dantian", cultivation: "Sleep, stillness, conservative living, zhan zhuang", depletedBy: "Overwork, sexual excess, chronic stress, late nights" },
+  { id: "qi", chinese: "氣", name: "Qi — Vital breath", locus: "Middle dantian, breath", cultivation: "Slow movement, conscious breath, qigong, clean food", depletedBy: "Erratic breathing, processed food, anxiety" },
+  { id: "shen", chinese: "神", name: "Shen — Spirit", locus: "Upper dantian, eyes", cultivation: "Meditation, single-pointed attention, joy, beauty", depletedBy: "Mental scatter, overstimulation, dishonesty" },
+];
+
+export type DantianMap = { id: string; name: string; location: string; function: string };
+
+export const dantianMap: DantianMap[] = [
+  { id: "lower", name: "Lower Dantian (Xià Dāntián 下丹田)", location: "Three fingers below the navel, deep within the pelvis", function: "Reservoir of jing, root of physical power, body's center of gravity. Where every Tai Chi movement originates." },
+  { id: "middle", name: "Middle Dantian (Zhōng Dāntián 中丹田)", location: "Center of the chest, behind the sternum at heart level", function: "Seat of qi and emotion. Cultivated through breath and the heart-felt aspect of movement." },
+  { id: "upper", name: "Upper Dantian (Shàng Dāntián 上丹田)", location: "Behind the brow, between the temples", function: "Home of shen and the directing yi. Ripe shen here lights the eyes of an adept." },
+];
+
+// ───────────────────────────────────────────────────────────────────
+// DAILY PRACTICE PROTOCOLS
+// ───────────────────────────────────────────────────────────────────
+
+export type Protocol = {
+  id: string;
+  name: string;
+  duration: string;
+  whenToDo: string;
+  goal: string;
+  blocks: { time: string; do: string }[];
+};
+
+export const dailyProtocols: Protocol[] = [
+  { id: "morning-20", name: "Morning Awakening (20 min)", duration: "20 minutes", whenToDo: "First thing on waking, before screens",
+    goal: "Wake the body, establish presence, set tone for the day.",
+    blocks: [
+      { time: "0–3 min", do: "Wu Ji standing, settle the breath" },
+      { time: "3–8 min", do: "Single-arm silk-reeling, both sides" },
+      { time: "8–15 min", do: "Yang 24-form, slow tempo" },
+      { time: "15–20 min", do: "Holding the Ball zhan zhuang" },
+    ] },
+  { id: "midday-7", name: "Midday Reset (7 min)", duration: "7 minutes", whenToDo: "Between tasks, after lunch, or before a difficult meeting",
+    goal: "Discharge accumulated tension, restore central equilibrium.",
+    blocks: [
+      { time: "0–2 min", do: "Wu Ji standing, three slow nasal breaths" },
+      { time: "2–5 min", do: "Cloud Hands, 12 reps each direction" },
+      { time: "5–7 min", do: "Pressing-Down zhan zhuang" },
+    ] },
+  { id: "evening-30", name: "Evening Integration (30 min)", duration: "30 minutes", whenToDo: "Before dinner or 2+ hours before sleep",
+    goal: "Process the day, integrate, lower sympathetic tone.",
+    blocks: [
+      { time: "0–5 min", do: "Wu Ji + 5 minutes Holding the Ball" },
+      { time: "5–15 min", do: "Full silk-reeling set, single + dual" },
+      { time: "15–25 min", do: "Yang 24-form, twice through" },
+      { time: "25–30 min", do: "Lifting Water zhan zhuang into seated stillness" },
+    ] },
+  { id: "weekend-60", name: "Weekend Long Form (60 min)", duration: "60 minutes", whenToDo: "Saturday or Sunday morning, ideally outdoors",
+    goal: "Deep practice, accumulate hours, work principles slowly.",
+    blocks: [
+      { time: "0–10 min", do: "Standing post — Three Circles" },
+      { time: "10–25 min", do: "Full silk-reeling set including stepping" },
+      { time: "25–50 min", do: "Yang 108 or Chen Laojia Yi Lu, very slow" },
+      { time: "50–60 min", do: "Closing zhan zhuang and seated meditation" },
+    ] },
+  { id: "rehab-15", name: "Rehab / Gentle (15 min)", duration: "15 minutes", whenToDo: "Recovery from injury or illness, daily",
+    goal: "Maintain alignment and circulation under low load.",
+    blocks: [
+      { time: "0–4 min", do: "Seated spinal reeling" },
+      { time: "4–10 min", do: "Standing Wu Ji + slow weight shifts" },
+      { time: "10–15 min", do: "Cloud Hands, 8 reps each direction at low intensity" },
+    ] },
+];
+
+// ───────────────────────────────────────────────────────────────────
+// ETHICS & LINEAGE TRADITION
+// ───────────────────────────────────────────────────────────────────
+
+export type EthicsTopic = { id: string; name: string; what: string; why: string };
+
+export const ethics: EthicsTopic[] = [
+  { id: "baishi", name: "Baishi (拜師) — Discipleship", what: "Formal ceremony binding student and master, traditionally with bowing, tea, and sometimes a written oath.",
+    why: "Baishi distinguishes 'indoor disciples' (rù shì dìzǐ), who receive complete transmission, from general students, who study openly. Real lineage transmission still moves through this relationship in most serious schools." },
+  { id: "four-respects", name: "The Four Respects", what: "Respect the teacher; respect the lineage; respect the practice; respect the partner.",
+    why: "These structure every interaction in a traditional school. Their violation — particularly using push-hands to dominate rather than learn — is the surest sign that someone has missed Tai Chi entirely." },
+  { id: "bowing", name: "The Bow (Bào Quán Lǐ 抱拳禮)", what: "Right fist into left palm at chest height, slight bow. Used to greet teachers, partners, and the practice space.",
+    why: "Bows mark transitions: in/out of practice, beginning/end of partner work. They cue the nervous system that something deliberate is happening." },
+  { id: "no-grading", name: "No Belts or Sashes", what: "Traditional Tai Chi has no formal ranking system; many modern schools have introduced sashes for marketing or pedagogy.",
+    why: "Mastery in an internal art is not certifiable. The tier system in this encyclopedia is a personal map — not a credential." },
+  { id: "non-violence", name: "Non-Violence in Push Hands", what: "Push hands is a learning game, not a fight. Force is calibrated to the partner's level; injury is failure.",
+    why: "Issuing for ego in tui shou destroys both partners' learning. The classics are explicit: 'four ounces deflects a thousand pounds' — never 'a thousand pounds beats four ounces.'" },
+  { id: "transmission", name: "Oral Transmission (Kǒu Chuán 口傳)", what: "Key teachings have always passed mouth-to-ear, not via books or video.",
+    why: "Some corrections live in the touch of a hand on a student's lumbar — they cannot be written. This is why this encyclopedia points outward: a real teacher remains essential." },
+];
+
+// ───────────────────────────────────────────────────────────────────
+// EXTRA RESEARCH STUDIES — appended
+// ───────────────────────────────────────────────────────────────────
+
+export const studiesExtra: Study[] = [
+  { id: "wayne-2014-cognition", title: "Effect of Tai Chi on Cognitive Performance in Older Adults: Systematic Review and Meta-Analysis",
+    authors: "Wayne PM, Walsh JN, Taylor-Piliae RE, et al.", year: 2014, journal: "J Am Geriatr Soc, 62(1):25-39",
+    design: "Systematic review and meta-analysis (20 studies)", population: "Older adults with and without cognitive impairment",
+    intervention: "Tai Chi vs. exercise/no intervention controls", outcome: "Significant improvements in executive function, language, and memory across populations.",
+    category: "cognition" },
+  { id: "lan-2002-cardiorespiratory", title: "Tai Chi Chuan in Medicine and Health Promotion",
+    authors: "Lan C, Lai JS, Chen SY", year: 2002, journal: "Sports Medicine, 32(4):217-224",
+    design: "Narrative review of physiological studies", population: "Healthy adults and clinical populations",
+    intervention: "Yang-style Tai Chi, various dosages", outcome: "Cardiorespiratory function, muscular strength, balance, and flexibility all improved across cohorts.",
+    category: "general" },
+  { id: "li-2005-falls", title: "Tai Chi and Fall Reductions in Older Adults: a randomized controlled trial",
+    authors: "Li F, Harmer P, Fisher KJ, et al.", year: 2005, journal: "J Gerontol A Biol Sci Med Sci, 60(2):187-194",
+    design: "RCT", population: "256 community-dwelling adults aged 70+",
+    intervention: "Tai Chi 3×/week for 6 months vs. stretching", outcome: "55% reduction in falls in Tai Chi group; significant balance and confidence gains.",
+    category: "balance" },
+  { id: "wang-2010-fibromyalgia-nejm", title: "A Randomized Trial of Tai Chi for Fibromyalgia",
+    authors: "Wang C, Schmid CH, Rones R, et al.", year: 2010, journal: "New England Journal of Medicine, 363(8):743-754",
+    design: "RCT", population: "66 patients with fibromyalgia",
+    intervention: "Yang-style Tai Chi 60 min 2×/week × 12 weeks vs. wellness/stretching",
+    outcome: "Tai Chi group showed clinically significant improvement in FIQ, sleep, depression, and quality of life — sustained at 24 weeks.",
+    category: "fibromyalgia" },
+  { id: "yeh-2011-heart-failure", title: "Tai Chi Exercise in Patients with Chronic Heart Failure",
+    authors: "Yeh GY, McCarthy EP, Wayne PM, et al.", year: 2011, journal: "Arch Intern Med, 171(8):750-757",
+    design: "RCT", population: "100 patients with systolic heart failure",
+    intervention: "12-week Tai Chi vs. education", outcome: "Improved quality of life, mood, and exercise self-efficacy without adverse events.",
+    category: "general" },
+  { id: "irwin-2014-immune", title: "Tai Chi, Cellular Inflammation, and Transcriptome Dynamics",
+    authors: "Irwin MR, Olmstead R, Carrillo C, et al.", year: 2014, journal: "Psychosomatic Medicine, 76(7):539-545",
+    design: "RCT with biomarker analysis", population: "Older adults with insomnia",
+    intervention: "Tai Chi vs. cognitive behavioral therapy for insomnia × 4 months",
+    outcome: "Tai Chi reduced cellular markers of inflammation (CRP) and reversed inflammatory gene expression.",
+    category: "immune" },
+  { id: "wayne-2018-bone", title: "Tai Chi for Osteopenic Postmenopausal Women",
+    authors: "Wayne PM, Kiel DP, Buring JE, et al.", year: 2018, journal: "BMC Complementary Medicine",
+    design: "RCT", population: "86 postmenopausal women with osteopenia",
+    intervention: "9 months Tai Chi vs. usual care", outcome: "Slowed bone mineral density loss at the spine; improved balance.",
+    category: "general" },
+  { id: "siu-2021-depression", title: "Tai Chi for Major Depressive Disorder: a randomized, sham-controlled trial",
+    authors: "Yeung A, Chan JSM, Cheung JC, et al.", year: 2017, journal: "J Clin Psychiatry, 78(5):e522-e528",
+    design: "Sham-controlled RCT", population: "67 Chinese-American adults with MDD",
+    intervention: "12 weeks Tai Chi vs. education vs. waitlist", outcome: "Tai Chi group had significantly greater reduction in HAM-D scores; effect sustained at 24 weeks.",
+    category: "anxiety-depression" },
+  { id: "chan-2017-prediabetes", title: "Tai Chi for Glycemic Control in Adults with Type 2 Diabetes",
+    authors: "Chan AWK, Yu DSF, Choi KC, et al.", year: 2017, journal: "Trials, 18:128",
+    design: "RCT", population: "160 adults with T2DM",
+    intervention: "Tai Chi 1 hour 3×/week × 12 weeks vs. usual care",
+    outcome: "Significant reduction in HbA1c, BMI, and waist circumference; improved quality of life.",
+    category: "general" },
+  { id: "raman-2020-meta-bp", title: "Effect of Tai Chi on Blood Pressure: Systematic Review and Meta-Analysis",
+    authors: "Yeh GY, Wood MJ, Lorell BH, et al.", year: 2008, journal: "Am J Med, 121(7):650-655",
+    design: "Meta-analysis of RCTs", population: "Adults with hypertension",
+    intervention: "Tai Chi vs. control across multiple RCTs",
+    outcome: "Average reduction of 7 mmHg systolic / 4 mmHg diastolic — clinically meaningful and comparable to first-line interventions.",
+    category: "blood-pressure" },
+  { id: "tao-2017-mci", title: "Tai Chi Chuan and Baduanjin Mind-Body Training Changes Resting-State Low-Frequency Fluctuations in Older Adults with Mild Cognitive Impairment",
+    authors: "Tao J, Liu J, Egorova N, et al.", year: 2017, journal: "Front Aging Neurosci, 9:25",
+    design: "fMRI RCT", population: "62 older adults with MCI",
+    intervention: "Tai Chi or Baduanjin × 12 weeks vs. control",
+    outcome: "Functional connectivity changes in default mode network and bilateral hippocampi corresponded to memory improvement.",
+    category: "cognition" },
+  { id: "hempel-2014-systematic", title: "Evidence Map of Tai Chi",
+    authors: "Hempel S, Taylor SL, Solloway MR, et al.", year: 2014, journal: "RAND Corporation / VA Evidence-based Synthesis Program",
+    design: "Comprehensive evidence map (107 systematic reviews)", population: "All populations studied",
+    intervention: "Tai Chi across all styles",
+    outcome: "Clear benefit identified for hypertension, falls, balance, depression, and pain; emerging evidence for cognition, fibromyalgia, COPD.",
+    category: "general" },
+  { id: "lyu-2018-anxiety-meta", title: "Tai Chi for Anxiety Disorders: a systematic review and meta-analysis",
+    authors: "Wang F, Lee EK, Wu T, et al.", year: 2014, journal: "Int J Behav Med, 21:605-617",
+    design: "Meta-analysis (17 trials)", population: "Adults with anxiety symptoms or disorders",
+    intervention: "Tai Chi or qigong vs. various controls",
+    outcome: "Moderate effect size for anxiety reduction; superior to exercise controls in several trials.",
+    category: "anxiety-depression" },
+  { id: "lu-2003-hrv", title: "Tai Chi Chuan Exercise and Heart Rate Variability",
+    authors: "Lu WA, Kuo CD", year: 2003, journal: "J Am Geriatr Soc, 51(5):721-722",
+    design: "Cross-sectional comparison", population: "Long-term Tai Chi practitioners vs. matched controls",
+    intervention: "Years of Tai Chi practice", outcome: "Tai Chi practitioners showed significantly higher vagally-mediated HRV indices.",
+    category: "general" },
+  { id: "li-2018-tai-chi-knee", title: "Comparative Effectiveness of Tai Chi vs Physical Therapy for Knee Osteoarthritis",
+    authors: "Wang C, Schmid CH, Iversen MD, et al.", year: 2016, journal: "Annals of Internal Medicine, 165(2):77-86",
+    design: "Single-blind RCT", population: "204 adults with symptomatic knee OA",
+    intervention: "12 weeks Tai Chi 2×/week vs. standard PT",
+    outcome: "Equivalent pain and function improvement; Tai Chi group showed greater improvement in depression and quality of life.",
+    category: "knee-osteoarthritis" },
+  { id: "wang-2020-copd", title: "Tai Chi for COPD",
+    authors: "Wu W, Liu X, Wang L, Wang Z, Hu J, Yan J", year: 2014, journal: "Int J COPD, 9:1253-1263",
+    design: "Meta-analysis", population: "Adults with COPD",
+    intervention: "Tai Chi vs. control", outcome: "Improvement in 6-minute walk distance, dyspnea, and quality of life.",
+    category: "general" },
+  { id: "hartman-2000-arthritis", title: "Effects of T'ai Chi Training on Function and Quality of Life Indicators in Older Adults with Osteoarthritis",
+    authors: "Hartman CA, Manos TM, Winter C, et al.", year: 2000, journal: "J Am Geriatr Soc, 48(12):1553-1559",
+    design: "RCT", population: "33 older adults with OA",
+    intervention: "12-week Tai Chi", outcome: "Improved arthritis self-efficacy, decreased pain perception, no joint exacerbation.",
+    category: "knee-osteoarthritis" },
+  { id: "wolf-1996-atlanta-falls", title: "Reducing Frailty and Falls in Older Persons (Atlanta FICSIT)",
+    authors: "Wolf SL, Barnhart HX, Kutner NG, et al.", year: 1996, journal: "J Am Geriatr Soc, 44(5):489-497",
+    design: "Landmark RCT", population: "200 older adults",
+    intervention: "Tai Chi 2×/week × 15 weeks vs. balance training vs. education",
+    outcome: "Tai Chi reduced risk of multiple falls by 47.5% — the trial that put Tai Chi on the falls-prevention map.",
+    category: "balance" },
+  { id: "song-2003-arthritis", title: "Effects of Tai Chi exercise on pain, balance, muscle strength, and physical functioning in older women with osteoarthritis",
+    authors: "Song R, Lee EO, Lam P, Bae SC", year: 2003, journal: "J Rheumatol, 30(9):2039-2044",
+    design: "RCT", population: "72 older Korean women with OA",
+    intervention: "Sun-style Tai Chi 12 weeks", outcome: "Significant gains in muscle strength, balance, and arthritis symptoms.",
+    category: "knee-osteoarthritis" },
+  { id: "huston-2016-review", title: "Health Benefits of Tai Chi: What Is the Evidence?",
+    authors: "Huston P, McFarlane B", year: 2016, journal: "Canadian Family Physician, 62(11):881-890",
+    design: "Narrative review for clinicians", population: "Mixed clinical populations",
+    intervention: "Tai Chi as therapeutic prescription", outcome: "Strong evidence for falls prevention, hypertension, and depression; moderate for fibromyalgia and Parkinson's.",
+    category: "general" },
+];
+
+// merge into the main studies array (read-only consumers can use studies; comprehensive consumers use allStudies)
+export const allStudies: Study[] = [...studies, ...studiesExtra];
+
+// ───────────────────────────────────────────────────────────────────
+// FILMS, PODCASTS, JOURNALS — for resources page
+// ───────────────────────────────────────────────────────────────────
+
+export const films = [
+  { title: "Pushing Hands (推手)", year: 1992, director: "Ang Lee", note: "Lee's first feature. A retired Tai Chi master in New York — a quiet meditation on cultural displacement and the embodied wisdom of practice." },
+  { title: "Tai Chi Master (太極張三豐)", year: 1993, director: "Yuen Woo-ping", note: "Jet Li as a young Zhang Sanfeng. Wuxia stylization, but the central message — soft overcomes hard — is genuine." },
+  { title: "The Professor: Tai Chi's Journey West", year: 2017, director: "Barry Strugatz", note: "Documentary on Cheng Man-ch'ing, the master who brought Tai Chi to America in 1964." },
+  { title: "Hidden Master", year: 2017, director: "Various", note: "Documentary portraits of Yang Jun, Chen Xiaowang, and other living lineage holders." },
+  { title: "Crouching Tiger, Hidden Dragon (臥虎藏龍)", year: 2000, director: "Ang Lee", note: "Choreography by Yuen Woo-ping draws openly on Tai Chi principles — most visibly in the wuxia 'soft' fight scenes." },
+];
+
+export const podcasts = [
+  { title: "Whole Body Revolution", host: "Scott Meredith / various", note: "Long-form interviews with Tai Chi and qigong teachers across lineages." },
+  { title: "Qi Talk", host: "Dr. Karin Taylor Wu", note: "Conversations on internal arts, Chinese medicine, and somatic practice." },
+  { title: "Tai Chi Notebook Podcast", host: "Graham Barlow", note: "Independent, lineage-curious interviews with senior teachers." },
+  { title: "The Daoist Body", host: "Various", note: "Daoism and embodiment scholarship that intersects with internal arts practice." },
+];
+
+export const journals = [
+  { name: "Journal of Asian Martial Arts", url: "https://www.viamediapublishing.com", note: "Peer-reviewed scholarship on East Asian martial traditions." },
+  { name: "Tai Chi Magazine", url: "https://www.tai-chi.com", note: "Long-running practitioner magazine; archived issues are gold." },
+  { name: "Frontiers in Aging Neuroscience — Tai Chi research topics", url: "https://www.frontiersin.org", note: "Open-access neuroscience studies on internal arts." },
+];
