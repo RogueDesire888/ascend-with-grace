@@ -10,10 +10,13 @@ import {
   Leaf,
   MoonStar,
   Sparkles,
+  Sun,
   Volume2,
   VolumeX,
   Wind,
 } from "lucide-react";
+import { SanctuaryPostFX, detectDefaultTier, type QualityTier } from "./sanctuary/PostFX";
+import sanctuarySkybox from "@/assets/sanctuary-skybox.jpg";
 import {
   Suspense,
   useEffect,
@@ -215,6 +218,7 @@ export function SanctuaryWorld() {
   const [glowEarned, setGlowEarned] = useState(8700);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [quality, setQuality] = useState<QualityTier>("balanced");
   const audioContextRef = useRef<AudioContext | null>(null);
   const keysPressed = useRef(new Set<string>());
   const lastAvatarPosition = useRef<Point>(START_POSITION);
@@ -229,7 +233,23 @@ export function SanctuaryWorld() {
   );
   const handleTargetReached = useMemo(() => () => setTargetPosition(null), []);
 
-  useEffect(() => setIsMounted(true), []);
+  useEffect(() => {
+    setIsMounted(true);
+    try {
+      const stored = localStorage.getItem("sanctuary-quality") as QualityTier | null;
+      setQuality(stored ?? detectDefaultTier());
+    } catch {
+      setQuality(detectDefaultTier());
+    }
+  }, []);
+
+  function cycleQuality() {
+    setQuality((q) => {
+      const next: QualityTier = q === "cinematic" ? "balanced" : q === "balanced" ? "lite" : "cinematic";
+      try { localStorage.setItem("sanctuary-quality", next); } catch {}
+      return next;
+    });
+  }
 
   const nearbyZone = useMemo(
     () => zones.find((zone) => distance(zone.position, avatarPosition) < 1.25),
@@ -383,15 +403,15 @@ export function SanctuaryWorld() {
             <Canvas
               className="sanctuary-canvas"
               shadows
-              dpr={[1, 1.9]}
-              camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 120 }}
+              dpr={quality === "cinematic" ? [1, 2] : quality === "balanced" ? [1, 1.6] : [1, 1.3]}
+              camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 140 }}
               style={{ opacity: hasEntered ? 1 : 0.2 }}
-              gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+              gl={{ antialias: quality === "lite", alpha: true, powerPreference: "high-performance" }}
               onCreated={({ gl }) => {
                 gl.shadowMap.enabled = true;
                 gl.shadowMap.type = THREE.PCFSoftShadowMap;
                 gl.toneMapping = THREE.ACESFilmicToneMapping;
-                gl.toneMappingExposure = 1.22;
+                gl.toneMappingExposure = 1.32;
                 gl.outputColorSpace = THREE.SRGBColorSpace;
               }}
             >
@@ -412,6 +432,7 @@ export function SanctuaryWorld() {
                     worldApiRef.current?.setTarget(point);
                   }}
                 />
+                <SanctuaryPostFX tier={quality} />
               </Suspense>
             </Canvas>
           ) : (
@@ -454,6 +475,8 @@ export function SanctuaryWorld() {
                 glowEarned={glowEarned}
                 isMuted={isMuted}
                 onToggleMute={() => setIsMuted((muted) => !muted)}
+                quality={quality}
+                onCycleQuality={cycleQuality}
               />
               <WorldPanel
                 activeZone={activeZone}
@@ -631,13 +654,15 @@ function SanctuaryScene({
 
   return (
     <>
-      <color attach="background" args={["#bfe6ff"]} />
-      <fog attach="fog" args={["#e9f4ff", 24, 76]} />
-      <hemisphereLight args={["#fff7e7", "#8aa0b8", 2.65]} />
-      <ambientLight intensity={0.58} />
+      <color attach="background" args={["#f4c79a"]} />
+      <fog attach="fog" args={["#f5d0a4", 22, 70]} />
+      <hemisphereLight args={["#ffe6c2", "#7a5a4b", 1.6]} />
+      <ambientLight intensity={0.42} color="#ffd9a8" />
+      {/* Warm key light — sun direction matched to the painterly skybox */}
       <directionalLight
         position={[-7, 13, 9]}
-        intensity={5.8}
+        intensity={5.4}
+        color="#ffd9a0"
         castShadow
         shadow-mapSize={[4096, 4096]}
         shadow-camera-near={0.5}
@@ -647,16 +672,19 @@ function SanctuaryScene({
         shadow-camera-top={18}
         shadow-camera-bottom={-18}
       />
-      <directionalLight position={[8, 7, -12]} intensity={1.35} color="#a9d8ff" />
-      <pointLight position={[0, 5, -4]} intensity={10.4} color="#ffe5a6" distance={18} />
-      <Environment preset="sunset" />
+      {/* Cool fill from opposite side */}
+      <directionalLight position={[8, 7, -12]} intensity={0.9} color="#c8b6e6" />
+      {/* Golden rim accent */}
+      <directionalLight position={[0, 6, -14]} intensity={1.4} color="#ffb072" />
+      <pointLight position={[0, 5, -4]} intensity={9.2} color="#ffd28a" distance={18} />
+      <Environment files={sanctuarySkybox} background backgroundBlurriness={0.06} environmentIntensity={1.15} />
       <SceneSparkles
-        count={78}
-        scale={[25, 8, 25]}
-        size={2.2}
-        speed={0.18}
-        opacity={0.42}
-        color="#fff1ba"
+        count={120}
+        scale={[28, 9, 28]}
+        size={2.6}
+        speed={0.22}
+        opacity={0.55}
+        color="#ffe6a8"
       />
       <SkyCloudBackdrop />
       <CloudSea />
@@ -1802,12 +1830,17 @@ function MovementHud({
   glowEarned,
   isMuted,
   onToggleMute,
+  quality,
+  onCycleQuality,
 }: {
   ascensionLevel: number;
   glowEarned: number;
   isMuted: boolean;
   onToggleMute: () => void;
+  quality: QualityTier;
+  onCycleQuality: () => void;
 }) {
+  const qualityLabel = quality === "cinematic" ? "Cinematic" : quality === "balanced" ? "Balanced" : "Lite";
   return (
     <div className="absolute left-4 top-4 z-30 grid gap-3">
       <div className="sanctuary-panel rounded-2xl border border-primary/30 p-3 shadow-[var(--shadow-soft)]">
@@ -1827,6 +1860,14 @@ function MovementHud({
             aria-label={isMuted ? "Unmute sound cues" : "Mute sound cues"}
           >
             {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          </button>
+          <button
+            onClick={onCycleQuality}
+            className="grid h-9 place-items-center rounded-full border border-border/60 bg-background/35 px-3 text-[11px] font-bold uppercase tracking-wider text-foreground"
+            aria-label={`Graphics quality: ${qualityLabel}. Click to cycle.`}
+            title={`Graphics: ${qualityLabel}`}
+          >
+            <span className="flex items-center gap-1.5"><Sun className="h-3.5 w-3.5 text-primary" />{qualityLabel}</span>
           </button>
         </div>
       </div>

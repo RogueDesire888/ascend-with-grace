@@ -1,59 +1,76 @@
 ## Goal
 
-Replace the stylized SVG Tree of Life with a **realistic, fully-grown tree image** in the style of your reference, then overlay 5 interactive skill nodes pinned exactly to the 5 most prominent branches. The tree always reads as lush, ancient, and fruitful — the 5 nodes are the focal points without forcing the underlying tree to look bare.
+Bring the Sanctuary 3D world up to a near-painterly, golden-hour cinematic look that matches the Tree of Life image — without sacrificing the interactive 3D walking experience.
 
-## Image
+## Strategy: Three layers
 
-- Generate one new portrait-orientation hero image (premium quality, ~1024×1536) tuned for a vertical layout panel:
-  - Massive ancient tree, gnarled trunk, lush golden-green canopy, glowing ornamental fruits.
-  - Floating cloud island base with classical ruins, statues, pink blossoms, twin waterfalls.
-  - Warm golden-hour lighting, painterly cinematic quality.
-  - **Composition tuned for overlay**: 5 clearly distinguishable major branches fanning out (one crown, two upper laterals, two lower laterals) — symmetric enough that we can pin nodes reliably.
-- Save to `src/assets/tree-of-life.jpg`, imported as an ES6 module.
-
-## Overlay Architecture
-
-`TreeOfLife.tsx` is fully rewritten but keeps its public props (`nodes`, `selectedKey`, `onSelect`, `rootsLabel`, `rootsProgress`) so `skill-trees.tsx` is untouched apart from one copy tweak.
-
-Layout:
 ```
-┌─────────────────────────────────┐
-│ <img tree-of-life.jpg>          │  ← absolute fill, object-cover
-│   ✦ node (Mind & Spirit)        │
-│  ✦         ✦                    │  ← 5 absolutely-positioned nodes
-│ ✦           ✦                   │     pinned to branch tips (% coords)
-│   ▼ Roots strip (ascension)     │
-└─────────────────────────────────┘
+┌─────────────────────────────────────────────┐
+│  Post-FX layer  (bloom, DoF, vignette, LUT) │  ← cinematic grade
+├─────────────────────────────────────────────┤
+│  3D foreground  (avatar, ground, zones)     │  ← upgraded materials
+├─────────────────────────────────────────────┤
+│  Painterly skybox + distant scenery (image) │  ← AI-generated dome
+└─────────────────────────────────────────────┘
 ```
 
-Each node:
-- Pinned with `top`/`left` percentages tuned to the generated image's branch tips.
-- Visual = small glowing fruit-like disc with the skill's tone color, lucide icon inside, soft radial aura.
-- Idle: gentle pulse. Hover: aura grows + scales 1.05. Selected: bright pulsing ring + tone-tinted glow; other nodes dim to ~45%.
-- Floating label card on hover/selected (skill name + percent + level), positioned to avoid clipping at edges.
-- Progress influences only the **node's glow intensity and aura size** (not the tree itself), so the tree always looks fully grown while still rewarding progression.
+## 1. Painterly Skybox + Distant Scenery
 
-Roots strip: stays as-is below the image (existing component already handles ascension % + chip list).
+Generate two new AI images in the same style as the Tree of Life (golden-hour, painterly, classical-fantasy):
 
-## Responsive
+- `src/assets/sanctuary-skybox.jpg` — 4096×2048 equirectangular panoramic sky (sunset clouds, distant floating islands, soft gold light, no foreground). Used as the scene's `background` + `environment` via drei's `<Environment files={...} background />`. Replaces the generic `<Environment preset="sunset" />`.
+- `src/assets/sanctuary-horizon.jpg` — 2048×512 horizon strip used as a curved billboard far behind the playable area for distant temples / mountains / cypress silhouettes. Adds depth without geometry cost.
 
-- Aspect ratio container (`aspect-[3/4]` desktop, `aspect-[4/5]` mobile) so node coordinates stay accurate at any width.
-- On viewports ≤640px: node labels collapse to icon-only chips; full label appears in a small popover on tap.
-- Image uses `object-cover` with `object-position: center top` to keep the canopy + branches in view if cropped.
+This single change is what makes the scene *feel* painterly — the sky and horizon do most of the visual heavy lifting.
 
-## Accessibility & Motion
+## 2. Cinematic Post-Processing
 
-- Each node is a `<button>` with `aria-pressed` and `aria-label` (e.g. "Energy Mastery — 84%").
-- Keyboard: tab through nodes; Enter/Space selects.
-- All animations honor `prefers-reduced-motion` (no pulse, instant state changes).
+Add `@react-three/postprocessing` and wire an `<EffectComposer>` pass:
 
-## Files Touched
+- **Bloom** — soft golden glow on bright spots (sun, particles, glowing fruits/lanterns). intensity ≈ 0.6, luminanceThreshold ≈ 0.85.
+- **God Rays** — volumetric sun shafts from a hidden sun mesh placed in the skybox direction.
+- **Depth of Field** — gentle focus on the avatar, blur on distant horizon. Cheap blur, big atmosphere boost.
+- **Vignette** — subtle warm corners.
+- **LUT / ColorGrading** — push warmth + slight desaturation in shadows for the golden-hour palette.
+- **SMAA** — replaces default MSAA for cleaner edges with FX enabled.
 
-- **New**: `src/assets/tree-of-life.jpg` (generated premium image).
-- **Rewritten**: `src/components/platform/TreeOfLife.tsx` — image + overlaid node buttons; props unchanged.
-- **Minor copy tweak**: `src/routes/skill-trees.tsx` — eyebrow/intro phrasing to match the new visual; no logic changes.
+Tone mapping stays ACES Filmic, exposure bumped slightly (1.22 → 1.32) to match the FX pipeline.
 
-## Out of Scope
+## 3. Foreground Upgrades
 
-- No multi-stage growth images (rejected option).
-- No changes to skill data, routing, or the detail card below the tree.
+Targeted improvements to existing 3D elements (no rewrites — surgical):
+
+- **Lighting**: replace the current ambient + directional with a 3-point setup — warm key (sun direction matching skybox), cool fill, golden rim. Add a `Sky`-aligned hemisphere light. Enable `castShadow` on hero objects, `PCFSoftShadowMap`, and a baked-style contact-shadow plane (drei `ContactShadows`) under the avatar + key props.
+- **Materials**: bump key surfaces (columns, statues, tree bark, water) to higher roughness/metalness contrast; add subtle emissive on lanterns/fruits so bloom catches them.
+- **Foliage density**: add a few `<Instances>` clusters of low-poly foliage cards (alpha-mapped leaves) along zone borders to mask hard edges and add lushness — instanced so cost stays low.
+- **Particles**: increase `<SceneSparkles>` density modestly, recolor to warm gold; add slow-drifting pollen/dust shader plane for atmosphere.
+- **Fog**: recolor the existing fog from cool blue (`#e9f4ff`) to warm peach (`#f5d9b8`) and tighten range so the painterly horizon shows through earlier — this single tweak unifies 3D + skybox.
+- **Water**: if waterfalls exist as planes, add a tiny scrolling normal map for shimmer.
+
+## 4. Performance & Quality Toggle
+
+Cinematic FX are heavy. Add an automatic quality detector + a manual toggle in the existing top-right control bar:
+
+- Detect: `navigator.hardwareConcurrency`, `devicePixelRatio`, mobile UA → default tier.
+- Tiers:
+  - **Cinematic** (desktop default): all FX, full skybox res, instanced foliage, shadows on, `dpr={[1, 2]}`.
+  - **Balanced** (mobile default): bloom + vignette only, half-res skybox, no DoF/god-rays, shadows off, `dpr={[1, 1.5]}`.
+  - **Lite** (low-end fallback): no FX, current visuals + new fog/skybox only.
+- Persist choice in `localStorage`.
+
+## 5. Files Touched
+
+- **New assets**: `src/assets/sanctuary-skybox.jpg`, `src/assets/sanctuary-horizon.jpg` (both AI-generated in Tree of Life style).
+- **New dependency**: `@react-three/postprocessing`.
+- **New component**: `src/components/platform/sanctuary/PostFX.tsx` — encapsulates the EffectComposer + quality-tier logic.
+- **Edited**: `src/components/platform/SanctuaryWorld.tsx` — swap Environment, add skybox/horizon, wire PostFX, lighting tweaks, fog color, quality toggle button. Walking, avatar, zone interactions, quest UI remain untouched.
+
+## 6. Out of Scope
+
+- No changes to the gameplay loop, quest data, zone behavior, or routing.
+- No replacement of the avatar model.
+- No new assets beyond the two background images (we're not regenerating each tree/statue as a 3D model).
+
+## Expected Result
+
+The Sanctuary will read as the same world as the Tree of Life image — same warm sunset light, same dreamy clouds and classical mood, soft bloom on every glowing element, painterly distant background — while you can still walk around and interact like before.
