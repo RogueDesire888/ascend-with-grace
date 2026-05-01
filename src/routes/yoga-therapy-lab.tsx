@@ -257,7 +257,7 @@ const yogaBadges: QuestBadge[] = [
 
 const yogaClasses = ["Seeker", "Student", "Practitioner", "Therapist", "Teacher"];
 
-
+function YogaTherapyLab() {
   const [activeSection, setActiveSection] = useState<LabSection>("home");
   const [search, setSearch] = useState("");
   const [primaryCondition, setPrimaryCondition] = useState<ConditionKey | "">("");
