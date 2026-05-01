@@ -1,76 +1,112 @@
 ## Goal
 
-Bring the Sanctuary 3D world up to a near-painterly, golden-hour cinematic look that matches the Tree of Life image — without sacrificing the interactive 3D walking experience.
+Push the Sanctuary from "stylized 3D" up to **cinematic stylized realism** — the visual register of *Journey*, *Sky: Children of the Light*, and *Ghost of Tsushima*'s photo mode. Real PBR materials lit by a real HDRI, real photoscanned ground/rocks/foliage, and a film-grade post-processing pass — tuned to hit ~60 FPS on a typical laptop and stay playable on phones.
 
-## Strategy: Three layers
+This is the realistic ceiling for a browser. True PS5/Xbox-Series-X fidelity requires ~150 GB of streamed assets, hardware ray tracing, and native shader compilation — none of which exist on the web. What we *can* deliver is a scene that genuinely makes people stop and stare.
 
+## Strategy
+
+```text
+┌────────────────────────────────────────────────┐
+│ Post-FX  bloom · SSAO · god rays · DoF · grade │  cinema grade
+├────────────────────────────────────────────────┤
+│ Foreground  PBR rocks/trees · grass · water    │  hero detail
+├────────────────────────────────────────────────┤
+│ Mid-ground  instanced foliage · fog volumes    │  depth & lushness
+├────────────────────────────────────────────────┤
+│ Background  HDRI sky + painterly horizon       │  mood & light
+└────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────────────────┐
-│  Post-FX layer  (bloom, DoF, vignette, LUT) │  ← cinematic grade
-├─────────────────────────────────────────────┤
-│  3D foreground  (avatar, ground, zones)     │  ← upgraded materials
-├─────────────────────────────────────────────┤
-│  Painterly skybox + distant scenery (image) │  ← AI-generated dome
-└─────────────────────────────────────────────┘
-```
 
-## 1. Painterly Skybox + Distant Scenery
+Two ideas do most of the heavy lifting:
+1. **Real HDRI environment** (one 4K `.hdr` file from Poly Haven) drives all reflections and ambient light. This single change is what makes materials look "real" instead of "computer-y".
+2. **Photoscanned PBR assets** (rocks, tree bark, grass, ground) from Poly Haven & Ambient CG. AAA studios use the same library. Each asset is a ~5 MB GLB plus 2K textures.
 
-Generate two new AI images in the same style as the Tree of Life (golden-hour, painterly, classical-fantasy):
+## 1. Real-world lighting (HDRI)
 
-- `src/assets/sanctuary-skybox.jpg` — 4096×2048 equirectangular panoramic sky (sunset clouds, distant floating islands, soft gold light, no foreground). Used as the scene's `background` + `environment` via drei's `<Environment files={...} background />`. Replaces the generic `<Environment preset="sunset" />`.
-- `src/assets/sanctuary-horizon.jpg` — 2048×512 horizon strip used as a curved billboard far behind the playable area for distant temples / mountains / cypress silhouettes. Adds depth without geometry cost.
+- Replace the painterly `sanctuary-skybox.jpg` background-only setup with a true `.hdr` equirectangular environment from **Poly Haven** (CC0). Candidates: `kloofendal_43d_clear_puresky`, `qwantani_dawn`, `golden_gate_hills`. Loaded via drei's `<Environment files="..." background />` so it lights every PBR material physically correctly.
+- Keep the painterly horizon billboard for art direction, layered in front of the HDRI.
+- Sun: replace the current directional light with a single high-intensity sun matching the HDRI's actual sun direction, plus drei's `<Sky>` for atmospheric scattering on the upper hemisphere.
 
-This single change is what makes the scene *feel* painterly — the sky and horizon do most of the visual heavy lifting.
+## 2. Photoscanned PBR assets
 
-## 2. Cinematic Post-Processing
+Source ~12–15 CC0 assets, all from **Poly Haven** and **Ambient CG**:
 
-Add `@react-three/postprocessing` and wire an `<EffectComposer>` pass:
+| Slot | Asset | Use |
+|---|---|---|
+| Ground | `forest_ground_04` (2K PBR) | Tiled across walkable platform with triplanar blending |
+| Rock × 3 | `rock_06`, `rock_boulder_dry`, `cliff_side` GLBs | Scattered as set dressing, instanced |
+| Tree × 2 | Stylized pine + cypress GLBs (Sketchfab CC0) | Zone markers, instanced clusters |
+| Grass | `grass_medium_01` alpha cards | Instanced grass field with wind shader |
+| Bark | `bark_brown_02` | Tree-of-Life trunk material |
+| Marble | `marble_01` | Temple columns / statue pedestals |
+| Water | `water_normals` + custom shader | Reflective pond with SSR fallback |
 
-- **Bloom** — soft golden glow on bright spots (sun, particles, glowing fruits/lanterns). intensity ≈ 0.6, luminanceThreshold ≈ 0.85.
-- **God Rays** — volumetric sun shafts from a hidden sun mesh placed in the skybox direction.
-- **Depth of Field** — gentle focus on the avatar, blur on distant horizon. Cheap blur, big atmosphere boost.
-- **Vignette** — subtle warm corners.
-- **LUT / ColorGrading** — push warmth + slight desaturation in shadows for the golden-hour palette.
-- **SMAA** — replaces default MSAA for cleaner edges with FX enabled.
+Each asset is downloaded once at build time and committed to `public/assets/sanctuary/`. Total asset budget ~40 MB gzipped — heavy but acceptable for a hero page, and cached after first load.
 
-Tone mapping stays ACES Filmic, exposure bumped slightly (1.22 → 1.32) to match the FX pipeline.
+## 3. Geometry & instancing
 
-## 3. Foreground Upgrades
+- Convert the existing procedurally generated zone props (current `THREE.Mesh` instances) into `<Instances>` groups for rocks, grass, and tree clusters. 5,000 grass blades and 200 rocks cost roughly the same as 10 hand-placed meshes.
+- Add a **grass shader** (vertex displacement for wind, alpha-tested cards) — cheap, transformative.
+- Add a **water plane** with animated normal map + screen-space reflection (drei's `<MeshReflectorMaterial>` — already in the dependency tree).
+- Tree-of-Life centerpiece: replace the procedural trunk with a Sketchfab CC0 ancient-tree GLB; keep the glowing fruit particles.
 
-Targeted improvements to existing 3D elements (no rewrites — surgical):
+## 4. Post-processing (extend existing PostFX.tsx)
 
-- **Lighting**: replace the current ambient + directional with a 3-point setup — warm key (sun direction matching skybox), cool fill, golden rim. Add a `Sky`-aligned hemisphere light. Enable `castShadow` on hero objects, `PCFSoftShadowMap`, and a baked-style contact-shadow plane (drei `ContactShadows`) under the avatar + key props.
-- **Materials**: bump key surfaces (columns, statues, tree bark, water) to higher roughness/metalness contrast; add subtle emissive on lanterns/fruits so bloom catches them.
-- **Foliage density**: add a few `<Instances>` clusters of low-poly foliage cards (alpha-mapped leaves) along zone borders to mask hard edges and add lushness — instanced so cost stays low.
-- **Particles**: increase `<SceneSparkles>` density modestly, recolor to warm gold; add slow-drifting pollen/dust shader plane for atmosphere.
-- **Fog**: recolor the existing fog from cool blue (`#e9f4ff`) to warm peach (`#f5d9b8`) and tighten range so the painterly horizon shows through earlier — this single tweak unifies 3D + skybox.
-- **Water**: if waterfalls exist as planes, add a tiny scrolling normal map for shimmer.
+Add to the current Bloom + Vignette + DoF + ColorGrade pass:
+- **SSAO** (screen-space ambient occlusion) — adds the contact shadows and crevice darkening that sells "real". Single biggest perceptual jump.
+- **God rays** from the sun direction (volumetric light shafts).
+- **Tone mapping** switch from `ACESFilmic` to `AgX` (newer, more cinematic; supported in three.js r163+).
+- **TAA** (temporal anti-aliasing) replacing SMAA on the cinematic tier — eliminates shimmer on grass and foliage.
 
-## 4. Performance & Quality Toggle
+## 5. Performance budget — "balanced, looks great everywhere"
 
-Cinematic FX are heavy. Add an automatic quality detector + a manual toggle in the existing top-right control bar:
+Three tiers (already scaffolded in `PostFX.tsx`); refine the budgets:
 
-- Detect: `navigator.hardwareConcurrency`, `devicePixelRatio`, mobile UA → default tier.
-- Tiers:
-  - **Cinematic** (desktop default): all FX, full skybox res, instanced foliage, shadows on, `dpr={[1, 2]}`.
-  - **Balanced** (mobile default): bloom + vignette only, half-res skybox, no DoF/god-rays, shadows off, `dpr={[1, 1.5]}`.
-  - **Lite** (low-end fallback): no FX, current visuals + new fog/skybox only.
-- Persist choice in `localStorage`.
+| Tier | Target | HDRI | Grass | Rocks | SSAO | God rays | DoF | TAA | DPR |
+|---|---|---|---|---|---|---|---|---|---|
+| Cinematic | desktop GPU | 4K | 8000 blades | 200 | yes | yes | yes | yes | up to 2 |
+| Balanced | typical laptop | 2K | 3000 | 80 | yes (half-res) | no | no | SMAA | up to 1.5 |
+| Lite | phone | 1K | 0 (texture only) | 30 | no | no | no | SMAA | 1 |
 
-## 5. Files Touched
+Auto-detection already exists; add a manual override in the existing HUD (cycle button is already there). Persist in `localStorage`.
 
-- **New assets**: `src/assets/sanctuary-skybox.jpg`, `src/assets/sanctuary-horizon.jpg` (both AI-generated in Tree of Life style).
-- **New dependency**: `@react-three/postprocessing`.
-- **New component**: `src/components/platform/sanctuary/PostFX.tsx` — encapsulates the EffectComposer + quality-tier logic.
-- **Edited**: `src/components/platform/SanctuaryWorld.tsx` — swap Environment, add skybox/horizon, wire PostFX, lighting tweaks, fog color, quality toggle button. Walking, avatar, zone interactions, quest UI remain untouched.
+## 6. Files Touched
 
-## 6. Out of Scope
+**New assets (downloaded at build time, committed)**
+- `public/assets/sanctuary/hdri/sky_2k.hdr` + `sky_1k.hdr` (HDRI, two resolutions)
+- `public/assets/sanctuary/models/*.glb` (ancient tree, 3 rocks, 2 trees, columns)
+- `public/assets/sanctuary/textures/*.{jpg,ktx2}` (ground, bark, grass, marble — KTX2 compressed)
 
-- No changes to the gameplay loop, quest data, zone behavior, or routing.
-- No replacement of the avatar model.
-- No new assets beyond the two background images (we're not regenerating each tree/statue as a 3D model).
+**New components**
+- `src/components/platform/sanctuary/Terrain.tsx` — PBR ground with triplanar shader
+- `src/components/platform/sanctuary/GrassField.tsx` — instanced wind-shaded grass
+- `src/components/platform/sanctuary/RockScatter.tsx` — instanced photoscanned rocks
+- `src/components/platform/sanctuary/Water.tsx` — reflective pond
+- `src/components/platform/sanctuary/AssetLoader.tsx` — preload + KTX2 + Draco setup
+
+**Edited**
+- `src/components/platform/sanctuary/PostFX.tsx` — add SSAO, god rays, AgX tone map, TAA
+- `src/components/platform/SanctuaryWorld.tsx` — swap Environment to HDRI, replace procedural ground/rocks/trees with new components, wire AssetLoader, keep all gameplay/quest/zone code untouched
+
+**Dependencies**
+- `three-stdlib` (already present via drei) for KTX2Loader + DRACOLoader
+- No new npm installs required — everything runs on the existing `@react-three/*` stack
+
+## 7. Out of Scope
+
+- Game logic, quests, zone interactions, avatar movement, routing — all untouched.
+- No custom-modeled assets; everything is CC0 from Poly Haven / Ambient CG / Sketchfab CC0.
+- No ray tracing, no Nanite, no virtual texturing — none exist on the web platform.
+- Other pages (Tree of Life, dashboards) — unchanged.
 
 ## Expected Result
 
-The Sanctuary will read as the same world as the Tree of Life image — same warm sunset light, same dreamy clouds and classical mood, soft bloom on every glowing element, painterly distant background — while you can still walk around and interact like before.
+Walking into the Sanctuary should feel like stepping into a cinematic stylized world: real golden-hour sunlight bouncing off marble, grass swaying in the wind, water reflecting the sky, photoscanned rocks with believable shading, a soft bloom on every glowing element, and a film grade tying it all together. Roughly the visual register of *Journey* or *Sky: Children of the Light* — the realistic ceiling of what a web browser can render at 60 FPS.
+
+## Honest expectations
+
+- **You will NOT get** PS5-level detail, ray-traced reflections, photoreal humans, or 8K textures (browsers cap practical textures at 2–4K).
+- **You WILL get** a scene that looks dramatically better than the current one and reads as "high-end web 3D" rather than "stylized prototype" — the same tier as Bruno Simon's portfolio, Active Theory's award-winning sites, or the Google "I/O" experiences.
+- First load will be heavier (~40 MB of assets vs current ~2 MB). Cached after first visit.
+- If this still falls short of your vision, the next step would be option 3 — pre-rendered cinematic backgrounds with on-rails movement, which can hit true 8K but loses free-roam.
