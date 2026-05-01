@@ -46,8 +46,9 @@ function CommunityPage() {
           {schools.map((s) => (
             <li key={s.name} className="rounded-2xl border border-border/50 bg-card/40 p-4">
               <p className="text-base font-semibold text-foreground">{s.name}</p>
-              <p className="text-xs uppercase tracking-widest text-leaf-glow">{s.location}</p>
+              <p className="text-xs uppercase tracking-widest text-leaf-glow">{s.format} · est. {s.founded}</p>
               <p className="mt-2 text-sm text-muted-foreground">{s.focus}</p>
+              <p className="mt-2 text-xs italic text-muted-foreground">{s.notable}</p>
             </li>
           ))}
         </ul>

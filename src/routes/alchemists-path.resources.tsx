@@ -18,7 +18,7 @@ export const Route = createFileRoute("/alchemists-path/resources")({
 
 function ResourcesPage() {
   const grouped = books.reduce<Record<string, typeof books>>((acc, b) => {
-    (acc[b.category] = acc[b.category] ?? []).push(b);
+    (acc[b.level] = acc[b.level] ?? []).push(b);
     return acc;
   }, {});
 
