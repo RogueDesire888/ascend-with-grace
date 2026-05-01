@@ -1,101 +1,133 @@
 ## Goal
 
-Apply the same calm-and-clear treatment to `/` that we just did on `/community`. The home page today is six full-width stacked sections (hero → element cards → 4-up value cards → skill wheel split → daily quests → membership CTA). Each section is beautiful in isolation, but together they read as a long scroll where every block competes for the same visual weight. A new visitor doesn't get a clear "here's what this is, here's what to do next."
+Replace the current 1-column list of skill cards on `/skill-trees` with a **Tree of Life** visualization — a single rooted tree where each of the five skill trees lives as its own branch growing out of a shared trunk. The page should *look* like a tree (trunk, branches, glowing fruit/leaf nodes), not just a list with a tree-shaped diagram next to it. Same data, same progress logic, same routes — new metaphor and layout.
 
-This is a **visual / IA pass only** on `src/routes/index.tsx`. Same content, same components, same routes — reorganized for hierarchy and rhythm, with one tightened hero, one clear primary CTA, and progressive disclosure for the deeper material.
+This is a **visual / structural pass** on `src/routes/skill-trees.tsx`. No data model changes, no progress-store changes, no route changes.
 
 ---
 
-## New page architecture
+## Visual concept
 
 ```text
-┌──────────────────────────────────────────────────────────┐
-│  HERO  (tighter, single focal CTA)                       │
-│  Eyebrow · H1 · subhead · primary + secondary CTA        │
-│  3 trust chips inline (no big grid)                      │
-│  Sanctuary image keeps the cinematic feel, smaller       │
-│  vertical footprint so the next section peeks            │
-└──────────────────────────────────────────────────────────┘
-
-┌──────────────────────────────────────────────────────────┐
-│  WHAT IS ASCEND  (one-line promise)                      │
-│  Three-step "how it works" strip:                        │
-│  ① Pick your element  ② Practice daily  ③ Watch it grow  │
-│  Compact cards, icons + 1 sentence each                  │
-└──────────────────────────────────────────────────────────┘
-
-┌──────────────────────────────────────────────────────────┐
-│  CHOOSE YOUR ELEMENT                                     │
-│  Existing <ElementCards /> — unchanged                   │
-│  (this is the page's natural focal point)                │
-└──────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────┬────────────────────────┐
-│  TODAY'S PATH                   │  YOUR FIVE PATHS       │
-│  3 daily quest cards            │  <SkillWheel /> + 3    │
-│                                 │  next-quest blurbs     │
-│  (was two separate full-width   │  stacked beside it     │
-│   sections — now side-by-side)  │                        │
-└─────────────────────────────────┴────────────────────────┘
-
-┌──────────────────────────────────────────────────────────┐
-│  EXPLORE THE PLATFORM  (replaces 4-card "value" section) │
-│  Tabbed: Movement · Daily Loop · Mastery · Library       │
-│  One panel visible at a time. Each panel = the existing  │
-│  copy + icon + CTA, just one at a time instead of four.  │
-└──────────────────────────────────────────────────────────┘
-
-┌──────────────────────────────────────────────────────────┐
-│  MEMBERSHIP CTA  (existing <MembershipCTA />, unchanged) │
-└──────────────────────────────────────────────────────────┘
+            ✦  Spirit (top crown)
+              \
+               \
+   Air ──── ●  trunk  ● ──── Energy
+              /│\
+             / │ \
+            /  │  \
+        Touch  │  Herbs
+               │
+              ◉  roots = "Your ascension"
+                  (combined level / XP)
 ```
 
-Page goes from **6 stacked full-width sections** to a clear **5-zone rhythm**: hero → how it works → element pick → daily + paths (split) → tabbed explore → membership.
+Tree-of-Life inspired layout (think Sephirot / world-tree, not literal photo-realism):
+
+- **Central vertical trunk** running top-to-bottom in an SVG.
+- **Five glowing node "fruits"** — one per skill tree — placed around the trunk in a balanced, organic arrangement (one at top/crown, two upper sides, two lower sides). Mind & Spirit at the crown, Energy + Air as upper limbs, Herbal + Touch as lower limbs. The fifth arrangement keeps left/right symmetry.
+- **Curved branch lines** in SVG connecting each node back to the trunk. Branches use a subtle gradient stroke and fade in on mount.
+- **Roots at the base** = a small "Ascension" summary node showing combined progress across all trees.
+- **Pulsing aura** on each node sized by that tree's progress — more progress = brighter glow.
+- **Tap a node** → it expands inline below the tree into the existing skill card (live or static), rather than replacing the tree. So the tree always stays visible as the navigator.
 
 ---
 
-## Visual refinements
+## Page architecture
 
-- **Hero**:
-  - Reduce `min-h-[calc(100vh-5rem)]` → `min-h-[78vh]` so the next zone peeks above the fold (current page feels like the hero IS the page).
-  - Tighten padding (`py-16` → `py-12`), trim `text-7xl` → `text-6xl` at lg.
-  - Replace the 3-column trust-chip grid with a single horizontal row of inline chips (matches the new community hero pulse style).
-  - Soften the second gradient overlay so the sanctuary image breathes.
-- **How it works** (new, lightweight): three numbered steps in a single row, no heavy panels — just numbered circles + one-line copy. Sets expectation immediately.
-- **Element cards**: keep as-is.
-- **Daily + Paths split**: combine the "Today's path" and "Five luminous paths / SkillWheel" sections into one two-column zone on `lg` (stacks on mobile). Same components, less vertical real estate.
-- **Explore tabs**: replace the 4-up value-card grid with a `Tabs` panel using the same tab styling as `/community` (rounded chip tabs). Each panel renders the icon + copy + CTA from `valueCards`. One thing to look at instead of four.
-- **Spacing rhythm**: section padding `pb-20` → `pb-14` between zones. Tighter, calmer.
-- **Color discipline**: keep semantic tokens. Reduce competing accents — `text-spirit` switches to `text-primary` for consistency with the rest of the site.
+```text
+┌─────────────────────────────────────────────────────────┐
+│  PageFrame header (eyebrow + title + intro line)        │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│   ┌─────────────────────────────────────────────────┐   │
+│   │           THE TREE OF LIFE (SVG)                │   │
+│   │                                                 │   │
+│   │              ✦  Mind & Spirit                   │   │
+│   │             /                                   │   │
+│   │      Air  ●     ● Energy                        │   │
+│   │            \   /                                │   │
+│   │             \ /                                 │   │
+│   │              ▌  trunk                           │   │
+│   │             / \                                 │   │
+│   │      Touch ●   ● Herbs                          │   │
+│   │              ▌                                  │   │
+│   │             ◉  roots: Ascension Lv N           │   │
+│   │                                                 │   │
+│   │  Each node is a clickable group: icon disc +    │   │
+│   │  label + tiny progress ring. Selected node      │   │
+│   │  pulses; others dim slightly.                   │   │
+│   └─────────────────────────────────────────────────┘   │
+│                                                         │
+│   ┌─────────────────────────────────────────────────┐   │
+│   │  SELECTED BRANCH DETAIL                         │   │
+│   │  Renders the existing LiveSkillCard or          │   │
+│   │  StaticSkillCard for the active node.           │   │
+│   │  Default selection: Mind & Spirit (crown).      │   │
+│   └─────────────────────────────────────────────────┘   │
+│                                                         │
+│   ┌─────────────────────────────────────────────────┐   │
+│   │  Legend / roots strip                           │   │
+│   │  "Your Ascension Level blends progress from all │   │
+│   │   five trees, rewarding balance over intensity."│   │
+│   │  Combined XP bar + small dot per branch.        │   │
+│   └─────────────────────────────────────────────────┘   │
+│                                                         │
+│  (SkillWheel removed from this page — the tree IS the   │
+│   wheel now. Wheel still lives elsewhere.)              │
+└─────────────────────────────────────────────────────────┘
+```
+
+On mobile (`< lg`): the SVG scales to fit; node labels move closer to the nodes; branches stay curved but shorter. Selection still works tap-to-expand below.
 
 ---
 
-## Files
+## Technical implementation
 
-**Edit**
-- `src/routes/index.tsx` — restructure top-level layout, slim hero, add "how it works" strip, merge daily-path + skill-wheel into one row, replace value-card grid with tabbed Explore panel.
+**Single new file**
+- `src/components/platform/TreeOfLife.tsx` — self-contained SVG component:
+  - Accepts `nodes: Array<{ key: string; name: string; Icon; tone: string; progress: number; x: number; y: number }>` and `selected`, `onSelect`.
+  - Draws an SVG `viewBox` (e.g. 0 0 600 700), trunk as a vertical path with slight organic curve, branches as quadratic Bézier curves from trunk midpoints to each node's `(x, y)`.
+  - Each node = `<g>` containing aura circle (radius scales with progress), filled disc, lucide icon (rendered as foreignObject or as inline SVG path), and a label below.
+  - Selected node gets `animate-pulse-glow` on its aura; others get reduced opacity.
+  - Roots node at the bottom is non-interactive, shows combined progress as a thicker stroke.
 
-**No changes**
-- `src/components/platform/PlatformUI.tsx` (`ElementCards`, `SkillWheel`, `QuestCard`, `MembershipCTA` reused as-is)
-- `src/components/platform/data.ts`
-- Any other route, asset, or style file
-- No new dependencies (`Tabs` already used elsewhere)
+**Edits**
+- `src/routes/skill-trees.tsx` — replace the two-column grid with: tree visual on top, selected-card panel below, legend at bottom. Wire `selected` state. Reuse the existing `LiveSkillCard` and `StaticSkillCard` (extracted to inline use, no API change). Compute combined XP for the roots from `useTreeProgress` data.
+
+**No edits**
+- `src/components/platform/data.ts` — no fields added; tone/Icon/className already exist.
+- `src/lib/progress-store.ts` — unchanged.
+- `src/components/platform/PlatformUI.tsx` — `SkillWheel` stays (still used on home + community sidebar), just no longer rendered on this page.
+
+**No new dependencies.** Pure SVG + Tailwind + existing semantic tokens (`text-air`, `text-spirit`, `text-earth`, `text-fire`, `text-water`, `--shadow-glow`, `--gradient-panel`).
+
+---
+
+## Visual / motion details
+
+- Node aura: `<circle>` with `fill: currentColor; opacity: 0.15-0.4` based on progress.
+- Branch stroke: `stroke="url(#branchGradient)"` linear gradient from `--border` at trunk → element color at node tip.
+- On mount: branches animate `stroke-dasharray` to draw in (~600ms staggered).
+- Hover/selected: node scales 1.05, aura brightens, label gets `text-foreground`.
+- Background of the tree panel: subtle `marble-sheen` overlay + `bg-[var(--gradient-panel)]` so it feels like a sanctuary frame, consistent with the rest of the app.
 
 ---
 
 ## Out of scope
 
-- No copy rewrites beyond the new "how it works" 3 one-liners.
-- No new images or assets.
-- No nav, route, or data changes.
-- No removed sections — every existing block is still present, just rearranged.
+- No 3D, no canvas/WebGL, no animation library beyond Tailwind keyframes already in `styles.css`.
+- No copy rewrites of skill descriptions or quest names.
+- No changes to how progress is stored or computed — only how it's visualized.
+- No new routes or nav.
 
 ---
 
 ## Success check
 
 - `tsc` clean.
-- At 719px (current preview) the page reads top-to-bottom without horizontal overflow; daily + paths stack vertically; explore tabs scroll horizontally if needed.
-- At ≥1024px the daily + paths zone is two columns, the hero leaves visible peek of the next section.
-- Explore zone shows exactly one panel at a time; default tab is "Movement".
-- All existing CTAs (Sanctuary, Skill Trees, Quests, Library, Yoga Therapy Lab) still link to the same routes.
+- `/skill-trees` shows the tree visualization with five clearly placed branch nodes plus a roots node.
+- Clicking a node updates the selected card below in place; the tree stays mounted.
+- At 719px viewport: SVG fits without overflow; selected card stacks below cleanly.
+- All five trees still link to their existing destinations via the same Live/Static card buttons.
+- Combined-XP roots indicator reflects real progress from `useTreeProgress`.
