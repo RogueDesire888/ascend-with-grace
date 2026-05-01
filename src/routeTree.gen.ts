@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as YogaTherapyLabRouteImport } from './routes/yoga-therapy-lab'
 import { Route as YogaRouteImport } from './routes/yoga'
 import { Route as TaiChiLabRouteImport } from './routes/tai-chi-lab'
+import { Route as TaiChiRouteImport } from './routes/tai-chi'
 import { Route as SmoothieCodexRouteImport } from './routes/smoothie-codex'
 import { Route as SkillTreesRouteImport } from './routes/skill-trees'
 import { Route as SanctuaryRouteImport } from './routes/sanctuary'
@@ -31,6 +32,16 @@ import { Route as YogaGoalsRouteImport } from './routes/yoga.goals'
 import { Route as YogaCommunityRouteImport } from './routes/yoga.community'
 import { Route as YogaAsanasRouteImport } from './routes/yoga.asanas'
 import { Route as YogaAnatomyRouteImport } from './routes/yoga.anatomy'
+import { Route as TaiChiToolsRouteImport } from './routes/tai-chi.tools'
+import { Route as TaiChiStartHereRouteImport } from './routes/tai-chi.start-here'
+import { Route as TaiChiScienceRouteImport } from './routes/tai-chi.science'
+import { Route as TaiChiResourcesRouteImport } from './routes/tai-chi.resources'
+import { Route as TaiChiPrinciplesRouteImport } from './routes/tai-chi.principles'
+import { Route as TaiChiMasteryRouteImport } from './routes/tai-chi.mastery'
+import { Route as TaiChiHistoryRouteImport } from './routes/tai-chi.history'
+import { Route as TaiChiGoalsRouteImport } from './routes/tai-chi.goals'
+import { Route as TaiChiFormsRouteImport } from './routes/tai-chi.forms'
+import { Route as TaiChiCommunityRouteImport } from './routes/tai-chi.community'
 import { Route as BreathworkToolsRouteImport } from './routes/breathwork.tools'
 import { Route as BreathworkTechniquesRouteImport } from './routes/breathwork.techniques'
 import { Route as BreathworkStartHereRouteImport } from './routes/breathwork.start-here'
@@ -42,6 +53,9 @@ import { Route as BreathworkCommunityRouteImport } from './routes/breathwork.com
 import { Route as BreathworkAboutRouteImport } from './routes/breathwork.about'
 import { Route as YogaGoalsGoalIdRouteImport } from './routes/yoga.goals.$goalId'
 import { Route as YogaAsanasSlugRouteImport } from './routes/yoga.asanas.$slug'
+import { Route as TaiChiPosturesSlugRouteImport } from './routes/tai-chi.postures.$slug'
+import { Route as TaiChiGoalsGoalIdRouteImport } from './routes/tai-chi.goals.$goalId'
+import { Route as TaiChiFormsSlugRouteImport } from './routes/tai-chi.forms.$slug'
 import { Route as BreathworkTechniquesTraditionsRouteImport } from './routes/breathwork.techniques.traditions'
 import { Route as BreathworkTechniquesSlugRouteImport } from './routes/breathwork.techniques.$slug'
 import { Route as BreathworkGoalsGoalIdRouteImport } from './routes/breathwork.goals.$goalId'
@@ -59,6 +73,11 @@ const YogaRoute = YogaRouteImport.update({
 const TaiChiLabRoute = TaiChiLabRouteImport.update({
   id: '/tai-chi-lab',
   path: '/tai-chi-lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TaiChiRoute = TaiChiRouteImport.update({
+  id: '/tai-chi',
+  path: '/tai-chi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SmoothieCodexRoute = SmoothieCodexRouteImport.update({
@@ -156,6 +175,56 @@ const YogaAnatomyRoute = YogaAnatomyRouteImport.update({
   path: '/anatomy',
   getParentRoute: () => YogaRoute,
 } as any)
+const TaiChiToolsRoute = TaiChiToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => TaiChiRoute,
+} as any)
+const TaiChiStartHereRoute = TaiChiStartHereRouteImport.update({
+  id: '/start-here',
+  path: '/start-here',
+  getParentRoute: () => TaiChiRoute,
+} as any)
+const TaiChiScienceRoute = TaiChiScienceRouteImport.update({
+  id: '/science',
+  path: '/science',
+  getParentRoute: () => TaiChiRoute,
+} as any)
+const TaiChiResourcesRoute = TaiChiResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => TaiChiRoute,
+} as any)
+const TaiChiPrinciplesRoute = TaiChiPrinciplesRouteImport.update({
+  id: '/principles',
+  path: '/principles',
+  getParentRoute: () => TaiChiRoute,
+} as any)
+const TaiChiMasteryRoute = TaiChiMasteryRouteImport.update({
+  id: '/mastery',
+  path: '/mastery',
+  getParentRoute: () => TaiChiRoute,
+} as any)
+const TaiChiHistoryRoute = TaiChiHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => TaiChiRoute,
+} as any)
+const TaiChiGoalsRoute = TaiChiGoalsRouteImport.update({
+  id: '/goals',
+  path: '/goals',
+  getParentRoute: () => TaiChiRoute,
+} as any)
+const TaiChiFormsRoute = TaiChiFormsRouteImport.update({
+  id: '/forms',
+  path: '/forms',
+  getParentRoute: () => TaiChiRoute,
+} as any)
+const TaiChiCommunityRoute = TaiChiCommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => TaiChiRoute,
+} as any)
 const BreathworkToolsRoute = BreathworkToolsRouteImport.update({
   id: '/tools',
   path: '/tools',
@@ -211,6 +280,21 @@ const YogaAsanasSlugRoute = YogaAsanasSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => YogaAsanasRoute,
 } as any)
+const TaiChiPosturesSlugRoute = TaiChiPosturesSlugRouteImport.update({
+  id: '/postures/$slug',
+  path: '/postures/$slug',
+  getParentRoute: () => TaiChiRoute,
+} as any)
+const TaiChiGoalsGoalIdRoute = TaiChiGoalsGoalIdRouteImport.update({
+  id: '/$goalId',
+  path: '/$goalId',
+  getParentRoute: () => TaiChiGoalsRoute,
+} as any)
+const TaiChiFormsSlugRoute = TaiChiFormsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => TaiChiFormsRoute,
+} as any)
 const BreathworkTechniquesTraditionsRoute =
   BreathworkTechniquesTraditionsRouteImport.update({
     id: '/traditions',
@@ -239,6 +323,7 @@ export interface FileRoutesByFullPath {
   '/sanctuary': typeof SanctuaryRoute
   '/skill-trees': typeof SkillTreesRoute
   '/smoothie-codex': typeof SmoothieCodexRoute
+  '/tai-chi': typeof TaiChiRouteWithChildren
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
@@ -251,6 +336,16 @@ export interface FileRoutesByFullPath {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/tai-chi/community': typeof TaiChiCommunityRoute
+  '/tai-chi/forms': typeof TaiChiFormsRouteWithChildren
+  '/tai-chi/goals': typeof TaiChiGoalsRouteWithChildren
+  '/tai-chi/history': typeof TaiChiHistoryRoute
+  '/tai-chi/mastery': typeof TaiChiMasteryRoute
+  '/tai-chi/principles': typeof TaiChiPrinciplesRoute
+  '/tai-chi/resources': typeof TaiChiResourcesRoute
+  '/tai-chi/science': typeof TaiChiScienceRoute
+  '/tai-chi/start-here': typeof TaiChiStartHereRoute
+  '/tai-chi/tools': typeof TaiChiToolsRoute
   '/yoga/anatomy': typeof YogaAnatomyRoute
   '/yoga/asanas': typeof YogaAsanasRouteWithChildren
   '/yoga/community': typeof YogaCommunityRoute
@@ -264,6 +359,9 @@ export interface FileRoutesByFullPath {
   '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
   '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
   '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
+  '/tai-chi/forms/$slug': typeof TaiChiFormsSlugRoute
+  '/tai-chi/goals/$goalId': typeof TaiChiGoalsGoalIdRoute
+  '/tai-chi/postures/$slug': typeof TaiChiPosturesSlugRoute
   '/yoga/asanas/$slug': typeof YogaAsanasSlugRoute
   '/yoga/goals/$goalId': typeof YogaGoalsGoalIdRoute
 }
@@ -277,6 +375,7 @@ export interface FileRoutesByTo {
   '/sanctuary': typeof SanctuaryRoute
   '/skill-trees': typeof SkillTreesRoute
   '/smoothie-codex': typeof SmoothieCodexRoute
+  '/tai-chi': typeof TaiChiRouteWithChildren
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
@@ -289,6 +388,16 @@ export interface FileRoutesByTo {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/tai-chi/community': typeof TaiChiCommunityRoute
+  '/tai-chi/forms': typeof TaiChiFormsRouteWithChildren
+  '/tai-chi/goals': typeof TaiChiGoalsRouteWithChildren
+  '/tai-chi/history': typeof TaiChiHistoryRoute
+  '/tai-chi/mastery': typeof TaiChiMasteryRoute
+  '/tai-chi/principles': typeof TaiChiPrinciplesRoute
+  '/tai-chi/resources': typeof TaiChiResourcesRoute
+  '/tai-chi/science': typeof TaiChiScienceRoute
+  '/tai-chi/start-here': typeof TaiChiStartHereRoute
+  '/tai-chi/tools': typeof TaiChiToolsRoute
   '/yoga/anatomy': typeof YogaAnatomyRoute
   '/yoga/asanas': typeof YogaAsanasRouteWithChildren
   '/yoga/community': typeof YogaCommunityRoute
@@ -302,6 +411,9 @@ export interface FileRoutesByTo {
   '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
   '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
   '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
+  '/tai-chi/forms/$slug': typeof TaiChiFormsSlugRoute
+  '/tai-chi/goals/$goalId': typeof TaiChiGoalsGoalIdRoute
+  '/tai-chi/postures/$slug': typeof TaiChiPosturesSlugRoute
   '/yoga/asanas/$slug': typeof YogaAsanasSlugRoute
   '/yoga/goals/$goalId': typeof YogaGoalsGoalIdRoute
 }
@@ -316,6 +428,7 @@ export interface FileRoutesById {
   '/sanctuary': typeof SanctuaryRoute
   '/skill-trees': typeof SkillTreesRoute
   '/smoothie-codex': typeof SmoothieCodexRoute
+  '/tai-chi': typeof TaiChiRouteWithChildren
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
@@ -328,6 +441,16 @@ export interface FileRoutesById {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/tai-chi/community': typeof TaiChiCommunityRoute
+  '/tai-chi/forms': typeof TaiChiFormsRouteWithChildren
+  '/tai-chi/goals': typeof TaiChiGoalsRouteWithChildren
+  '/tai-chi/history': typeof TaiChiHistoryRoute
+  '/tai-chi/mastery': typeof TaiChiMasteryRoute
+  '/tai-chi/principles': typeof TaiChiPrinciplesRoute
+  '/tai-chi/resources': typeof TaiChiResourcesRoute
+  '/tai-chi/science': typeof TaiChiScienceRoute
+  '/tai-chi/start-here': typeof TaiChiStartHereRoute
+  '/tai-chi/tools': typeof TaiChiToolsRoute
   '/yoga/anatomy': typeof YogaAnatomyRoute
   '/yoga/asanas': typeof YogaAsanasRouteWithChildren
   '/yoga/community': typeof YogaCommunityRoute
@@ -341,6 +464,9 @@ export interface FileRoutesById {
   '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
   '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
   '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
+  '/tai-chi/forms/$slug': typeof TaiChiFormsSlugRoute
+  '/tai-chi/goals/$goalId': typeof TaiChiGoalsGoalIdRoute
+  '/tai-chi/postures/$slug': typeof TaiChiPosturesSlugRoute
   '/yoga/asanas/$slug': typeof YogaAsanasSlugRoute
   '/yoga/goals/$goalId': typeof YogaGoalsGoalIdRoute
 }
@@ -356,6 +482,7 @@ export interface FileRouteTypes {
     | '/sanctuary'
     | '/skill-trees'
     | '/smoothie-codex'
+    | '/tai-chi'
     | '/tai-chi-lab'
     | '/yoga'
     | '/yoga-therapy-lab'
@@ -368,6 +495,16 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/tai-chi/community'
+    | '/tai-chi/forms'
+    | '/tai-chi/goals'
+    | '/tai-chi/history'
+    | '/tai-chi/mastery'
+    | '/tai-chi/principles'
+    | '/tai-chi/resources'
+    | '/tai-chi/science'
+    | '/tai-chi/start-here'
+    | '/tai-chi/tools'
     | '/yoga/anatomy'
     | '/yoga/asanas'
     | '/yoga/community'
@@ -381,6 +518,9 @@ export interface FileRouteTypes {
     | '/breathwork/goals/$goalId'
     | '/breathwork/techniques/$slug'
     | '/breathwork/techniques/traditions'
+    | '/tai-chi/forms/$slug'
+    | '/tai-chi/goals/$goalId'
+    | '/tai-chi/postures/$slug'
     | '/yoga/asanas/$slug'
     | '/yoga/goals/$goalId'
   fileRoutesByTo: FileRoutesByTo
@@ -394,6 +534,7 @@ export interface FileRouteTypes {
     | '/sanctuary'
     | '/skill-trees'
     | '/smoothie-codex'
+    | '/tai-chi'
     | '/tai-chi-lab'
     | '/yoga'
     | '/yoga-therapy-lab'
@@ -406,6 +547,16 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/tai-chi/community'
+    | '/tai-chi/forms'
+    | '/tai-chi/goals'
+    | '/tai-chi/history'
+    | '/tai-chi/mastery'
+    | '/tai-chi/principles'
+    | '/tai-chi/resources'
+    | '/tai-chi/science'
+    | '/tai-chi/start-here'
+    | '/tai-chi/tools'
     | '/yoga/anatomy'
     | '/yoga/asanas'
     | '/yoga/community'
@@ -419,6 +570,9 @@ export interface FileRouteTypes {
     | '/breathwork/goals/$goalId'
     | '/breathwork/techniques/$slug'
     | '/breathwork/techniques/traditions'
+    | '/tai-chi/forms/$slug'
+    | '/tai-chi/goals/$goalId'
+    | '/tai-chi/postures/$slug'
     | '/yoga/asanas/$slug'
     | '/yoga/goals/$goalId'
   id:
@@ -432,6 +586,7 @@ export interface FileRouteTypes {
     | '/sanctuary'
     | '/skill-trees'
     | '/smoothie-codex'
+    | '/tai-chi'
     | '/tai-chi-lab'
     | '/yoga'
     | '/yoga-therapy-lab'
@@ -444,6 +599,16 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/tai-chi/community'
+    | '/tai-chi/forms'
+    | '/tai-chi/goals'
+    | '/tai-chi/history'
+    | '/tai-chi/mastery'
+    | '/tai-chi/principles'
+    | '/tai-chi/resources'
+    | '/tai-chi/science'
+    | '/tai-chi/start-here'
+    | '/tai-chi/tools'
     | '/yoga/anatomy'
     | '/yoga/asanas'
     | '/yoga/community'
@@ -457,6 +622,9 @@ export interface FileRouteTypes {
     | '/breathwork/goals/$goalId'
     | '/breathwork/techniques/$slug'
     | '/breathwork/techniques/traditions'
+    | '/tai-chi/forms/$slug'
+    | '/tai-chi/goals/$goalId'
+    | '/tai-chi/postures/$slug'
     | '/yoga/asanas/$slug'
     | '/yoga/goals/$goalId'
   fileRoutesById: FileRoutesById
@@ -471,6 +639,7 @@ export interface RootRouteChildren {
   SanctuaryRoute: typeof SanctuaryRoute
   SkillTreesRoute: typeof SkillTreesRoute
   SmoothieCodexRoute: typeof SmoothieCodexRoute
+  TaiChiRoute: typeof TaiChiRouteWithChildren
   TaiChiLabRoute: typeof TaiChiLabRoute
   YogaRoute: typeof YogaRouteWithChildren
   YogaTherapyLabRoute: typeof YogaTherapyLabRoute
@@ -497,6 +666,13 @@ declare module '@tanstack/react-router' {
       path: '/tai-chi-lab'
       fullPath: '/tai-chi-lab'
       preLoaderRoute: typeof TaiChiLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tai-chi': {
+      id: '/tai-chi'
+      path: '/tai-chi'
+      fullPath: '/tai-chi'
+      preLoaderRoute: typeof TaiChiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/smoothie-codex': {
@@ -632,6 +808,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof YogaAnatomyRouteImport
       parentRoute: typeof YogaRoute
     }
+    '/tai-chi/tools': {
+      id: '/tai-chi/tools'
+      path: '/tools'
+      fullPath: '/tai-chi/tools'
+      preLoaderRoute: typeof TaiChiToolsRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
+    '/tai-chi/start-here': {
+      id: '/tai-chi/start-here'
+      path: '/start-here'
+      fullPath: '/tai-chi/start-here'
+      preLoaderRoute: typeof TaiChiStartHereRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
+    '/tai-chi/science': {
+      id: '/tai-chi/science'
+      path: '/science'
+      fullPath: '/tai-chi/science'
+      preLoaderRoute: typeof TaiChiScienceRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
+    '/tai-chi/resources': {
+      id: '/tai-chi/resources'
+      path: '/resources'
+      fullPath: '/tai-chi/resources'
+      preLoaderRoute: typeof TaiChiResourcesRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
+    '/tai-chi/principles': {
+      id: '/tai-chi/principles'
+      path: '/principles'
+      fullPath: '/tai-chi/principles'
+      preLoaderRoute: typeof TaiChiPrinciplesRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
+    '/tai-chi/mastery': {
+      id: '/tai-chi/mastery'
+      path: '/mastery'
+      fullPath: '/tai-chi/mastery'
+      preLoaderRoute: typeof TaiChiMasteryRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
+    '/tai-chi/history': {
+      id: '/tai-chi/history'
+      path: '/history'
+      fullPath: '/tai-chi/history'
+      preLoaderRoute: typeof TaiChiHistoryRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
+    '/tai-chi/goals': {
+      id: '/tai-chi/goals'
+      path: '/goals'
+      fullPath: '/tai-chi/goals'
+      preLoaderRoute: typeof TaiChiGoalsRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
+    '/tai-chi/forms': {
+      id: '/tai-chi/forms'
+      path: '/forms'
+      fullPath: '/tai-chi/forms'
+      preLoaderRoute: typeof TaiChiFormsRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
+    '/tai-chi/community': {
+      id: '/tai-chi/community'
+      path: '/community'
+      fullPath: '/tai-chi/community'
+      preLoaderRoute: typeof TaiChiCommunityRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
     '/breathwork/tools': {
       id: '/breathwork/tools'
       path: '/tools'
@@ -708,6 +954,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/yoga/asanas/$slug'
       preLoaderRoute: typeof YogaAsanasSlugRouteImport
       parentRoute: typeof YogaAsanasRoute
+    }
+    '/tai-chi/postures/$slug': {
+      id: '/tai-chi/postures/$slug'
+      path: '/postures/$slug'
+      fullPath: '/tai-chi/postures/$slug'
+      preLoaderRoute: typeof TaiChiPosturesSlugRouteImport
+      parentRoute: typeof TaiChiRoute
+    }
+    '/tai-chi/goals/$goalId': {
+      id: '/tai-chi/goals/$goalId'
+      path: '/$goalId'
+      fullPath: '/tai-chi/goals/$goalId'
+      preLoaderRoute: typeof TaiChiGoalsGoalIdRouteImport
+      parentRoute: typeof TaiChiGoalsRoute
+    }
+    '/tai-chi/forms/$slug': {
+      id: '/tai-chi/forms/$slug'
+      path: '/$slug'
+      fullPath: '/tai-chi/forms/$slug'
+      preLoaderRoute: typeof TaiChiFormsSlugRouteImport
+      parentRoute: typeof TaiChiFormsRoute
     }
     '/breathwork/techniques/traditions': {
       id: '/breathwork/techniques/traditions'
@@ -786,6 +1053,61 @@ const BreathworkRouteWithChildren = BreathworkRoute._addFileChildren(
   BreathworkRouteChildren,
 )
 
+interface TaiChiFormsRouteChildren {
+  TaiChiFormsSlugRoute: typeof TaiChiFormsSlugRoute
+}
+
+const TaiChiFormsRouteChildren: TaiChiFormsRouteChildren = {
+  TaiChiFormsSlugRoute: TaiChiFormsSlugRoute,
+}
+
+const TaiChiFormsRouteWithChildren = TaiChiFormsRoute._addFileChildren(
+  TaiChiFormsRouteChildren,
+)
+
+interface TaiChiGoalsRouteChildren {
+  TaiChiGoalsGoalIdRoute: typeof TaiChiGoalsGoalIdRoute
+}
+
+const TaiChiGoalsRouteChildren: TaiChiGoalsRouteChildren = {
+  TaiChiGoalsGoalIdRoute: TaiChiGoalsGoalIdRoute,
+}
+
+const TaiChiGoalsRouteWithChildren = TaiChiGoalsRoute._addFileChildren(
+  TaiChiGoalsRouteChildren,
+)
+
+interface TaiChiRouteChildren {
+  TaiChiCommunityRoute: typeof TaiChiCommunityRoute
+  TaiChiFormsRoute: typeof TaiChiFormsRouteWithChildren
+  TaiChiGoalsRoute: typeof TaiChiGoalsRouteWithChildren
+  TaiChiHistoryRoute: typeof TaiChiHistoryRoute
+  TaiChiMasteryRoute: typeof TaiChiMasteryRoute
+  TaiChiPrinciplesRoute: typeof TaiChiPrinciplesRoute
+  TaiChiResourcesRoute: typeof TaiChiResourcesRoute
+  TaiChiScienceRoute: typeof TaiChiScienceRoute
+  TaiChiStartHereRoute: typeof TaiChiStartHereRoute
+  TaiChiToolsRoute: typeof TaiChiToolsRoute
+  TaiChiPosturesSlugRoute: typeof TaiChiPosturesSlugRoute
+}
+
+const TaiChiRouteChildren: TaiChiRouteChildren = {
+  TaiChiCommunityRoute: TaiChiCommunityRoute,
+  TaiChiFormsRoute: TaiChiFormsRouteWithChildren,
+  TaiChiGoalsRoute: TaiChiGoalsRouteWithChildren,
+  TaiChiHistoryRoute: TaiChiHistoryRoute,
+  TaiChiMasteryRoute: TaiChiMasteryRoute,
+  TaiChiPrinciplesRoute: TaiChiPrinciplesRoute,
+  TaiChiResourcesRoute: TaiChiResourcesRoute,
+  TaiChiScienceRoute: TaiChiScienceRoute,
+  TaiChiStartHereRoute: TaiChiStartHereRoute,
+  TaiChiToolsRoute: TaiChiToolsRoute,
+  TaiChiPosturesSlugRoute: TaiChiPosturesSlugRoute,
+}
+
+const TaiChiRouteWithChildren =
+  TaiChiRoute._addFileChildren(TaiChiRouteChildren)
+
 interface YogaAsanasRouteChildren {
   YogaAsanasSlugRoute: typeof YogaAsanasSlugRoute
 }
@@ -848,6 +1170,7 @@ const rootRouteChildren: RootRouteChildren = {
   SanctuaryRoute: SanctuaryRoute,
   SkillTreesRoute: SkillTreesRoute,
   SmoothieCodexRoute: SmoothieCodexRoute,
+  TaiChiRoute: TaiChiRouteWithChildren,
   TaiChiLabRoute: TaiChiLabRoute,
   YogaRoute: YogaRouteWithChildren,
   YogaTherapyLabRoute: YogaTherapyLabRoute,
