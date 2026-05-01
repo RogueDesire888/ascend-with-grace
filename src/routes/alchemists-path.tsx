@@ -50,14 +50,10 @@ export const Route = createFileRoute("/alchemists-path")({
   component: AlchemistsPathPage,
 });
 
-const STORAGE_KEY = "alchemists-path-progress-v1";
-
 type Progress = {
   quests: Record<string, boolean>;
   levels: Record<string, boolean>;
 };
-
-const defaultProgress: Progress = { quests: {}, levels: {} };
 
 // ---------- Content ----------
 
