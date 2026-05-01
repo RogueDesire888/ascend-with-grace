@@ -19,6 +19,7 @@ import { SanctuaryPostFX, detectDefaultTier, type QualityTier } from "./sanctuar
 import { GroundOverlay } from "./sanctuary/GroundOverlay";
 import { GrassField } from "./sanctuary/GrassField";
 import { ReflectivePond } from "./sanctuary/ReflectivePond";
+import { CinematicBackdrop } from "./sanctuary/CinematicBackdrop";
 import { sanctuaryAssets } from "./sanctuary/assets";
 import {
   Suspense,
@@ -683,14 +684,12 @@ function SanctuaryScene({
       {/* Golden rim accent */}
       <directionalLight position={[0, 6, -14]} intensity={0.8} color="#ffb072" />
       <pointLight position={[0, 5, -4]} intensity={6.5} color="#ffd28a" distance={18} />
-      {/* Real HDRI environment from Poly Haven — drives all PBR lighting + reflections */}
+      {/* HDRI lighting only — the visible sky is the cinematic backdrop below */}
       <Environment
         files={quality === "lite" ? sanctuaryAssets.hdri.low : sanctuaryAssets.hdri.high}
-        background
-        backgroundBlurriness={0.18}
-        backgroundIntensity={1.0}
         environmentIntensity={1.15}
       />
+      <CinematicBackdrop />
       <SceneSparkles
         count={120}
         scale={[28, 9, 28]}
@@ -699,7 +698,7 @@ function SanctuaryScene({
         opacity={0.55}
         color="#ffe6a8"
       />
-      <SkyCloudBackdrop />
+      {/* Keep a thin near-camera cloud band so the island still feels seated in clouds */}
       <CloudSea />
       <FloatingTempleIsland
         activeZone={activeZone}
