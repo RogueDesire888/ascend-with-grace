@@ -200,6 +200,19 @@ export const movementItems = [
   { to: "/tai-chi-lab" as const, label: "Tai Chi Lab" },
 ];
 
+export const taiChiItems = [
+  { to: "/tai-chi/start-here" as const, label: "Start Here" },
+  { to: "/tai-chi/history" as const, label: "History & Lineage" },
+  { to: "/tai-chi/forms" as const, label: "Form Library" },
+  { to: "/tai-chi/goals" as const, label: "Tai Chi by Goal" },
+  { to: "/tai-chi/mastery" as const, label: "Path to Mastery" },
+  { to: "/tai-chi/principles" as const, label: "Principles & Classics" },
+  { to: "/tai-chi/science" as const, label: "Health Science" },
+  { to: "/tai-chi/community" as const, label: "Community & Teachers" },
+  { to: "/tai-chi/resources" as const, label: "Resource Hub" },
+  { to: "/tai-chi/tools" as const, label: "Tools & Practice" },
+];
+
 export const yogaItems = [
   { to: "/yoga/start-here" as const, label: "Start Here" },
   { to: "/yoga/philosophy" as const, label: "Philosophy & History" },
