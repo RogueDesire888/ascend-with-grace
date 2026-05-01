@@ -44,6 +44,7 @@ import { Route as TaiChiGoalsRouteImport } from './routes/tai-chi.goals'
 import { Route as TaiChiFormsRouteImport } from './routes/tai-chi.forms'
 import { Route as TaiChiCommunityRouteImport } from './routes/tai-chi.community'
 import { Route as TaiChiAnatomyRouteImport } from './routes/tai-chi.anatomy'
+import { Route as SmoothieToolsRouteImport } from './routes/smoothie.tools'
 import { Route as SmoothieStartHereRouteImport } from './routes/smoothie.start-here'
 import { Route as SmoothieScienceRouteImport } from './routes/smoothie.science'
 import { Route as SmoothieRitualsRouteImport } from './routes/smoothie.rituals'
@@ -54,6 +55,7 @@ import { Route as SmoothieMasteryRouteImport } from './routes/smoothie.mastery'
 import { Route as SmoothieIngredientsRouteImport } from './routes/smoothie.ingredients'
 import { Route as SmoothieGoalsRouteImport } from './routes/smoothie.goals'
 import { Route as SmoothieCommunityRouteImport } from './routes/smoothie.community'
+import { Route as SmoothieBuilderRouteImport } from './routes/smoothie.builder'
 import { Route as BreathworkToolsRouteImport } from './routes/breathwork.tools'
 import { Route as BreathworkTechniquesRouteImport } from './routes/breathwork.techniques'
 import { Route as BreathworkStartHereRouteImport } from './routes/breathwork.start-here'
@@ -263,6 +265,11 @@ const TaiChiAnatomyRoute = TaiChiAnatomyRouteImport.update({
   path: '/anatomy',
   getParentRoute: () => TaiChiRoute,
 } as any)
+const SmoothieToolsRoute = SmoothieToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => SmoothieRoute,
+} as any)
 const SmoothieStartHereRoute = SmoothieStartHereRouteImport.update({
   id: '/start-here',
   path: '/start-here',
@@ -311,6 +318,11 @@ const SmoothieGoalsRoute = SmoothieGoalsRouteImport.update({
 const SmoothieCommunityRoute = SmoothieCommunityRouteImport.update({
   id: '/community',
   path: '/community',
+  getParentRoute: () => SmoothieRoute,
+} as any)
+const SmoothieBuilderRoute = SmoothieBuilderRouteImport.update({
+  id: '/builder',
+  path: '/builder',
   getParentRoute: () => SmoothieRoute,
 } as any)
 const BreathworkToolsRoute = BreathworkToolsRouteImport.update({
@@ -521,6 +533,7 @@ export interface FileRoutesByFullPath {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/smoothie/builder': typeof SmoothieBuilderRoute
   '/smoothie/community': typeof SmoothieCommunityRoute
   '/smoothie/goals': typeof SmoothieGoalsRouteWithChildren
   '/smoothie/ingredients': typeof SmoothieIngredientsRouteWithChildren
@@ -531,6 +544,7 @@ export interface FileRoutesByFullPath {
   '/smoothie/rituals': typeof SmoothieRitualsRoute
   '/smoothie/science': typeof SmoothieScienceRoute
   '/smoothie/start-here': typeof SmoothieStartHereRoute
+  '/smoothie/tools': typeof SmoothieToolsRoute
   '/tai-chi/anatomy': typeof TaiChiAnatomyRoute
   '/tai-chi/community': typeof TaiChiCommunityRoute
   '/tai-chi/forms': typeof TaiChiFormsRouteWithChildren
@@ -601,6 +615,7 @@ export interface FileRoutesByTo {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/smoothie/builder': typeof SmoothieBuilderRoute
   '/smoothie/community': typeof SmoothieCommunityRoute
   '/smoothie/goals': typeof SmoothieGoalsRouteWithChildren
   '/smoothie/ingredients': typeof SmoothieIngredientsRouteWithChildren
@@ -611,6 +626,7 @@ export interface FileRoutesByTo {
   '/smoothie/rituals': typeof SmoothieRitualsRoute
   '/smoothie/science': typeof SmoothieScienceRoute
   '/smoothie/start-here': typeof SmoothieStartHereRoute
+  '/smoothie/tools': typeof SmoothieToolsRoute
   '/tai-chi/anatomy': typeof TaiChiAnatomyRoute
   '/tai-chi/community': typeof TaiChiCommunityRoute
   '/tai-chi/forms': typeof TaiChiFormsRouteWithChildren
@@ -682,6 +698,7 @@ export interface FileRoutesById {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/smoothie/builder': typeof SmoothieBuilderRoute
   '/smoothie/community': typeof SmoothieCommunityRoute
   '/smoothie/goals': typeof SmoothieGoalsRouteWithChildren
   '/smoothie/ingredients': typeof SmoothieIngredientsRouteWithChildren
@@ -692,6 +709,7 @@ export interface FileRoutesById {
   '/smoothie/rituals': typeof SmoothieRitualsRoute
   '/smoothie/science': typeof SmoothieScienceRoute
   '/smoothie/start-here': typeof SmoothieStartHereRoute
+  '/smoothie/tools': typeof SmoothieToolsRoute
   '/tai-chi/anatomy': typeof TaiChiAnatomyRoute
   '/tai-chi/community': typeof TaiChiCommunityRoute
   '/tai-chi/forms': typeof TaiChiFormsRouteWithChildren
@@ -764,6 +782,7 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/smoothie/builder'
     | '/smoothie/community'
     | '/smoothie/goals'
     | '/smoothie/ingredients'
@@ -774,6 +793,7 @@ export interface FileRouteTypes {
     | '/smoothie/rituals'
     | '/smoothie/science'
     | '/smoothie/start-here'
+    | '/smoothie/tools'
     | '/tai-chi/anatomy'
     | '/tai-chi/community'
     | '/tai-chi/forms'
@@ -844,6 +864,7 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/smoothie/builder'
     | '/smoothie/community'
     | '/smoothie/goals'
     | '/smoothie/ingredients'
@@ -854,6 +875,7 @@ export interface FileRouteTypes {
     | '/smoothie/rituals'
     | '/smoothie/science'
     | '/smoothie/start-here'
+    | '/smoothie/tools'
     | '/tai-chi/anatomy'
     | '/tai-chi/community'
     | '/tai-chi/forms'
@@ -924,6 +946,7 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/smoothie/builder'
     | '/smoothie/community'
     | '/smoothie/goals'
     | '/smoothie/ingredients'
@@ -934,6 +957,7 @@ export interface FileRouteTypes {
     | '/smoothie/rituals'
     | '/smoothie/science'
     | '/smoothie/start-here'
+    | '/smoothie/tools'
     | '/tai-chi/anatomy'
     | '/tai-chi/community'
     | '/tai-chi/forms'
@@ -1234,6 +1258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TaiChiAnatomyRouteImport
       parentRoute: typeof TaiChiRoute
     }
+    '/smoothie/tools': {
+      id: '/smoothie/tools'
+      path: '/tools'
+      fullPath: '/smoothie/tools'
+      preLoaderRoute: typeof SmoothieToolsRouteImport
+      parentRoute: typeof SmoothieRoute
+    }
     '/smoothie/start-here': {
       id: '/smoothie/start-here'
       path: '/start-here'
@@ -1302,6 +1333,13 @@ declare module '@tanstack/react-router' {
       path: '/community'
       fullPath: '/smoothie/community'
       preLoaderRoute: typeof SmoothieCommunityRouteImport
+      parentRoute: typeof SmoothieRoute
+    }
+    '/smoothie/builder': {
+      id: '/smoothie/builder'
+      path: '/builder'
+      fullPath: '/smoothie/builder'
+      preLoaderRoute: typeof SmoothieBuilderRouteImport
       parentRoute: typeof SmoothieRoute
     }
     '/breathwork/tools': {
@@ -1685,6 +1723,7 @@ const SmoothieRecipesRouteWithChildren = SmoothieRecipesRoute._addFileChildren(
 )
 
 interface SmoothieRouteChildren {
+  SmoothieBuilderRoute: typeof SmoothieBuilderRoute
   SmoothieCommunityRoute: typeof SmoothieCommunityRoute
   SmoothieGoalsRoute: typeof SmoothieGoalsRouteWithChildren
   SmoothieIngredientsRoute: typeof SmoothieIngredientsRouteWithChildren
@@ -1695,9 +1734,11 @@ interface SmoothieRouteChildren {
   SmoothieRitualsRoute: typeof SmoothieRitualsRoute
   SmoothieScienceRoute: typeof SmoothieScienceRoute
   SmoothieStartHereRoute: typeof SmoothieStartHereRoute
+  SmoothieToolsRoute: typeof SmoothieToolsRoute
 }
 
 const SmoothieRouteChildren: SmoothieRouteChildren = {
+  SmoothieBuilderRoute: SmoothieBuilderRoute,
   SmoothieCommunityRoute: SmoothieCommunityRoute,
   SmoothieGoalsRoute: SmoothieGoalsRouteWithChildren,
   SmoothieIngredientsRoute: SmoothieIngredientsRouteWithChildren,
@@ -1708,6 +1749,7 @@ const SmoothieRouteChildren: SmoothieRouteChildren = {
   SmoothieRitualsRoute: SmoothieRitualsRoute,
   SmoothieScienceRoute: SmoothieScienceRoute,
   SmoothieStartHereRoute: SmoothieStartHereRoute,
+  SmoothieToolsRoute: SmoothieToolsRoute,
 }
 
 const SmoothieRouteWithChildren = SmoothieRoute._addFileChildren(
