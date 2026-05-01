@@ -16,7 +16,10 @@ import {
   Wind,
 } from "lucide-react";
 import { SanctuaryPostFX, detectDefaultTier, type QualityTier } from "./sanctuary/PostFX";
-import sanctuarySkybox from "@/assets/sanctuary-skybox.jpg";
+import { GroundOverlay } from "./sanctuary/GroundOverlay";
+import { GrassField } from "./sanctuary/GrassField";
+import { ReflectivePond } from "./sanctuary/ReflectivePond";
+import { sanctuaryAssets } from "./sanctuary/assets";
 import {
   Suspense,
   useEffect,
@@ -410,8 +413,8 @@ export function SanctuaryWorld() {
               onCreated={({ gl }) => {
                 gl.shadowMap.enabled = true;
                 gl.shadowMap.type = THREE.PCFSoftShadowMap;
-                gl.toneMapping = THREE.ACESFilmicToneMapping;
-                gl.toneMappingExposure = 1.32;
+                gl.toneMapping = THREE.AgXToneMapping;
+                gl.toneMappingExposure = 1.18;
                 gl.outputColorSpace = THREE.SRGBColorSpace;
               }}
             >
@@ -423,6 +426,7 @@ export function SanctuaryWorld() {
                   activeZone={activeZone}
                   keysPressed={keysPressed}
                   targetPosition={targetPosition}
+                  quality={quality}
                   onReady={handleSceneReady}
                   onTargetReached={handleTargetReached}
                   onWalkTo={walkTo}
@@ -516,6 +520,7 @@ function SanctuaryScene({
   activeZone,
   keysPressed,
   targetPosition,
+  quality,
   onReady,
   onTargetReached,
   onWalkTo,
@@ -527,6 +532,7 @@ function SanctuaryScene({
   activeZone: ZoneKey;
   keysPressed: RefObject<Set<string>>;
   targetPosition: Point | null;
+  quality: QualityTier;
   onReady: (api: SanctuaryWorldApi) => void;
   onTargetReached: () => void;
   onWalkTo: (zone: Zone) => void;
@@ -654,14 +660,14 @@ function SanctuaryScene({
 
   return (
     <>
-      <color attach="background" args={["#f4c79a"]} />
-      <fog attach="fog" args={["#f5d0a4", 22, 70]} />
-      <hemisphereLight args={["#ffe6c2", "#7a5a4b", 1.6]} />
-      <ambientLight intensity={0.42} color="#ffd9a8" />
-      {/* Warm key light — sun direction matched to the painterly skybox */}
+      <color attach="background" args={["#e8c79a"]} />
+      <fog attach="fog" args={["#f0caa0", 26, 78]} />
+      {/* Soft ambient lift; HDRI provides the real diffuse light */}
+      <ambientLight intensity={0.18} color="#ffd9a8" />
+      {/* Warm key sun matching the HDRI sun direction */}
       <directionalLight
         position={[-7, 13, 9]}
-        intensity={5.4}
+        intensity={3.4}
         color="#ffd9a0"
         castShadow
         shadow-mapSize={[4096, 4096]}
@@ -672,12 +678,19 @@ function SanctuaryScene({
         shadow-camera-top={18}
         shadow-camera-bottom={-18}
       />
-      {/* Cool fill from opposite side */}
-      <directionalLight position={[8, 7, -12]} intensity={0.9} color="#c8b6e6" />
+      {/* Cool fill bounce */}
+      <directionalLight position={[8, 7, -12]} intensity={0.55} color="#c8b6e6" />
       {/* Golden rim accent */}
-      <directionalLight position={[0, 6, -14]} intensity={1.4} color="#ffb072" />
-      <pointLight position={[0, 5, -4]} intensity={9.2} color="#ffd28a" distance={18} />
-      <Environment files={sanctuarySkybox} background backgroundBlurriness={0.06} environmentIntensity={1.15} />
+      <directionalLight position={[0, 6, -14]} intensity={0.8} color="#ffb072" />
+      <pointLight position={[0, 5, -4]} intensity={6.5} color="#ffd28a" distance={18} />
+      {/* Real HDRI environment from Poly Haven — drives all PBR lighting + reflections */}
+      <Environment
+        files={quality === "lite" ? sanctuaryAssets.hdri.low : sanctuaryAssets.hdri.high}
+        background
+        backgroundBlurriness={0.18}
+        backgroundIntensity={1.0}
+        environmentIntensity={1.15}
+      />
       <SceneSparkles
         count={120}
         scale={[28, 9, 28]}
@@ -693,6 +706,9 @@ function SanctuaryScene({
         onWalkTo={onWalkTo}
         onGroundClick={handleGroundClick}
       />
+      <GroundOverlay />
+      <GrassField tier={quality} />
+      <ReflectivePond tier={quality} />
       <PlayerAvatar refObject={avatarRef} />
     </>
   );
