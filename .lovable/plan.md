@@ -1,99 +1,101 @@
 ## Goal
 
-Make `/community` feel calm, scannable, and obviously useful at first glance. Today the page stacks 10 dense sections in a single column — hero, stats strip, three challenge cards, composer, tabs, feed, circles, mentors, events, rituals, leaderboards, badges, code of conduct. Each section is well-built individually, but together they read as a wall. The user should land and immediately understand: *here's me, here's today, here's the feed — everything else is one click away.*
+Apply the same calm-and-clear treatment to `/` that we just did on `/community`. The home page today is six full-width stacked sections (hero → element cards → 4-up value cards → skill wheel split → daily quests → membership CTA). Each section is beautiful in isolation, but together they read as a long scroll where every block competes for the same visual weight. A new visitor doesn't get a clear "here's what this is, here's what to do next."
 
-This is a **visual / information-architecture pass only**. No new features, no data-layer changes, no removed functionality. Same components, reorganized and restyled for hierarchy.
+This is a **visual / IA pass only** on `src/routes/index.tsx`. Same content, same components, same routes — reorganized for hierarchy and rhythm, with one tightened hero, one clear primary CTA, and progressive disclosure for the deeper material.
 
 ---
 
 ## New page architecture
 
 ```text
-┌────────────────────────────────────────────────────────────┐
-│  HERO (smaller, focused)                                   │
-│  "The Circle" · one-line subtitle · 4 pulse stats          │
-│  Today's intention card (only if not yet set today)        │
-└────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  HERO  (tighter, single focal CTA)                       │
+│  Eyebrow · H1 · subhead · primary + secondary CTA        │
+│  3 trust chips inline (no big grid)                      │
+│  Sanctuary image keeps the cinematic feel, smaller       │
+│  vertical footprint so the next section peeks            │
+└──────────────────────────────────────────────────────────┘
 
-┌──────────────────────────────────┬─────────────────────────┐
-│  MAIN COLUMN (2/3)               │  SIDEBAR (1/3, sticky)  │
-│                                  │                         │
-│  Your Standing — compact         │  Today at a glance      │
-│  (one row, 4 inline stats,       │   • Active challenge    │
-│   not 4 big cards)               │     (the one user is in)│
-│                                  │   • Next event          │
-│  Feed                            │   • Streak + intention  │
-│  • Composer (collapsed by        │                         │
-│    default — "Share with the     │  Circles you're in      │
-│    circle…" expands on focus)    │   (3 chips + "browse")  │
-│  • Tabs + posts                  │                         │
-│                                  │  Mentors on call today  │
-│                                  │   (2 with avatars)      │
-│                                  │                         │
-└──────────────────────────────────┴─────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  WHAT IS ASCEND  (one-line promise)                      │
+│  Three-step "how it works" strip:                        │
+│  ① Pick your element  ② Practice daily  ③ Watch it grow  │
+│  Compact cards, icons + 1 sentence each                  │
+└──────────────────────────────────────────────────────────┘
 
-┌────────────────────────────────────────────────────────────┐
-│  EXPLORE (tabbed, single panel — replaces 5 sections)      │
-│  Tabs: Challenges · Circles · Mentors · Events · Rituals   │
-│  Only the active tab renders. Reduces page from 10         │
-│  sections to 4.                                            │
-└────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  CHOOSE YOUR ELEMENT                                     │
+│  Existing <ElementCards /> — unchanged                   │
+│  (this is the page's natural focal point)                │
+└──────────────────────────────────────────────────────────┘
 
-┌────────────────────────────────────────────────────────────┐
-│  RECOGNITION (collapsed accordion)                         │
-│  • Leaderboards                                            │
-│  • Badge gallery                                           │
-│  Both closed by default. User opens what they care about.  │
-└────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────┬────────────────────────┐
+│  TODAY'S PATH                   │  YOUR FIVE PATHS       │
+│  3 daily quest cards            │  <SkillWheel /> + 3    │
+│                                 │  next-quest blurbs     │
+│  (was two separate full-width   │  stacked beside it     │
+│   sections — now side-by-side)  │                        │
+└─────────────────────────────────┴────────────────────────┘
 
-┌────────────────────────────────────────────────────────────┐
-│  Code of the Circle (slim footer card, unchanged)          │
-└────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  EXPLORE THE PLATFORM  (replaces 4-card "value" section) │
+│  Tabbed: Movement · Daily Loop · Mastery · Library       │
+│  One panel visible at a time. Each panel = the existing  │
+│  copy + icon + CTA, just one at a time instead of four.  │
+└──────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────┐
+│  MEMBERSHIP CTA  (existing <MembershipCTA />, unchanged) │
+└──────────────────────────────────────────────────────────┘
 ```
 
-Page goes from ~10 stacked sections to 4 visual zones: **hero → work area (feed + sidebar) → explore → recognition.** Same content, much less perceived weight.
+Page goes from **6 stacked full-width sections** to a clear **5-zone rhythm**: hero → how it works → element pick → daily + paths (split) → tabbed explore → membership.
 
 ---
 
 ## Visual refinements
 
-- **Hero**: trim padding (`p-8 lg:p-12` → `p-6 lg:p-8`), drop the second decorative gradient layer to a single subtle one, hide the intention card once today's intention is set (move a tiny "✓ Today: Soft start" chip into the sidebar instead).
-- **Your Standing**: convert the 4-card grid into a single horizontal "stat bar" — rank chip on the left with progress bar, three inline metrics on the right. Reads as one object, not four.
-- **Feed composer**: collapsed pill ("Share with the circle…") that expands to the full composer on focus. Removes the largest static block above the fold.
-- **Post cards**: tighten padding, smaller avatars, single-line meta row, reaction buttons as a quiet row (icon + count, no chip background until hovered/selected).
-- **Tabs in Explore section**: same `Tabs` primitive already used for the feed — consistent pattern, only one panel visible at a time.
-- **Recognition accordion**: shadcn `Accordion` (already installed), both items closed by default.
-- **Spacing rhythm**: `space-y-12` → `space-y-8` between zones, `space-y-6` inside zones. Tighter, calmer.
-- **Color discipline**: keep semantic tokens. Reduce competing accent colors — primary for active/CTA, muted for everything else. Today every section uses `border-primary/30`, `text-primary`, `text-cyan-glow`, `text-orchid-glow` — pick primary as the single accent on this page.
-- **Mobile**: sidebar collapses to a horizontal scroll strip of three mini-cards above the feed. Explore tabs stay horizontal-scroll.
+- **Hero**:
+  - Reduce `min-h-[calc(100vh-5rem)]` → `min-h-[78vh]` so the next zone peeks above the fold (current page feels like the hero IS the page).
+  - Tighten padding (`py-16` → `py-12`), trim `text-7xl` → `text-6xl` at lg.
+  - Replace the 3-column trust-chip grid with a single horizontal row of inline chips (matches the new community hero pulse style).
+  - Soften the second gradient overlay so the sanctuary image breathes.
+- **How it works** (new, lightweight): three numbered steps in a single row, no heavy panels — just numbered circles + one-line copy. Sets expectation immediately.
+- **Element cards**: keep as-is.
+- **Daily + Paths split**: combine the "Today's path" and "Five luminous paths / SkillWheel" sections into one two-column zone on `lg` (stacks on mobile). Same components, less vertical real estate.
+- **Explore tabs**: replace the 4-up value-card grid with a `Tabs` panel using the same tab styling as `/community` (rounded chip tabs). Each panel renders the icon + copy + CTA from `valueCards`. One thing to look at instead of four.
+- **Spacing rhythm**: section padding `pb-20` → `pb-14` between zones. Tighter, calmer.
+- **Color discipline**: keep semantic tokens. Reduce competing accents — `text-spirit` switches to `text-primary` for consistency with the rest of the site.
 
 ---
 
 ## Files
 
 **Edit**
-- `src/routes/community.tsx` — restructure top-level layout, collapse sections into the Explore tabs and Recognition accordion, slim the hero, convert Your Standing into a stat bar, collapse the composer, tighten post cards.
+- `src/routes/index.tsx` — restructure top-level layout, slim hero, add "how it works" strip, merge daily-path + skill-wheel into one row, replace value-card grid with tabbed Explore panel.
 
 **No changes**
-- `src/lib/community-data.ts` (all data reused as-is)
-- `src/lib/community-progress.ts` (state API unchanged)
-- Any other route or component
+- `src/components/platform/PlatformUI.tsx` (`ElementCards`, `SkillWheel`, `QuestCard`, `MembershipCTA` reused as-is)
+- `src/components/platform/data.ts`
+- Any other route, asset, or style file
+- No new dependencies (`Tabs` already used elsewhere)
 
 ---
 
 ## Out of scope
 
-- No new content, no removed sections (challenges, circles, mentors, events, rituals, leaderboards, badges all still present — just reorganized).
-- No new data fields, no new XP rules, no nav changes.
-- No new dependencies (Accordion + Tabs already in the project).
+- No copy rewrites beyond the new "how it works" 3 one-liners.
+- No new images or assets.
+- No nav, route, or data changes.
+- No removed sections — every existing block is still present, just rearranged.
 
 ---
 
 ## Success check
 
 - `tsc` clean.
-- At 719px viewport (current preview) the page shows hero → stat bar → composer pill → feed without horizontal overflow; sidebar content appears as a scroll strip above the feed.
-- At ≥1024px the sidebar is sticky beside the feed.
-- Explore section renders exactly one panel at a time.
-- Recognition accordion items both start closed.
-- All existing actions (set intention, join challenge, log day, react, compose, etc.) still work — same handlers wired to the same state.
+- At 719px (current preview) the page reads top-to-bottom without horizontal overflow; daily + paths stack vertically; explore tabs scroll horizontally if needed.
+- At ≥1024px the daily + paths zone is two columns, the hero leaves visible peek of the next section.
+- Explore zone shows exactly one panel at a time; default tab is "Movement".
+- All existing CTAs (Sanctuary, Skill Trees, Quests, Library, Yoga Therapy Lab) still link to the same routes.
