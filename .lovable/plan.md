@@ -1,112 +1,133 @@
 ## Goal
 
-Transform the single-page **Smoothie Codex** (`/smoothie-codex`) into an elite encyclopedic module — same depth and structure as the new Herbal Path and Breathwork sections — and give it its **own dedicated dropdown** in the header (separate from the Alchemy menu).
+Transform `/community` from a thin two-card placeholder into a true "home base" — a gamified, value-dense, sticky community hub that rivals the depth of the Breathwork / Herbal / Smoothie modules, but oriented around *people, momentum, and belonging* instead of encyclopedic content.
 
-## New architecture
+The aim: when a user lands here, they see (1) themselves reflected, (2) the pulse of the circle, (3) several inviting ways to interact, and (4) reasons to come back tomorrow.
+
+---
+
+## Page architecture
+
+A single `/community` route, sectioned like a living dashboard. No new sub-routes (the section already lives across the `*.community.tsx` modality pages). One page, deeply built.
 
 ```text
-/smoothie/
-  start-here              Welcome, philosophy of the blender, your first elixir
-  ingredients             Encyclopedia of 80+ ingredients (fruits, greens, proteins,
-                          fats, superfoods, liquids, boosters) with nutrition,
-                          benefits, swaps, sourcing, seasonality
-  ingredients/$slug       Per-ingredient deep dive (macro/micro profile, ORAC,
-                          glycemic load, pairings, contraindications)
-  science                 Nutrient density, bioavailability, blending vs juicing,
-                          fibre, polyphenols, the cold-chain, glycemic response
-  recipes                 60+ curated recipes filterable by goal, season, diet
-  recipes/$slug           Full recipe page (ratios, prep, nutrient breakdown,
-                          variations, story)
-  goals                   Smoothies by goal — energy, gut, recovery, immunity,
-                          skin, focus, sleep, weight, hormonal, kids
-  goals/$goalId           Goal detail with curated recipes + 7-day rotation
-  builder                 Interactive smoothie architect (base/liquid/protein/
-                          fat/fibre/superfood/sweetener) with live macro estimate
-  mastery                 Existing 5-level game preserved verbatim
-  rituals                 Morning, post-workout, evening, fasting-window,
-                          seasonal cleanse rituals
-  pantry                  Build-your-pantry shopping lists by budget tier and
-                          dietary pattern (omnivore / plant-based / keto / AIP)
-  community               Featured creators, recipe contributors, regional
-                          smoothie traditions (Brazilian açaí, Indian lassi,
-                          Filipino halo-halo blends, etc.)
-  resources               Books, blenders compared, equipment, podcasts, studies
-  tools                   Macro calculator, ratio architect, glycemic estimator,
-                          freezer-prep planner
+┌─ Hero: "The Circle" — live pulse banner
+│  ├─ Members online · today's check-ins · current group glow
+│  └─ Daily intention prompt (1-tap submit)
+├─ Your Standing — personal gamified strip
+│  ├─ Rank badge · streak · weekly XP · circle contribution score
+│  └─ Next-rank progress bar + 3 quick actions to earn it
+├─ Group Challenges (active)
+│  ├─ 2–3 challenges with progress rings, members joined, days left
+│  └─ Join / Continue CTA
+├─ Live Feed (tabbed)
+│  ├─ Tabs: For You · Wins · Questions · Practice Logs · Field Notes
+│  ├─ Rich post cards: avatar, rank chip, modality tag, body, reactions
+│  └─ Reactions: glow / resonate / bow / amplify (no plain "likes")
+├─ Circles (interest pods)
+│  └─ 8–10 themed circles (Breathwork Daily, Herbal Apothecary, Tai Chi
+│      Mornings, Yoga Recovery, Smoothie Lab, Shadow Work, Sleep Reset,
+│      Family Practice, Beginners Hearth, Mastery Path)
+├─ Mentors & Guides
+│  └─ 4–6 senior practitioners offering office-hour windows
+├─ Events This Week
+│  └─ Live circles, group sits, AMA, full-moon ritual
+├─ Leaderboards (gentle)
+│  ├─ Most generous (replies given) · Longest streak · Quest finishers
+│  └─ Framing: "celebration, not competition"
+├─ Rituals of the Circle
+│  └─ Weekly cadence: Mon intention · Wed practice swap · Fri gratitude
+└─ Code of the Circle (always-visible footer card)
+   └─ Consent, privacy, non-performative growth
 ```
 
-## Header navigation
+---
 
-Add a **new "Smoothies" dropdown** in `src/components/platform/AppShell.tsx` (both desktop and mobile), placed next to Alchemy. The current Smoothie Codex link inside the **Alchemy** dropdown will be removed so the section stands on its own.
+## Gamification layer (the engagement engine)
 
-Final header dropdowns: Tai Chi · Yoga · Alchemy · **Smoothies** · Breathwork.
+Five mechanics, all surfaced visibly:
 
-## Data layer
+1. **Circle Rank** — 7 tiers (Ember → Spark → Flame → Beacon → Lantern → Hearth → Keeper of the Flame). Earned via *contribution*, not consumption.
+2. **Streak** — daily check-in flame; soft-recovery (1 grace day/week) so it never feels punishing.
+3. **Weekly XP** — earned for: posting (10), thoughtful reply (15), completing a challenge day (20), mentoring response (25).
+4. **Glow Bloom** — visual flower that grows on the hero based on the *whole circle's* weekly activity. Collective, not individual.
+5. **Badges** — earnable micro-achievements: "First Reply", "Seven-Day Sit", "Pollinator" (replied to 10 different members), "Lineage Bridge" (engaged across 3+ modalities).
 
-**`src/lib/smoothie-data.ts`** — single static encyclopedia with these exports:
+All mechanics framed as **encouragement, not performance pressure** — copy reflects that throughout.
 
-- `ingredients: Ingredient[]` — 80+ entries with `slug, name, category, emoji, nutrients{calories, protein, fat, carbs, fibre, sugar, key micronutrients}, benefits[], pairings[], swaps[], season[], sourcing, contraindications[]`
-- `categories: IngredientCategory[]` — fruits, leafy greens, cruciferous, proteins, healthy fats, superfoods, liquids, sweeteners, spices, boosters
-- `recipes: Recipe[]` — 60+ recipes with goals, macros, season, difficulty, story
-- `goals: SmoothieGoal[]` — 10 goals with summary, recipe slugs, weekly rotation, "why it works"
-- `rituals: Ritual[]` — 6 ritual templates (timing, intention, recipe pairing)
-- `nutrients: NutrientFact[]` — vitamins/minerals/phytonutrients with what-it-does and best food sources
-- `studies: Study[]` — 15–20 peer-reviewed entries on whole-food smoothies, blending vs juicing, fibre intake, polyphenol bioavailability
-- `equipment: Blender[]` — comparison of common blenders (Vitamix, Blendtec, NutriBullet, Ninja, immersion) with strengths and price tier
-- `books: Book[]` — foundational reading
-- `pantryTiers: PantryTier[]` — budget / standard / premium starter pantries
-- `searchAll(query)` — Cmd+K search across ingredients, recipes, goals, nutrients, studies
-- `getIngredient(slug)`, `getRecipe(slug)`, `getGoal(id)` lookups
-- `ranks: Rank[]` — 6-tier rank ladder (Sprout → Blender Apprentice → Recipe Architect → Macro Sage → Phytonutrient Scholar → Grand Smoothie Sage)
+---
 
-## Progress store
+## Interaction design (the "sticky" bits)
 
-Extend **`src/lib/smoothie-progress.ts`** (or replace its internals) to track:
+- **One-tap daily intention** at the top (3 chip options + custom) — instant feedback, low friction, returns next day.
+- **Reaction buttons that mean something**: Glow (warm acknowledgment), Resonate (this matched my experience), Bow (gratitude), Amplify (boost into For You).
+- **Tabbed feed** with smooth content switching using `Tabs` from shadcn.
+- **Quick post composer** inline (modality dropdown + intention chip + text), not a modal — friction kills posting.
+- **"Reply with practice"** — when someone asks a question, you can attach a technique/recipe/posture from any module's data layer.
+- **Hover-to-preview** rank badges show what's next.
+- **Subtle motion**: glow blooms animate on load, streak flame pulses, progress rings fill on mount (`animate-fade-in`, `animate-scale-in`).
 
-- `recipesMade: Record<slug, boolean>`
-- `ingredientsLogged: Record<slug, boolean>`
-- `goalsActive: Record<id, boolean>`
-- `streakDays: { date: string }[]` for daily blend streaks
-- `customRecipes: SavedRecipe[]` from the builder
-- existing `levels` / `quests` map preserved for the mastery game
+---
 
-Add `currentRank(progress)` mirroring `currentRank` in `herbal-progress.ts` based on recipes made + ingredients logged.
+## Data & state
 
-## Layout shell
+A single new file, no DB required (matches the rest of the app's local-first pattern):
 
-**`src/routes/smoothie.tsx`** — layout route mirroring `breathwork.tsx` / `alchemists-path.tsx`:
+- `src/lib/community-data.ts` — static seed: 25+ rich posts across tabs, 10 circles, 6 mentors, 6 events, 3 active challenges, 7 ranks, 12 badges, leaderboard rows, ritual cadence.
+- `src/lib/community-progress.ts` — `useSyncExternalStore` + `localStorage`:
+  - `dailyIntention` (today's chip + timestamp)
+  - `streak` (count + lastCheckIn + graceUsed)
+  - `weeklyXp` (rolls weekly)
+  - `joinedCircles` (string[])
+  - `joinedChallenges` (string[])
+  - `reactions` (postId → reactionType)
+  - `rank` (derived)
+  - `earnedBadges` (string[])
+  - `composedPosts` (local-only drafts/posts shown atop the feed)
 
-- header strip with module label + rank badge + ⌘K search dialog
-- horizontal scroll nav of all sub-routes
-- `<Outlet />` for child pages
-- root redirect message pointing to Start Here
+Mirrors `breathwork-progress.ts` / `smoothie-progress.ts` exactly — same SSR-safe pattern.
 
-## Sub-routes
+---
 
-Each page follows the same visual grammar as the new Herbal Path pages — semantic tokens only (no hardcoded colors), `bg-card/40` panels, leaf/citrus accent token, lucide icons. Notable interactions:
+## Files to create / edit
 
-- **builder**: live macro estimate as you click ingredients, save to `customRecipes`, share-friendly summary card
-- **tools**: macro calculator (per-100g math), ratio architect (40% base / 25% liquid / 15% protein / 10% fat / 10% boosters defaults), glycemic estimator (low/med/high based on ingredient GL sums), 7-day freezer-prep planner
-- **mastery**: existing 5-level Codex page lifted into `/smoothie/mastery` so nothing is lost
+**Create**
+- `src/lib/community-data.ts`
+- `src/lib/community-progress.ts`
 
-## Migration & redirects
+**Edit**
+- `src/routes/community.tsx` — full rebuild as the dashboard described above. Keep the existing `head()` meta but expand with richer description.
 
-- Move existing `src/routes/smoothie-codex.tsx` content into `src/routes/smoothie.mastery.tsx` (route `/smoothie/mastery`).
-- Replace `src/routes/smoothie-codex.tsx` with a small redirect component that navigates to `/smoothie/start-here` so existing links keep working.
-- Update `alchemyItems` in `src/components/platform/data.ts` to drop the Smoothie Codex entry.
-- Add `smoothieItems` array (all 13 sub-route entries) and import it in `AppShell.tsx`.
+**Possibly edit**
+- `src/components/platform/data.ts` — only if we want to deprecate the thin `communityPosts` seed (we'll leave it; PlatformUI elsewhere still imports it).
 
-## Quality bar
+No changes to navigation, no changes to other modality `*.community.tsx` pages (those remain modality-specific; this is the cross-cutting hub).
 
-- TypeScript strict — no `any`, all routes typed.
-- Every route has its own `head()` with unique title + description + og tags.
-- Every detail route has `loader`, `notFoundComponent`, `errorComponent`.
-- Recipes and ingredients use the same monograph density as the herbal materia medica (real numbers, real benefits, real contraindications — no filler).
-- Cmd+K search works across the whole module.
-- Rank tracker badge in the layout updates as the user marks recipes made.
+---
 
-## Non-goals
+## Visual / design notes
 
-- No backend/persistence beyond `localStorage` (matches Herbal & Breathwork modules).
-- No image generation — emoji + typography carry the visual identity, like the existing codex.
-- No e-commerce links for blenders — comparison only.
+- Reuse semantic tokens already in `src/styles.css` (no new colors).
+- Use existing utility classes seen in modality pages: `sanctuary-panel`, `quest-panel-air`, `marble-sheen`, `var(--shadow-aura)`, `var(--gradient-panel)`, `var(--shadow-glow)`.
+- Lean on `lucide-react` icons already in the bundle (Flame, Sparkles, Users, HeartHandshake, Trophy, Crown, Sprout, Wind, Leaf, MessageCircle, Heart).
+- Components from shadcn already present: `Tabs`, `Progress`, `Card`, `Button`, `Badge`, `Avatar`, `Tooltip`, `Dialog` (for "view all members" / rank explainer).
+- Mobile-first: dashboard collapses to single column under `lg`; sticky bottom composer on mobile.
+
+---
+
+## Out of scope (intentionally)
+
+- No real backend / auth / multi-user sync — same local-first pattern as the rest of the app.
+- No new routes, no nav changes.
+- No changes to modality-specific community sub-pages (`/breathwork/community`, `/smoothie/community`, etc.).
+- No paid-tier mechanics — keeping the existing $5 framing in `MembershipCTA` untouched.
+
+---
+
+## Success check after build
+
+- `tsc` clean.
+- Hero, gamification strip, challenges, tabbed feed, circles, mentors, events, leaderboards, rituals, code-of-circle all render at `/community`.
+- Daily intention persists across reload via localStorage.
+- Reactions persist; XP/rank update live.
+- Mobile viewport (719px, current preview) renders cleanly with no overflow.
