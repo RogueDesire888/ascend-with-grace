@@ -35,7 +35,8 @@ export const Route = createFileRoute("/yoga/asanas/$slug")({
 });
 
 function AsanaDetail() {
-  const { asana } = Route.useLoaderData();
+  const loaderData = Route.useLoaderData() as { asana: NonNullable<ReturnType<typeof getAsana>> };
+  const { asana } = loaderData;
   const { progress, toggleAsana } = useYogaProgress();
   const tracked = !!progress.asanas[asana.slug];
 
