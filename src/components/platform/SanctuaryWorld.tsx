@@ -10,10 +10,13 @@ import {
   Leaf,
   MoonStar,
   Sparkles,
+  Sun,
   Volume2,
   VolumeX,
   Wind,
 } from "lucide-react";
+import { SanctuaryPostFX, detectDefaultTier, type QualityTier } from "./sanctuary/PostFX";
+import sanctuarySkybox from "@/assets/sanctuary-skybox.jpg";
 import {
   Suspense,
   useEffect,
