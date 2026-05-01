@@ -196,10 +196,6 @@ export const navItems = [
   { to: "/community" as const, label: "Community" },
 ];
 
-export const movementItems = [
-  { to: "/tai-chi-lab" as const, label: "Tai Chi Lab" },
-];
-
 export const taiChiItems = [
   { to: "/tai-chi/start-here" as const, label: "Start Here" },
   { to: "/tai-chi/history" as const, label: "History & Lineage" },
