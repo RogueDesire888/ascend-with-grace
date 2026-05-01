@@ -42,27 +42,28 @@ export function SanctuaryPostFX({ tier }: Props): ReactElement | null {
         worldProximityFalloff={1}
       />
       <Bloom
-        intensity={isCinematic ? 0.95 : 0.6}
-        luminanceThreshold={0.78}
-        luminanceSmoothing={0.32}
+        intensity={isCinematic ? 1.15 : 0.75}
+        luminanceThreshold={0.7}
+        luminanceSmoothing={0.4}
         mipmapBlur
         kernelSize={isCinematic ? KernelSize.LARGE : KernelSize.MEDIUM}
       />
       {isCinematic ? (
         <DepthOfField
-          focusDistance={0.018}
-          focalLength={0.045}
-          bokehScale={2.4}
+          focusDistance={0.04}
+          focalLength={0.08}
+          bokehScale={1.2}
           height={480}
         />
       ) : (
         <Fragment />
       )}
-      <HueSaturation hue={0} saturation={isCinematic ? 0.14 : 0.07} />
-      <BrightnessContrast brightness={0.02} contrast={isCinematic ? 0.1 : 0.05} />
+      {/* Warm golden-hour grade — pulls everything toward the backdrop's color story */}
+      <HueSaturation hue={0.02} saturation={isCinematic ? 0.18 : 0.12} />
+      <BrightnessContrast brightness={0.04} contrast={isCinematic ? 0.14 : 0.08} />
       <Vignette
-        offset={0.32}
-        darkness={isCinematic ? 0.55 : 0.4}
+        offset={0.28}
+        darkness={isCinematic ? 0.6 : 0.45}
         blendFunction={BlendFunction.NORMAL}
       />
     </EffectComposer>
