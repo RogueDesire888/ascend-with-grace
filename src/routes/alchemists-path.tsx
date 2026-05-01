@@ -346,26 +346,8 @@ function useReveal<T extends HTMLElement>() {
 // ---------- Page ----------
 
 function AlchemistsPathPage() {
-  const [progress, setProgress] = useState<Progress>(defaultProgress);
+  const { progress, toggleQuest, toggleLevel } = useTreeProgress("herbal-wisdom");
   const [openLevel, setOpenLevel] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as Progress;
-        setProgress({ quests: parsed.quests ?? {}, levels: parsed.levels ?? {} });
-      }
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  }, [progress]);
 
   const totalQuests = useMemo(
     () => levels.reduce((acc, l) => acc + l.quests.length, 0),
@@ -374,12 +356,6 @@ function AlchemistsPathPage() {
   const completedQuests = Object.values(progress.quests).filter(Boolean).length;
   const xp = completedQuests * 25;
   const xpMax = totalQuests * 25;
-
-  const toggleQuest = (key: string) =>
-    setProgress((p) => ({ ...p, quests: { ...p.quests, [key]: !p.quests[key] } }));
-
-  const toggleLevel = (levelId: string) =>
-    setProgress((p) => ({ ...p, levels: { ...p.levels, [levelId]: !p.levels[levelId] } }));
 
   const scrollTo = (id: string) => {
     if (typeof document === "undefined") return;
