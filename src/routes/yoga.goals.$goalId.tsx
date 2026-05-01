@@ -30,7 +30,8 @@ export const Route = createFileRoute("/yoga/goals/$goalId")({
 });
 
 function GoalDetail() {
-  const { goal } = Route.useLoaderData();
+  const loaderData = Route.useLoaderData() as { goal: NonNullable<ReturnType<typeof getGoal>> };
+  const { goal } = loaderData;
   const { progress, toggleGoal } = useYogaProgress();
   const tracked = !!progress.goals[goal.id];
 
