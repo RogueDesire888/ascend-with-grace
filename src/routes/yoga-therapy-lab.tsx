@@ -292,18 +292,31 @@ function YogaTherapyLab() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto w-full max-w-7xl space-y-12 px-4 py-8 sm:px-6 lg:px-8">
+      <QuestPath
+        treeKey="movement-arts"
+        treeLabel="Yoga Path"
+        classes={yogaClasses}
+        eyebrow="A Game of Yoga Mastery"
+        title="🧘 The Yoga Practitioner's Path"
+        quote="“First, do no harm. Second, find your breath. Third, let the practice change you.”"
+        levels={yogaLevels}
+        badges={yogaBadges}
+        panelClass="quest-panel-air"
+        accentClass="text-air"
+      />
+
       <section className="overflow-hidden rounded-lg border border-border/70 bg-card/80 shadow-[var(--shadow-soft)] backdrop-blur-xl">
         <div className="border-b border-border/60 bg-background/70 px-5 py-4 sm:px-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
                 <Sparkles className="h-4 w-4" />
-                Yoga Therapy Lab
+                Yoga Reference Lab
               </div>
-              <h1 className="mt-3 text-3xl font-bold text-foreground sm:text-4xl">
-                Evidence-informed yoga resources for teachers and practitioners.
-              </h1>
+              <h2 className="mt-3 text-2xl font-bold text-foreground sm:text-3xl">
+                Evidence-informed reference for teachers and practitioners.
+              </h2>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-end">
               {sections.map(({ id, label, Icon }) => (
