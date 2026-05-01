@@ -40,7 +40,7 @@ function PreparationsPage() {
                 <div>
                   <h2 className="text-2xl font-bold text-foreground">{p.name}</h2>
                   <p className="mt-1 text-sm italic text-muted-foreground">
-                    Vehicle: {p.vehicle}
+                    Menstruum: {p.menstruum}
                   </p>
                 </div>
                 <label className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border/60 bg-background/40 px-3 py-1.5 text-xs text-muted-foreground">
@@ -49,7 +49,7 @@ function PreparationsPage() {
                 </label>
               </div>
 
-              <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <div className="mt-4 grid gap-4 md:grid-cols-3">
                 <div>
                   <p className="text-xs uppercase tracking-widest text-leaf-glow">When to choose</p>
                   <p className="mt-1 text-sm text-muted-foreground">{p.whenToChoose}</p>
@@ -58,11 +58,22 @@ function PreparationsPage() {
                   <p className="text-xs uppercase tracking-widest text-leaf-glow">Standard ratio</p>
                   <p className="mt-1 text-sm text-muted-foreground">{p.ratio}</p>
                 </div>
+                <div>
+                  <p className="text-xs uppercase tracking-widest text-leaf-glow">Time / Yield</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{p.time} · {p.yield}</p>
+                </div>
               </div>
 
               <div className="mt-4">
                 <p className="text-xs uppercase tracking-widest text-leaf-glow">Method</p>
-                <p className="mt-1 whitespace-pre-line text-sm text-muted-foreground">{p.method}</p>
+                <ol className="mt-1 space-y-1 text-sm text-muted-foreground">
+                  {p.steps.map((step, i) => (
+                    <li key={i}>
+                      <span className="mr-1 font-semibold text-foreground">{i + 1}.</span>
+                      {step}
+                    </li>
+                  ))}
+                </ol>
               </div>
 
               {p.shelfLife && (
