@@ -403,15 +403,15 @@ export function SanctuaryWorld() {
             <Canvas
               className="sanctuary-canvas"
               shadows
-              dpr={[1, 1.9]}
-              camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 120 }}
+              dpr={quality === "cinematic" ? [1, 2] : quality === "balanced" ? [1, 1.6] : [1, 1.3]}
+              camera={{ position: [0, 9, 18], fov: 42, near: 0.1, far: 140 }}
               style={{ opacity: hasEntered ? 1 : 0.2 }}
-              gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+              gl={{ antialias: quality === "lite", alpha: true, powerPreference: "high-performance" }}
               onCreated={({ gl }) => {
                 gl.shadowMap.enabled = true;
                 gl.shadowMap.type = THREE.PCFSoftShadowMap;
                 gl.toneMapping = THREE.ACESFilmicToneMapping;
-                gl.toneMappingExposure = 1.22;
+                gl.toneMappingExposure = 1.32;
                 gl.outputColorSpace = THREE.SRGBColorSpace;
               }}
             >
@@ -432,6 +432,7 @@ export function SanctuaryWorld() {
                     worldApiRef.current?.setTarget(point);
                   }}
                 />
+                <SanctuaryPostFX tier={quality} />
               </Suspense>
             </Canvas>
           ) : (
