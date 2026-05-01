@@ -1,65 +1,59 @@
 ## Goal
 
-Redesign the Skill Trees page so the Tree of Life evokes the uploaded reference (ancient golden-lit tree on a floating cloud island with ruins and waterfalls) — but rendered as a pure stylized SVG. Each of the 5 skills becomes its own **living branch that grows with progress**: the further you advance in a skill, the longer, thicker, leafier, and more fruit-laden that branch becomes.
+Replace the stylized SVG Tree of Life with a **realistic, fully-grown tree image** in the style of your reference, then overlay 5 interactive skill nodes pinned exactly to the 5 most prominent branches. The tree always reads as lush, ancient, and fruitful — the 5 nodes are the focal points without forcing the underlying tree to look bare.
 
-## Visual Direction (inspired by the reference)
+## Image
 
-- **Sky/canvas backdrop**: warm golden-hour gradient (soft amber → rose → cream) with layered cloud silhouettes drifting at the bottom.
-- **Floating island base**: a rounded rocky platform with moss tufts and pink flower clusters spilling over the edge; two faint waterfalls cascading off the sides into the clouds.
-- **Ruins**: a few minimal classical column silhouettes (3–5 columns + 2 statue silhouettes) flanking the trunk base, low-opacity to feel ambient, not busy.
-- **Trunk**: thick, gnarled, organic shape (compound SVG path with bark-like inner texture lines and a warm brown gradient with a golden rim-light on one side).
-- **Canopy halo**: large radial golden glow behind the upper branches.
-- **Palette**: warm browns, mossy greens, golden amber, soft rose — wired through `src/styles.css` tokens (e.g. `--tree-trunk`, `--tree-canopy`, `--tree-glow`, `--tree-bloom`, `--tree-stone`) so it stays themeable.
+- Generate one new portrait-orientation hero image (premium quality, ~1024×1536) tuned for a vertical layout panel:
+  - Massive ancient tree, gnarled trunk, lush golden-green canopy, glowing ornamental fruits.
+  - Floating cloud island base with classical ruins, statues, pink blossoms, twin waterfalls.
+  - Warm golden-hour lighting, painterly cinematic quality.
+  - **Composition tuned for overlay**: 5 clearly distinguishable major branches fanning out (one crown, two upper laterals, two lower laterals) — symmetric enough that we can pin nodes reliably.
+- Save to `src/assets/tree-of-life.jpg`, imported as an ES6 module.
 
-## Branches as Living Skill Meters
+## Overlay Architecture
 
-Each of the 5 skills owns one branch. The branch geometry is **driven by that skill's `progress` (0–100)**:
+`TreeOfLife.tsx` is fully rewritten but keeps its public props (`nodes`, `selectedKey`, `onSelect`, `rootsLabel`, `rootsProgress`) so `skill-trees.tsx` is untouched apart from one copy tweak.
 
-| Visual property | At 0% | At 100% |
-|---|---|---|
-| Branch length | short stub off trunk | long sweeping arc into canopy |
-| Branch thickness | thin twig (~3px) | thick limb (~12px) |
-| Leaf cluster count | 1 small cluster | 5–7 lush clusters along the branch |
-| Fruit count | 0 fruits | 3–5 glowing fruits (skill's tone color) |
-| Bloom/flower accents | none | pink blossoms scattered |
-| Branch glow | dim | bright aura matching skill tone |
+Layout:
+```
+┌─────────────────────────────────┐
+│ <img tree-of-life.jpg>          │  ← absolute fill, object-cover
+│   ✦ node (Mind & Spirit)        │
+│  ✦         ✦                    │  ← 5 absolutely-positioned nodes
+│ ✦           ✦                   │     pinned to branch tips (% coords)
+│   ▼ Roots strip (ascension)     │
+└─────────────────────────────────┘
+```
 
-Branch endpoints stay roughly anchored (so the silhouette is always recognizable as 5 branches) but interpolate from "stub" to "full limb" along a fixed Bézier path. Leaves/fruits are placed at parametric points along the path (using `getPointAtLength`-style precomputed offsets) and faded/scaled in as progress crosses thresholds.
+Each node:
+- Pinned with `top`/`left` percentages tuned to the generated image's branch tips.
+- Visual = small glowing fruit-like disc with the skill's tone color, lucide icon inside, soft radial aura.
+- Idle: gentle pulse. Hover: aura grows + scales 1.05. Selected: bright pulsing ring + tone-tinted glow; other nodes dim to ~45%.
+- Floating label card on hover/selected (skill name + percent + level), positioned to avoid clipping at edges.
+- Progress influences only the **node's glow intensity and aura size** (not the tree itself), so the tree always looks fully grown while still rewarding progression.
 
-## Interaction
+Roots strip: stays as-is below the image (existing component already handles ascension % + chip list).
 
-- The full branch (path + leaves + fruits) is one clickable/focusable group. Hover lifts the branch slightly and brightens its glow; selected branch pulses and dims the others to ~40% opacity.
-- A small floating label near each branch tip shows skill name + percent + level (same data as today).
-- Clicking a branch keeps the existing behavior: the detail card (`LiveSkillCard` / `StaticSkillCard`) renders below the tree.
-- The "Roots" section under the island stays — roots visibly extend further into the clouds as ascension level rises, and the existing Roots progress strip remains below the SVG.
+## Responsive
 
-## Layout
+- Aspect ratio container (`aspect-[3/4]` desktop, `aspect-[4/5]` mobile) so node coordinates stay accurate at any width.
+- On viewports ≤640px: node labels collapse to icon-only chips; full label appears in a small popover on tap.
+- Image uses `object-cover` with `object-position: center top` to keep the canopy + branches in view if cropped.
 
-- Replace the current `TreeOfLife` SVG content while keeping the component's public props (`nodes`, `selectedKey`, `onSelect`, `rootsLabel`, `rootsProgress`) so `skill-trees.tsx` doesn't need logic changes.
-- New viewBox ~`0 0 800 900` (taller, to fit canopy + island + cloud base).
-- Responsive: SVG scales fluidly; on mobile (≤640px) labels collapse to just the skill icon chip near each branch tip, and the column/statue silhouettes simplify (drop to 2 columns) to avoid clutter.
+## Accessibility & Motion
 
-## Animations
+- Each node is a `<button>` with `aria-pressed` and `aria-label` (e.g. "Energy Mastery — 84%").
+- Keyboard: tab through nodes; Enter/Space selects.
+- All animations honor `prefers-reduced-motion` (no pulse, instant state changes).
 
-- On mount: trunk fades/grows up, then branches "grow" outward in sequence (`stroke-dasharray` reveal sized to current progress length, ~250ms each, staggered).
-- Leaves/fruits pop in with a subtle scale spring after their branch finishes growing.
-- Slow ambient drift on cloud layer (CSS `translateX` loop, 30s).
-- Selected branch fruit gets a gentle pulsing glow (existing `animate-ping` pattern, slowed).
-- All animations respect `prefers-reduced-motion` (skip growth, render final state).
+## Files Touched
 
-## Technical Notes
-
-- **Files touched**:
-  - `src/components/platform/TreeOfLife.tsx` — full rewrite of the SVG body; props/exports unchanged.
-  - `src/styles.css` — add the new tree color tokens in `oklch` (light + dark mode variants).
-  - `src/routes/skill-trees.tsx` — no functional changes; possibly minor copy tweak in the eyebrow/intro to match the new visual.
-- **Branch geometry**: each skill gets a fixed base Bézier (start anchor on trunk, control point, max endpoint). At runtime we compute an interpolated endpoint = `lerp(stubEnd, maxEnd, progress/100)` and interpolated stroke width. Leaf/fruit positions are precomputed as `t` values along the *max* path; we render only those whose `t <= progress/100 + small offset`.
-- **Leaves & fruits**: small reusable SVG symbols (`<symbol id="leaf-cluster">`, `<symbol id="fruit">`) referenced via `<use>` so the markup stays light. Fruit fill uses `currentColor` driven by the branch's `toneClass`.
-- **Ruins, statues, waterfalls, clouds**: pure SVG paths with low-opacity fills — no raster images, keeps bundle size flat and themeable.
-- **Performance**: entire tree is one inline SVG, ~5 branches × ~10 decorative children = well under 200 nodes total.
+- **New**: `src/assets/tree-of-life.jpg` (generated premium image).
+- **Rewritten**: `src/components/platform/TreeOfLife.tsx` — image + overlaid node buttons; props unchanged.
+- **Minor copy tweak**: `src/routes/skill-trees.tsx` — eyebrow/intro phrasing to match the new visual; no logic changes.
 
 ## Out of Scope
 
-- No raster/AI-generated background image (per chosen approach).
-- No changes to progress data model, routing, or the detail cards below the tree.
-- No new skills added — still the existing 5 from `skillTrees`.
+- No multi-stage growth images (rejected option).
+- No changes to skill data, routing, or the detail card below the tree.
