@@ -218,6 +218,7 @@ export function SanctuaryWorld() {
   const [glowEarned, setGlowEarned] = useState(8700);
   const [celebration, setCelebration] = useState<Celebration | null>(null);
   const [isMuted, setIsMuted] = useState(false);
+  const [quality, setQuality] = useState<QualityTier>("balanced");
   const audioContextRef = useRef<AudioContext | null>(null);
   const keysPressed = useRef(new Set<string>());
   const lastAvatarPosition = useRef<Point>(START_POSITION);
@@ -232,7 +233,23 @@ export function SanctuaryWorld() {
   );
   const handleTargetReached = useMemo(() => () => setTargetPosition(null), []);
 
-  useEffect(() => setIsMounted(true), []);
+  useEffect(() => {
+    setIsMounted(true);
+    try {
+      const stored = localStorage.getItem("sanctuary-quality") as QualityTier | null;
+      setQuality(stored ?? detectDefaultTier());
+    } catch {
+      setQuality(detectDefaultTier());
+    }
+  }, []);
+
+  function cycleQuality() {
+    setQuality((q) => {
+      const next: QualityTier = q === "cinematic" ? "balanced" : q === "balanced" ? "lite" : "cinematic";
+      try { localStorage.setItem("sanctuary-quality", next); } catch {}
+      return next;
+    });
+  }
 
   const nearbyZone = useMemo(
     () => zones.find((zone) => distance(zone.position, avatarPosition) < 1.25),
