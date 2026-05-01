@@ -1,29 +1,31 @@
-## Goal
+## Problem
 
-Replace the single "Yoga Lab" header tab with a "Movement" dropdown button containing two sections — Yoga Therapy Lab and Tai Chi Lab.
+The "Movement" dropdown opens but is painted behind the page's hero image / 3D sanctuary content.
 
-## Current state
+## Root cause
 
-The code in `src/components/platform/AppShell.tsx` **already implements this exact feature**:
-- Desktop nav renders a `MovementMenu` component (a hover/focus dropdown labeled "Movement" with a chevron) between "Skill Trees" and "Library".
-- The dropdown lists both `movementItems` from `src/components/platform/data.ts`: Yoga Therapy Lab → `/yoga-therapy-lab`, Tai Chi Lab → `/tai-chi-lab`.
-- Mobile nav uses a `<details>` element with the same two links.
+In `src/components/platform/AppShell.tsx`, `MovementMenu` renders the dropdown panel as a plain absolutely-positioned `<div>` inside the header's `<nav>`. That `<nav>` uses the `.sanctuary-panel` class which applies `backdrop-filter: blur(22px)` (see `src/styles.css` line ~295). `backdrop-filter` creates a new stacking context, so the dropdown's `z-50` is scoped to the nav, not the page. Large transformed elements in `<main>` (hero card, sanctuary scenes) then overlap it.
 
-The live published site at `glow-ascend-quest.lovable.app` still shows the old "Yoga Lab" tab because the published deployment is stale relative to the current source.
+The mobile `<details>` dropdown has the same issue for the same reason.
 
-## Plan
+## Fix
 
-No code changes needed. The fix is a republish:
+Replace the hand-rolled hover/details dropdowns with Radix's already-installed `DropdownMenu` (`src/components/ui/dropdown-menu.tsx`). Radix portals its content to `document.body`, escaping every parent stacking context. Result: the menu always paints above page content.
 
-1. Open the **Publish** dialog (top-right in desktop, ⋯ menu on mobile).
-2. Click **Update** to redeploy the latest build.
-3. Hard-refresh the live site and confirm the header shows **Movement** (with chevron) instead of **Yoga Lab**, and that hovering/clicking it reveals **Yoga Therapy Lab** and **Tai Chi Lab**.
+### Changes (single file: `src/components/platform/AppShell.tsx`)
 
-If after republishing the dropdown still doesn't appear, switch to build mode and I will inspect for a caching/build issue or an alternate header component being rendered.
+1. Import `DropdownMenu`, `DropdownMenuTrigger`, `DropdownMenuContent`, `DropdownMenuItem` from `@/components/ui/dropdown-menu`.
+2. Rewrite `MovementMenu` to use `DropdownMenu` with:
+   - Trigger: same pill button styling as today ("Movement" + chevron).
+   - Content: `align="center"`, `sideOffset={8}`, with the existing `sanctuary-panel` styling applied to `DropdownMenuContent` (or a wrapper) so the look is preserved.
+   - Each item is a `DropdownMenuItem` rendering a TanStack `<Link>` (use `asChild`) to `/yoga-therapy-lab` and `/tai-chi-lab`.
+3. Replace the mobile `<details>` block with the same `DropdownMenu` (Radix works on touch). Keep the trigger styled to match the surrounding mobile pills.
+4. Keep all existing labels, routes, and `movementItems` data — no changes to `data.ts`.
 
-## Optional enhancements (only if you want them)
+### Verification
 
-- Add short descriptions or icons under each dropdown item (e.g. a leaf icon for Yoga, a wave icon for Tai Chi).
-- Group the two items under labeled subheadings ("Yoga", "Tai Chi") with separators inside the dropdown.
+- Open the home page, hover/click "Movement" — the dropdown should appear above the hero image.
+- Same check on `/sanctuary` (3D scene), `/quests`, and the mobile viewport.
+- Confirm both items still navigate correctly and the active link styling still applies.
 
-Let me know if you'd like either of these and I'll fold them into the implementation.
+No other files change.
