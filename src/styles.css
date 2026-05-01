@@ -612,3 +612,97 @@
     display: none;
   }
 }
+
+@layer utilities {
+  .font-grimoire {
+    font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+    letter-spacing: 0.01em;
+  }
+
+  .grimoire-heading {
+    font-family: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+    text-shadow: 0 1px 0 color-mix(in oklab, var(--background) 60%, transparent),
+      0 0 24px color-mix(in oklab, var(--sun-glow) 22%, transparent);
+    letter-spacing: 0.02em;
+  }
+
+  .gold-accent {
+    color: color-mix(in oklab, var(--primary) 65%, var(--coral-glow));
+  }
+
+  .parchment-card {
+    background:
+      radial-gradient(
+        ellipse at 18% 10%,
+        color-mix(in oklab, var(--sun-glow) 18%, transparent),
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse at 82% 92%,
+        color-mix(in oklab, var(--coral-glow) 18%, transparent),
+        transparent 55%
+      ),
+      linear-gradient(
+        140deg,
+        color-mix(in oklab, var(--card) 78%, oklch(0.78 0.06 70) 22%),
+        color-mix(in oklab, var(--card) 88%, oklch(0.55 0.08 50) 12%)
+      );
+    background-blend-mode: screen, screen, normal;
+    border: 1px solid color-mix(in oklab, var(--primary) 55%, var(--coral-glow) 30%);
+    box-shadow:
+      inset 0 0 38px color-mix(in oklab, oklch(0.3 0.07 50) 32%, transparent),
+      inset 0 1px 0 color-mix(in oklab, var(--sun-glow) 30%, transparent),
+      0 14px 40px -22px color-mix(in oklab, oklch(0.1 0.05 40) 70%, transparent);
+    position: relative;
+  }
+
+  .parchment-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background-image:
+      radial-gradient(
+        circle at 30% 20%,
+        color-mix(in oklab, oklch(0.3 0.05 50) 18%, transparent) 0 1px,
+        transparent 1.6px
+      ),
+      radial-gradient(
+        circle at 70% 80%,
+        color-mix(in oklab, oklch(0.3 0.05 50) 14%, transparent) 0 1px,
+        transparent 1.6px
+      );
+    background-size: 60px 60px, 90px 90px;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+  }
+
+  .parchment-card > * {
+    position: relative;
+  }
+
+  .path-step-line {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--primary) 60%, transparent),
+      color-mix(in oklab, var(--coral-glow) 60%, transparent)
+    );
+  }
+
+  .badge-locked {
+    filter: grayscale(0.85) brightness(0.6);
+    opacity: 0.55;
+  }
+
+  .reveal-on-view {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 700ms ease-out, transform 700ms ease-out;
+  }
+
+  .reveal-on-view.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
