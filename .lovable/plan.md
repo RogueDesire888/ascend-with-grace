@@ -1,112 +1,69 @@
 ## Goal
+Transform "Yoga Therapy Lab" (single page, 733 lines) into a comprehensive Yoga encyclopedia matching the depth of the Breathwork section (13 routes, 1,295-line data library, progress tracking, interactive tools).
 
-Add a comprehensive Breathwork section: replace the "Library" top-level nav with a "Breathwork" dropdown containing 9 sub-pages, plus dynamic technique pages, a research database, a forum, a session builder, and a global breath pacer — all styled with the existing cosmic dark theme + air/water accents.
+## Navigation Update
+Replace the single "Yoga Therapy Lab" link in the Movement dropdown with a new top-level **Yoga** dropdown (parallel to Breathwork) containing 9 sub-pages. The existing `/yoga-therapy-lab` route becomes a redirect to `/yoga/start-here`.
 
-> Build sequence (per the brief): nav + Start Here first, then each section in order. If the response runs out of room I'll stop and report exactly which pages shipped.
+```text
+Yoga ▾
+ ├─ Start Here
+ ├─ Philosophy & History
+ ├─ Asana Library
+ ├─ Yoga by Goal
+ ├─ The Path to Mastery
+ ├─ Anatomy & Therapy
+ ├─ Pranayama & Meditation
+ ├─ Community & Teachers
+ ├─ Resource Hub
+ └─ Tools & Practice Builder
+```
 
-## Navigation changes
+## New Files
 
-### `src/components/platform/data.ts`
-- Remove `{ to: "/library", label: "Library" }` from `navItems`.
-- Add new export `breathworkItems`:
-  ```ts
-  export const breathworkItems = [
-    { to: "/breathwork/start-here", label: "Start Here" },
-    { to: "/breathwork/science", label: "Science of Breath" },
-    { to: "/breathwork/techniques", label: "Library of Techniques" },
-    { to: "/breathwork/goals", label: "Breathwork by Goal" },
-    { to: "/breathwork/mastery", label: "The Path to Mastery" },
-    { to: "/breathwork/community", label: "Community & Guidance" },
-    { to: "/breathwork/resources", label: "Resource Hub" },
-    { to: "/breathwork/tools", label: "Tools & Tech" },
-    { to: "/breathwork/about", label: "About & Contribute" },
-  ];
-  ```
+**Data & state**
+- `src/lib/yoga-data.ts` — Static encyclopedia: 40+ asanas (Sanskrit name, English, drishti, bandhas, alignment cues, contraindications, modifications, prep poses, counter poses, level, family), 8 traditions (Hatha, Ashtanga, Iyengar, Vinyasa, Kundalini, Yin, Restorative, Bikram), 8 limbs of Patanjali, 7 chakras with bija mantras, 20+ research studies, 30+ glossary terms, mastery curriculum (Beginner → Master with 5 belt tiers), goal hubs (back pain, anxiety, sleep, flexibility, strength, focus, hormonal balance), reading list, teacher directory.
+- `src/lib/yoga-progress.ts` — `localStorage` hook (mirror of breathwork-progress): tracked asanas, completed sequences, daily streak, belt progression, journal entries, saved sequences.
 
-### `src/components/platform/AppShell.tsx`
-- Render a third `NavDropdown label="Breathwork"` after Alchemy in both desktop and mobile nav (uses the existing reusable `NavDropdown` so dropdown layering and styling are inherited).
-- Re-slice `leadingNavItems` / `trailingNavItems` for the shorter `navItems` (Library is removed; Community moves to trailing).
+**Interactive components**
+- `src/components/yoga/AsanaCard.tsx` — Pose card with Sanskrit/English, level badge, tradition tags.
+- `src/components/yoga/SequenceBuilder.tsx` — Drag-to-order custom flow builder with auto-calculated duration and intensity.
+- `src/components/yoga/AsanaTimer.tsx` — Hold timer with breath-count overlay using the existing BreathPacer.
 
-> The `/library` route file stays untouched — direct URLs still resolve, just no longer in the header (consistent with how the site is wired).
+**Routes** (`src/routes/yoga.*`)
+- `yoga.tsx` — Layout wrapper with global Cmd+K search and belt display (mirrors `breathwork.tsx`).
+- `yoga.start-here.tsx` — Onboarding gateway, what is yoga, choosing a path quiz.
+- `yoga.philosophy.tsx` — 8 limbs, yamas/niyamas, key texts (Sutras, Gita, Hatha Yoga Pradipika), schools comparison.
+- `yoga.asanas.tsx` — Filterable library (level, family, tradition, goal). Compare poses side-by-side.
+- `yoga.asanas.$slug.tsx` — Detail page per pose: alignment, cues, contraindications, prep/counter poses, video placeholder, related research.
+- `yoga.goals.tsx` + `yoga.goals.$goalId.tsx` — Curated hubs for outcomes.
+- `yoga.mastery.tsx` — 5-tier belt path with challenges (30-day flexibility, 21-day inversion, etc.).
+- `yoga.anatomy.tsx` — Interactive anatomy: muscle groups engaged per pose, common injuries, therapy applications.
+- `yoga.pranayama.tsx` — Cross-link to breathwork plus yoga-specific pranayama (ujjayi, nadi shodhana, kapalabhati) with embedded BreathPacer.
+- `yoga.community.tsx` — Teacher directory, lineages, retreat finder, simulated forum.
+- `yoga.resources.tsx` — Books, podcasts, studios, certifications (200hr/500hr YTT explained), research database.
+- `yoga.tools.tsx` — Sequence builder, pose timer, journal, sun salutation counter.
 
-## Shared infrastructure
+## Visual Identity
+Match existing cosmic dark theme. Add yoga-specific accent tokens to `src/styles.css`:
+- `--yoga-saffron`, `--yoga-lotus`, `--yoga-earth` (warm earth + saffron palette layered over cosmic dark)
+- `.yoga-card`, `.yoga-mandala` (radial backdrop for hero sections), `.asana-glow` (hover state for pose cards)
 
-### `src/lib/breathwork-data.ts` — single source of truth
-- `Technique` type + array of 15 techniques (Diaphragmatic, 4-7-8, Box, Kapalabhati, Bhastrika, Bhramari, Alternate Nostril, Holotropic, Conscious Connected, Rebirthing, Wim Hof, Oxygen Advantage, Coherent, Cyclic Sighing, CO₂ Tolerance Breath Holds). Each entry: `slug`, name, level, goals[], tradition, durationMinutes, summary, steps[], mechanism, pacer preset (inhale/holdIn/exhale/holdOut/cycles), research snippet, contraindications[], related slugs[].
-- `goals`: id, label, blurb, recommended technique slugs.
-- `traditions`: id, label, summary.
-- `studies`: 12 research entries (title, authors, journal, year, findings, doi, technique slugs).
-- `glossary`: ~30 A–Z terms with definitions and cross-references.
-- `books`: 8 entries (title, author, summary, link).
-- `practitioners`: 12 placeholder facilitators (name, location, certifications, bio, contact).
-- `events`: 8 upcoming workshops.
-- `faq`: ~10 Q&A entries.
-- `phases` + `belts` for the mastery roadmap.
-- `challenges`: `7-day-reset` and `21-day-mastery` with daily cards.
+## Migration of existing content
+The current `yoga-therapy-lab.tsx` (733 lines) contains real content — therapy protocols, anatomy notes, etc. Distribute it across the new routes:
+- Therapy protocols → `yoga.anatomy.tsx`
+- Any pose content → seed `yoga-data.ts`
+- Lab/experimental content → `yoga.tools.tsx`
+- Replace old route file with a redirect to `/yoga/start-here`.
 
-### `src/lib/breathwork-progress.ts`
-- localStorage hook (mirrors `smoothie-progress.ts` pattern with `useSyncExternalStore`).
-- Tracks: completed phases, completed challenge days, current belt, completed mastery techniques, saved custom sessions, journal entries, simulated forum posts, simulated guest profile (display name + signups).
-- Belt is derived from completed-phase count + technique count.
+## Build sequence
+1. Create `yoga-data.ts` and `yoga-progress.ts` (foundation).
+2. Update `data.ts` and `AppShell.tsx` nav (add Yoga dropdown, remove from Movement).
+3. Build `yoga.tsx` layout + `start-here`, `asanas`, `asanas.$slug` (core).
+4. Build philosophy, goals, mastery, anatomy (depth).
+5. Build pranayama, community, resources, tools (breadth).
+6. Migrate yoga-therapy-lab content and convert old route to a redirect.
 
-### `src/components/breathwork/BreathPacer.tsx`
-- Reusable visual breath pacer: animated SVG/CSS circle that scales to inhale → hold → exhale → hold counts.
-- Props: `inhale`, `holdIn`, `exhale`, `holdOut`, `cycles?`, optional `audio` (Web Audio API tone via short oscillator on phase change), Play/Pause/Reset controls, current-phase label, cycle counter.
-- Used inline on Start Here, every technique detail page, the goals pages, and on /breathwork/tools.
-
-### `src/components/breathwork/BreathLayout.tsx`
-- Hub layout used by all `/breathwork/*` pages: page heading slot, sticky in-page sub-section nav (anchor links generated from `<section id>` props), shared breadcrumb, and the global Breathwork search trigger.
-
-### `src/components/breathwork/BreathSearch.tsx`
-- Global front-end fuzzy search, opened from a header button on every breathwork page (`Cmd+K` shortcut).
-- Indexes techniques + studies + glossary + books + goals + FAQ from `breathwork-data.ts`. Lightweight scoring (tokenized substring + prefix boost — no extra dependency).
-- Results render in a `Dialog` with grouped sections and `<Link>`s.
-
-### Styling — `src/styles.css`
-- Add small additions reusing existing tokens (no new colors):
-  - `.breath-card` — variant of `.quest-panel-air` with slightly stronger water hue.
-  - `.breath-pulse` — keyframe used by the pacer (scale + opacity).
-  - `.breath-mist` — soft radial backdrop for hero panels.
-
-## Routes (TanStack file-based, flat dot-naming)
-
-All under `src/routes/`:
-
-1. `breathwork.tsx` — layout route: defines `head()`, renders `<Outlet />` inside `BreathLayout` with the dropdown sub-nav. Visiting `/breathwork` redirects (via component) to `/breathwork/start-here`.
-2. `breathwork.start-here.tsx` — sections: What is Breathwork?, Why Breathe?, Your First Breath (5-min 5-5-5 pacer embedded), Fundamentals (diaphragmatic, nasal vs mouth, posture, trauma-sensitive note), Is Breathwork Safe? (contraindications). Anchor-linked sub-nav.
-3. `breathwork.science.tsx` — sections: Anatomy & Gas Exchange (annotated SVG diaphragm/lungs diagram), Breath & Nervous System (sympathetic/parasympathetic visual), Biochemistry, Research Library (filterable/sortable table with chip filters by technique + year + free-text search; pulls from `studies`).
-4. `breathwork.techniques.tsx` — main library: filter bar (Level, Goal, Tradition, Duration sliders), grid of cards each linking to the detail route. Includes the **Interactive Technique Comparator** at the top: select 2–3 techniques and see overlaid pacer ratios + a small bar chart of breath rate / engagement.
-5. `breathwork.techniques.$slug.tsx` — dynamic technique detail. Looks up by slug from `breathwork-data.ts`. Renders name + category badges, animated step-by-step list, embedded `BreathPacer` preset, mechanism, research snippet, contraindications, related techniques links. `notFoundComponent` for unknown slugs.
-6. `breathwork.techniques.traditions.tsx` — overview cards for Pranayama, Tibetan Buddhism, Qigong, modern therapeutic systems with crosslinks to relevant techniques.
-7. `breathwork.goals.tsx` — hub grid of 6 goals.
-8. `breathwork.goals.$goalId.tsx` — dynamic page per goal: blurb + curated technique cards (links) + embedded recommended pacer.
-9. `breathwork.mastery.tsx` — visual 4-phase roadmap (clickable, marks complete via progress hook), belt display (current belt + next belt requirements), expandable challenges (7-Day Reset, 21-Day Mastery) showing daily cards and a simulated signup form.
-10. `breathwork.community.tsx` — three tabs/sections: Practitioner Directory (filterable list), Forum/Circle (categories: Experiences, Technique Q&A, Science; new-post form + list rendered from local store), Workshops & Events (calendar list + "Submit event" form UI).
-11. `breathwork.resources.tsx` — Bookshelf grid, Glossary (A–Z with anchor index, cross-links to techniques/glossary terms), FAQ (Accordion), For Practitioners (downloadable script placeholders rendered as buttons that toast "downloaded" — no real PDFs).
-12. `breathwork.tools.tsx` — Customizable `BreathPacer` (set inhale/hold/exhale/hold + optional audio cues), App & Wearable guide (cards with placeholder reviews + affiliate-link placeholders), **Session Builder** (add/reorder phase blocks via simple up/down buttons — no extra dnd dep — preview with the pacer, save to local list, journal entries pre/post).
-13. `breathwork.about.tsx` — Mission & Team, Editorial Policy, Contribute form (success message on submit — no backend).
-
-## Global features
-
-- **Site search**: `BreathSearch` button rendered in `BreathLayout` header (and `Cmd+K`). Indexes everything in `breathwork-data.ts`; 0 dependencies.
-- **Interlinking**: All technique mentions across goals/science/mastery/glossary use `<Link to="/breathwork/techniques/$slug" params={{ slug }}>`.
-- **Progress tracking**: Phase completions, challenge day check-offs, saved sessions, and current belt persist via the new progress hook. Belt + level display shown in the BreathLayout header on every breathwork page.
-- **Guest profile**: Simple "Set display name" prompt stored locally so forum posts and challenge signups can attribute a name. No real auth.
-- **Responsive**: Layouts use the existing tailwind grid patterns already proven on Smoothie Codex / Alchemist's Path; sticky sub-nav collapses to a horizontal scroller on mobile.
-- **SEO**: Each route sets unique `head()` with `title`, `description`, `og:title`, `og:description`. Dynamic technique pages derive metadata from the slug.
-
-## Out of scope
-
-- Real authentication, real email signups, real PDF generation, real backend persistence — all simulated client-side per the brief.
-- New npm dependencies (no fuse.js, no dnd-kit, no chart libs — implemented small or with SVG/CSS).
-- Editing other parts of the site beyond `data.ts` and `AppShell.tsx`.
-
-## Verification
-
-After build I'll confirm:
-- Header replaces Library with Breathwork ▾ containing all 9 sub-items.
-- Every breathwork route renders, has a unique `<title>`, and links between sections work.
-- The shared breath pacer animates and respects custom inputs on `/breathwork/tools`.
-- Filters work on the techniques library and research library.
-- Local storage persists phase/challenge/session state across reload.
-- Global Cmd+K search returns results from techniques, studies, glossary, books, goals, FAQ.
+## Notes
+- All content is hand-written, encyclopedic, and Sanskrit-accurate. No lorem ipsum.
+- Movement dropdown keeps Tai Chi only (Yoga graduates to top-level like Alchemy/Breathwork did).
+- Total estimated additions: ~3,500 lines across 15 files. May require continuation in a follow-up turn if limits hit.

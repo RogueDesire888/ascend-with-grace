@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as YogaTherapyLabRouteImport } from './routes/yoga-therapy-lab'
+import { Route as YogaRouteImport } from './routes/yoga'
 import { Route as TaiChiLabRouteImport } from './routes/tai-chi-lab'
 import { Route as SmoothieCodexRouteImport } from './routes/smoothie-codex'
 import { Route as SkillTreesRouteImport } from './routes/skill-trees'
@@ -20,6 +21,16 @@ import { Route as CommunityRouteImport } from './routes/community'
 import { Route as BreathworkRouteImport } from './routes/breathwork'
 import { Route as AlchemistsPathRouteImport } from './routes/alchemists-path'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as YogaToolsRouteImport } from './routes/yoga.tools'
+import { Route as YogaStartHereRouteImport } from './routes/yoga.start-here'
+import { Route as YogaResourcesRouteImport } from './routes/yoga.resources'
+import { Route as YogaPranayamaRouteImport } from './routes/yoga.pranayama'
+import { Route as YogaPhilosophyRouteImport } from './routes/yoga.philosophy'
+import { Route as YogaMasteryRouteImport } from './routes/yoga.mastery'
+import { Route as YogaGoalsRouteImport } from './routes/yoga.goals'
+import { Route as YogaCommunityRouteImport } from './routes/yoga.community'
+import { Route as YogaAsanasRouteImport } from './routes/yoga.asanas'
+import { Route as YogaAnatomyRouteImport } from './routes/yoga.anatomy'
 import { Route as BreathworkToolsRouteImport } from './routes/breathwork.tools'
 import { Route as BreathworkTechniquesRouteImport } from './routes/breathwork.techniques'
 import { Route as BreathworkStartHereRouteImport } from './routes/breathwork.start-here'
@@ -29,6 +40,8 @@ import { Route as BreathworkMasteryRouteImport } from './routes/breathwork.maste
 import { Route as BreathworkGoalsRouteImport } from './routes/breathwork.goals'
 import { Route as BreathworkCommunityRouteImport } from './routes/breathwork.community'
 import { Route as BreathworkAboutRouteImport } from './routes/breathwork.about'
+import { Route as YogaGoalsGoalIdRouteImport } from './routes/yoga.goals.$goalId'
+import { Route as YogaAsanasSlugRouteImport } from './routes/yoga.asanas.$slug'
 import { Route as BreathworkTechniquesTraditionsRouteImport } from './routes/breathwork.techniques.traditions'
 import { Route as BreathworkTechniquesSlugRouteImport } from './routes/breathwork.techniques.$slug'
 import { Route as BreathworkGoalsGoalIdRouteImport } from './routes/breathwork.goals.$goalId'
@@ -36,6 +49,11 @@ import { Route as BreathworkGoalsGoalIdRouteImport } from './routes/breathwork.g
 const YogaTherapyLabRoute = YogaTherapyLabRouteImport.update({
   id: '/yoga-therapy-lab',
   path: '/yoga-therapy-lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const YogaRoute = YogaRouteImport.update({
+  id: '/yoga',
+  path: '/yoga',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TaiChiLabRoute = TaiChiLabRouteImport.update({
@@ -88,6 +106,56 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const YogaToolsRoute = YogaToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => YogaRoute,
+} as any)
+const YogaStartHereRoute = YogaStartHereRouteImport.update({
+  id: '/start-here',
+  path: '/start-here',
+  getParentRoute: () => YogaRoute,
+} as any)
+const YogaResourcesRoute = YogaResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => YogaRoute,
+} as any)
+const YogaPranayamaRoute = YogaPranayamaRouteImport.update({
+  id: '/pranayama',
+  path: '/pranayama',
+  getParentRoute: () => YogaRoute,
+} as any)
+const YogaPhilosophyRoute = YogaPhilosophyRouteImport.update({
+  id: '/philosophy',
+  path: '/philosophy',
+  getParentRoute: () => YogaRoute,
+} as any)
+const YogaMasteryRoute = YogaMasteryRouteImport.update({
+  id: '/mastery',
+  path: '/mastery',
+  getParentRoute: () => YogaRoute,
+} as any)
+const YogaGoalsRoute = YogaGoalsRouteImport.update({
+  id: '/goals',
+  path: '/goals',
+  getParentRoute: () => YogaRoute,
+} as any)
+const YogaCommunityRoute = YogaCommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => YogaRoute,
+} as any)
+const YogaAsanasRoute = YogaAsanasRouteImport.update({
+  id: '/asanas',
+  path: '/asanas',
+  getParentRoute: () => YogaRoute,
+} as any)
+const YogaAnatomyRoute = YogaAnatomyRouteImport.update({
+  id: '/anatomy',
+  path: '/anatomy',
+  getParentRoute: () => YogaRoute,
+} as any)
 const BreathworkToolsRoute = BreathworkToolsRouteImport.update({
   id: '/tools',
   path: '/tools',
@@ -133,6 +201,16 @@ const BreathworkAboutRoute = BreathworkAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => BreathworkRoute,
 } as any)
+const YogaGoalsGoalIdRoute = YogaGoalsGoalIdRouteImport.update({
+  id: '/$goalId',
+  path: '/$goalId',
+  getParentRoute: () => YogaGoalsRoute,
+} as any)
+const YogaAsanasSlugRoute = YogaAsanasSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => YogaAsanasRoute,
+} as any)
 const BreathworkTechniquesTraditionsRoute =
   BreathworkTechniquesTraditionsRouteImport.update({
     id: '/traditions',
@@ -162,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/skill-trees': typeof SkillTreesRoute
   '/smoothie-codex': typeof SmoothieCodexRoute
   '/tai-chi-lab': typeof TaiChiLabRoute
+  '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
   '/breathwork/about': typeof BreathworkAboutRoute
   '/breathwork/community': typeof BreathworkCommunityRoute
@@ -172,9 +251,21 @@ export interface FileRoutesByFullPath {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/yoga/anatomy': typeof YogaAnatomyRoute
+  '/yoga/asanas': typeof YogaAsanasRouteWithChildren
+  '/yoga/community': typeof YogaCommunityRoute
+  '/yoga/goals': typeof YogaGoalsRouteWithChildren
+  '/yoga/mastery': typeof YogaMasteryRoute
+  '/yoga/philosophy': typeof YogaPhilosophyRoute
+  '/yoga/pranayama': typeof YogaPranayamaRoute
+  '/yoga/resources': typeof YogaResourcesRoute
+  '/yoga/start-here': typeof YogaStartHereRoute
+  '/yoga/tools': typeof YogaToolsRoute
   '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
   '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
   '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
+  '/yoga/asanas/$slug': typeof YogaAsanasSlugRoute
+  '/yoga/goals/$goalId': typeof YogaGoalsGoalIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -187,6 +278,7 @@ export interface FileRoutesByTo {
   '/skill-trees': typeof SkillTreesRoute
   '/smoothie-codex': typeof SmoothieCodexRoute
   '/tai-chi-lab': typeof TaiChiLabRoute
+  '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
   '/breathwork/about': typeof BreathworkAboutRoute
   '/breathwork/community': typeof BreathworkCommunityRoute
@@ -197,9 +289,21 @@ export interface FileRoutesByTo {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/yoga/anatomy': typeof YogaAnatomyRoute
+  '/yoga/asanas': typeof YogaAsanasRouteWithChildren
+  '/yoga/community': typeof YogaCommunityRoute
+  '/yoga/goals': typeof YogaGoalsRouteWithChildren
+  '/yoga/mastery': typeof YogaMasteryRoute
+  '/yoga/philosophy': typeof YogaPhilosophyRoute
+  '/yoga/pranayama': typeof YogaPranayamaRoute
+  '/yoga/resources': typeof YogaResourcesRoute
+  '/yoga/start-here': typeof YogaStartHereRoute
+  '/yoga/tools': typeof YogaToolsRoute
   '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
   '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
   '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
+  '/yoga/asanas/$slug': typeof YogaAsanasSlugRoute
+  '/yoga/goals/$goalId': typeof YogaGoalsGoalIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -213,6 +317,7 @@ export interface FileRoutesById {
   '/skill-trees': typeof SkillTreesRoute
   '/smoothie-codex': typeof SmoothieCodexRoute
   '/tai-chi-lab': typeof TaiChiLabRoute
+  '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
   '/breathwork/about': typeof BreathworkAboutRoute
   '/breathwork/community': typeof BreathworkCommunityRoute
@@ -223,9 +328,21 @@ export interface FileRoutesById {
   '/breathwork/start-here': typeof BreathworkStartHereRoute
   '/breathwork/techniques': typeof BreathworkTechniquesRouteWithChildren
   '/breathwork/tools': typeof BreathworkToolsRoute
+  '/yoga/anatomy': typeof YogaAnatomyRoute
+  '/yoga/asanas': typeof YogaAsanasRouteWithChildren
+  '/yoga/community': typeof YogaCommunityRoute
+  '/yoga/goals': typeof YogaGoalsRouteWithChildren
+  '/yoga/mastery': typeof YogaMasteryRoute
+  '/yoga/philosophy': typeof YogaPhilosophyRoute
+  '/yoga/pranayama': typeof YogaPranayamaRoute
+  '/yoga/resources': typeof YogaResourcesRoute
+  '/yoga/start-here': typeof YogaStartHereRoute
+  '/yoga/tools': typeof YogaToolsRoute
   '/breathwork/goals/$goalId': typeof BreathworkGoalsGoalIdRoute
   '/breathwork/techniques/$slug': typeof BreathworkTechniquesSlugRoute
   '/breathwork/techniques/traditions': typeof BreathworkTechniquesTraditionsRoute
+  '/yoga/asanas/$slug': typeof YogaAsanasSlugRoute
+  '/yoga/goals/$goalId': typeof YogaGoalsGoalIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -240,6 +357,7 @@ export interface FileRouteTypes {
     | '/skill-trees'
     | '/smoothie-codex'
     | '/tai-chi-lab'
+    | '/yoga'
     | '/yoga-therapy-lab'
     | '/breathwork/about'
     | '/breathwork/community'
@@ -250,9 +368,21 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/yoga/anatomy'
+    | '/yoga/asanas'
+    | '/yoga/community'
+    | '/yoga/goals'
+    | '/yoga/mastery'
+    | '/yoga/philosophy'
+    | '/yoga/pranayama'
+    | '/yoga/resources'
+    | '/yoga/start-here'
+    | '/yoga/tools'
     | '/breathwork/goals/$goalId'
     | '/breathwork/techniques/$slug'
     | '/breathwork/techniques/traditions'
+    | '/yoga/asanas/$slug'
+    | '/yoga/goals/$goalId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -265,6 +395,7 @@ export interface FileRouteTypes {
     | '/skill-trees'
     | '/smoothie-codex'
     | '/tai-chi-lab'
+    | '/yoga'
     | '/yoga-therapy-lab'
     | '/breathwork/about'
     | '/breathwork/community'
@@ -275,9 +406,21 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/yoga/anatomy'
+    | '/yoga/asanas'
+    | '/yoga/community'
+    | '/yoga/goals'
+    | '/yoga/mastery'
+    | '/yoga/philosophy'
+    | '/yoga/pranayama'
+    | '/yoga/resources'
+    | '/yoga/start-here'
+    | '/yoga/tools'
     | '/breathwork/goals/$goalId'
     | '/breathwork/techniques/$slug'
     | '/breathwork/techniques/traditions'
+    | '/yoga/asanas/$slug'
+    | '/yoga/goals/$goalId'
   id:
     | '__root__'
     | '/'
@@ -290,6 +433,7 @@ export interface FileRouteTypes {
     | '/skill-trees'
     | '/smoothie-codex'
     | '/tai-chi-lab'
+    | '/yoga'
     | '/yoga-therapy-lab'
     | '/breathwork/about'
     | '/breathwork/community'
@@ -300,9 +444,21 @@ export interface FileRouteTypes {
     | '/breathwork/start-here'
     | '/breathwork/techniques'
     | '/breathwork/tools'
+    | '/yoga/anatomy'
+    | '/yoga/asanas'
+    | '/yoga/community'
+    | '/yoga/goals'
+    | '/yoga/mastery'
+    | '/yoga/philosophy'
+    | '/yoga/pranayama'
+    | '/yoga/resources'
+    | '/yoga/start-here'
+    | '/yoga/tools'
     | '/breathwork/goals/$goalId'
     | '/breathwork/techniques/$slug'
     | '/breathwork/techniques/traditions'
+    | '/yoga/asanas/$slug'
+    | '/yoga/goals/$goalId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -316,6 +472,7 @@ export interface RootRouteChildren {
   SkillTreesRoute: typeof SkillTreesRoute
   SmoothieCodexRoute: typeof SmoothieCodexRoute
   TaiChiLabRoute: typeof TaiChiLabRoute
+  YogaRoute: typeof YogaRouteWithChildren
   YogaTherapyLabRoute: typeof YogaTherapyLabRoute
 }
 
@@ -326,6 +483,13 @@ declare module '@tanstack/react-router' {
       path: '/yoga-therapy-lab'
       fullPath: '/yoga-therapy-lab'
       preLoaderRoute: typeof YogaTherapyLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/yoga': {
+      id: '/yoga'
+      path: '/yoga'
+      fullPath: '/yoga'
+      preLoaderRoute: typeof YogaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tai-chi-lab': {
@@ -398,6 +562,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/yoga/tools': {
+      id: '/yoga/tools'
+      path: '/tools'
+      fullPath: '/yoga/tools'
+      preLoaderRoute: typeof YogaToolsRouteImport
+      parentRoute: typeof YogaRoute
+    }
+    '/yoga/start-here': {
+      id: '/yoga/start-here'
+      path: '/start-here'
+      fullPath: '/yoga/start-here'
+      preLoaderRoute: typeof YogaStartHereRouteImport
+      parentRoute: typeof YogaRoute
+    }
+    '/yoga/resources': {
+      id: '/yoga/resources'
+      path: '/resources'
+      fullPath: '/yoga/resources'
+      preLoaderRoute: typeof YogaResourcesRouteImport
+      parentRoute: typeof YogaRoute
+    }
+    '/yoga/pranayama': {
+      id: '/yoga/pranayama'
+      path: '/pranayama'
+      fullPath: '/yoga/pranayama'
+      preLoaderRoute: typeof YogaPranayamaRouteImport
+      parentRoute: typeof YogaRoute
+    }
+    '/yoga/philosophy': {
+      id: '/yoga/philosophy'
+      path: '/philosophy'
+      fullPath: '/yoga/philosophy'
+      preLoaderRoute: typeof YogaPhilosophyRouteImport
+      parentRoute: typeof YogaRoute
+    }
+    '/yoga/mastery': {
+      id: '/yoga/mastery'
+      path: '/mastery'
+      fullPath: '/yoga/mastery'
+      preLoaderRoute: typeof YogaMasteryRouteImport
+      parentRoute: typeof YogaRoute
+    }
+    '/yoga/goals': {
+      id: '/yoga/goals'
+      path: '/goals'
+      fullPath: '/yoga/goals'
+      preLoaderRoute: typeof YogaGoalsRouteImport
+      parentRoute: typeof YogaRoute
+    }
+    '/yoga/community': {
+      id: '/yoga/community'
+      path: '/community'
+      fullPath: '/yoga/community'
+      preLoaderRoute: typeof YogaCommunityRouteImport
+      parentRoute: typeof YogaRoute
+    }
+    '/yoga/asanas': {
+      id: '/yoga/asanas'
+      path: '/asanas'
+      fullPath: '/yoga/asanas'
+      preLoaderRoute: typeof YogaAsanasRouteImport
+      parentRoute: typeof YogaRoute
+    }
+    '/yoga/anatomy': {
+      id: '/yoga/anatomy'
+      path: '/anatomy'
+      fullPath: '/yoga/anatomy'
+      preLoaderRoute: typeof YogaAnatomyRouteImport
+      parentRoute: typeof YogaRoute
+    }
     '/breathwork/tools': {
       id: '/breathwork/tools'
       path: '/tools'
@@ -460,6 +694,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/breathwork/about'
       preLoaderRoute: typeof BreathworkAboutRouteImport
       parentRoute: typeof BreathworkRoute
+    }
+    '/yoga/goals/$goalId': {
+      id: '/yoga/goals/$goalId'
+      path: '/$goalId'
+      fullPath: '/yoga/goals/$goalId'
+      preLoaderRoute: typeof YogaGoalsGoalIdRouteImport
+      parentRoute: typeof YogaGoalsRoute
+    }
+    '/yoga/asanas/$slug': {
+      id: '/yoga/asanas/$slug'
+      path: '/$slug'
+      fullPath: '/yoga/asanas/$slug'
+      preLoaderRoute: typeof YogaAsanasSlugRouteImport
+      parentRoute: typeof YogaAsanasRoute
     }
     '/breathwork/techniques/traditions': {
       id: '/breathwork/techniques/traditions'
@@ -538,6 +786,58 @@ const BreathworkRouteWithChildren = BreathworkRoute._addFileChildren(
   BreathworkRouteChildren,
 )
 
+interface YogaAsanasRouteChildren {
+  YogaAsanasSlugRoute: typeof YogaAsanasSlugRoute
+}
+
+const YogaAsanasRouteChildren: YogaAsanasRouteChildren = {
+  YogaAsanasSlugRoute: YogaAsanasSlugRoute,
+}
+
+const YogaAsanasRouteWithChildren = YogaAsanasRoute._addFileChildren(
+  YogaAsanasRouteChildren,
+)
+
+interface YogaGoalsRouteChildren {
+  YogaGoalsGoalIdRoute: typeof YogaGoalsGoalIdRoute
+}
+
+const YogaGoalsRouteChildren: YogaGoalsRouteChildren = {
+  YogaGoalsGoalIdRoute: YogaGoalsGoalIdRoute,
+}
+
+const YogaGoalsRouteWithChildren = YogaGoalsRoute._addFileChildren(
+  YogaGoalsRouteChildren,
+)
+
+interface YogaRouteChildren {
+  YogaAnatomyRoute: typeof YogaAnatomyRoute
+  YogaAsanasRoute: typeof YogaAsanasRouteWithChildren
+  YogaCommunityRoute: typeof YogaCommunityRoute
+  YogaGoalsRoute: typeof YogaGoalsRouteWithChildren
+  YogaMasteryRoute: typeof YogaMasteryRoute
+  YogaPhilosophyRoute: typeof YogaPhilosophyRoute
+  YogaPranayamaRoute: typeof YogaPranayamaRoute
+  YogaResourcesRoute: typeof YogaResourcesRoute
+  YogaStartHereRoute: typeof YogaStartHereRoute
+  YogaToolsRoute: typeof YogaToolsRoute
+}
+
+const YogaRouteChildren: YogaRouteChildren = {
+  YogaAnatomyRoute: YogaAnatomyRoute,
+  YogaAsanasRoute: YogaAsanasRouteWithChildren,
+  YogaCommunityRoute: YogaCommunityRoute,
+  YogaGoalsRoute: YogaGoalsRouteWithChildren,
+  YogaMasteryRoute: YogaMasteryRoute,
+  YogaPhilosophyRoute: YogaPhilosophyRoute,
+  YogaPranayamaRoute: YogaPranayamaRoute,
+  YogaResourcesRoute: YogaResourcesRoute,
+  YogaStartHereRoute: YogaStartHereRoute,
+  YogaToolsRoute: YogaToolsRoute,
+}
+
+const YogaRouteWithChildren = YogaRoute._addFileChildren(YogaRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlchemistsPathRoute: AlchemistsPathRoute,
@@ -549,6 +849,7 @@ const rootRouteChildren: RootRouteChildren = {
   SkillTreesRoute: SkillTreesRoute,
   SmoothieCodexRoute: SmoothieCodexRoute,
   TaiChiLabRoute: TaiChiLabRoute,
+  YogaRoute: YogaRouteWithChildren,
   YogaTherapyLabRoute: YogaTherapyLabRoute,
 }
 export const routeTree = rootRouteImport
