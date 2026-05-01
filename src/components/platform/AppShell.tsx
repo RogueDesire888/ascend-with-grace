@@ -6,26 +6,36 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { movementItems, navItems } from "./data";
+import { alchemyItems, movementItems, navItems } from "./data";
 
 const leadingNavItems = navItems.slice(0, 4);
 const trailingNavItems = navItems.slice(4);
 
-function MovementMenu({ triggerClassName }: { triggerClassName: string }) {
+type NavGroupItem = { to: string; label: string };
+
+function NavDropdown({
+  label,
+  items,
+  triggerClassName,
+}: {
+  label: string;
+  items: readonly NavGroupItem[];
+  triggerClassName: string;
+}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className={triggerClassName}>
-        Movement <ChevronDown className="h-4 w-4" />
+        {label} <ChevronDown className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="center"
         sideOffset={8}
         className="sanctuary-panel z-[100] min-w-56 rounded-lg border border-border/60 p-2 shadow-[var(--shadow-aura)]"
       >
-        {movementItems.map((item) => (
+        {items.map((item) => (
           <DropdownMenuItem key={item.to} asChild>
             <Link
-              to={item.to}
+              to={item.to as never}
               className="block w-full cursor-pointer rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground focus:bg-secondary focus:text-secondary-foreground"
               activeProps={{
                 className: "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]",
@@ -41,6 +51,11 @@ function MovementMenu({ triggerClassName }: { triggerClassName: string }) {
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const desktopTrigger =
+    "inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground focus-visible:outline-none data-[state=open]:bg-secondary data-[state=open]:text-secondary-foreground";
+  const mobileTrigger =
+    "flex shrink-0 cursor-pointer items-center gap-1 rounded-full border border-border/70 bg-card/60 px-3 py-2 text-sm text-muted-foreground focus-visible:outline-none data-[state=open]:border-primary";
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -82,7 +97,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {item.label}
               </Link>
             ))}
-            <MovementMenu triggerClassName="inline-flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground focus-visible:outline-none data-[state=open]:bg-secondary data-[state=open]:text-secondary-foreground" />
+            <NavDropdown label="Movement" items={movementItems} triggerClassName={desktopTrigger} />
+            <NavDropdown label="Alchemy" items={alchemyItems} triggerClassName={desktopTrigger} />
             {trailingNavItems.map((item) => (
               <Link
                 key={item.to}
@@ -119,7 +135,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </Link>
           ))}
           <div className="shrink-0">
-            <MovementMenu triggerClassName="flex shrink-0 cursor-pointer items-center gap-1 rounded-full border border-border/70 bg-card/60 px-3 py-2 text-sm text-muted-foreground focus-visible:outline-none data-[state=open]:border-primary" />
+            <NavDropdown label="Movement" items={movementItems} triggerClassName={mobileTrigger} />
+          </div>
+          <div className="shrink-0">
+            <NavDropdown label="Alchemy" items={alchemyItems} triggerClassName={mobileTrigger} />
           </div>
           {trailingNavItems.map((item) => (
             <Link
