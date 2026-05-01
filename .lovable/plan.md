@@ -1,133 +1,99 @@
 ## Goal
 
-Transform `/community` from a thin two-card placeholder into a true "home base" — a gamified, value-dense, sticky community hub that rivals the depth of the Breathwork / Herbal / Smoothie modules, but oriented around *people, momentum, and belonging* instead of encyclopedic content.
+Make `/community` feel calm, scannable, and obviously useful at first glance. Today the page stacks 10 dense sections in a single column — hero, stats strip, three challenge cards, composer, tabs, feed, circles, mentors, events, rituals, leaderboards, badges, code of conduct. Each section is well-built individually, but together they read as a wall. The user should land and immediately understand: *here's me, here's today, here's the feed — everything else is one click away.*
 
-The aim: when a user lands here, they see (1) themselves reflected, (2) the pulse of the circle, (3) several inviting ways to interact, and (4) reasons to come back tomorrow.
+This is a **visual / information-architecture pass only**. No new features, no data-layer changes, no removed functionality. Same components, reorganized and restyled for hierarchy.
 
 ---
 
-## Page architecture
-
-A single `/community` route, sectioned like a living dashboard. No new sub-routes (the section already lives across the `*.community.tsx` modality pages). One page, deeply built.
+## New page architecture
 
 ```text
-┌─ Hero: "The Circle" — live pulse banner
-│  ├─ Members online · today's check-ins · current group glow
-│  └─ Daily intention prompt (1-tap submit)
-├─ Your Standing — personal gamified strip
-│  ├─ Rank badge · streak · weekly XP · circle contribution score
-│  └─ Next-rank progress bar + 3 quick actions to earn it
-├─ Group Challenges (active)
-│  ├─ 2–3 challenges with progress rings, members joined, days left
-│  └─ Join / Continue CTA
-├─ Live Feed (tabbed)
-│  ├─ Tabs: For You · Wins · Questions · Practice Logs · Field Notes
-│  ├─ Rich post cards: avatar, rank chip, modality tag, body, reactions
-│  └─ Reactions: glow / resonate / bow / amplify (no plain "likes")
-├─ Circles (interest pods)
-│  └─ 8–10 themed circles (Breathwork Daily, Herbal Apothecary, Tai Chi
-│      Mornings, Yoga Recovery, Smoothie Lab, Shadow Work, Sleep Reset,
-│      Family Practice, Beginners Hearth, Mastery Path)
-├─ Mentors & Guides
-│  └─ 4–6 senior practitioners offering office-hour windows
-├─ Events This Week
-│  └─ Live circles, group sits, AMA, full-moon ritual
-├─ Leaderboards (gentle)
-│  ├─ Most generous (replies given) · Longest streak · Quest finishers
-│  └─ Framing: "celebration, not competition"
-├─ Rituals of the Circle
-│  └─ Weekly cadence: Mon intention · Wed practice swap · Fri gratitude
-└─ Code of the Circle (always-visible footer card)
-   └─ Consent, privacy, non-performative growth
+┌────────────────────────────────────────────────────────────┐
+│  HERO (smaller, focused)                                   │
+│  "The Circle" · one-line subtitle · 4 pulse stats          │
+│  Today's intention card (only if not yet set today)        │
+└────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────┬─────────────────────────┐
+│  MAIN COLUMN (2/3)               │  SIDEBAR (1/3, sticky)  │
+│                                  │                         │
+│  Your Standing — compact         │  Today at a glance      │
+│  (one row, 4 inline stats,       │   • Active challenge    │
+│   not 4 big cards)               │     (the one user is in)│
+│                                  │   • Next event          │
+│  Feed                            │   • Streak + intention  │
+│  • Composer (collapsed by        │                         │
+│    default — "Share with the     │  Circles you're in      │
+│    circle…" expands on focus)    │   (3 chips + "browse")  │
+│  • Tabs + posts                  │                         │
+│                                  │  Mentors on call today  │
+│                                  │   (2 with avatars)      │
+│                                  │                         │
+└──────────────────────────────────┴─────────────────────────┘
+
+┌────────────────────────────────────────────────────────────┐
+│  EXPLORE (tabbed, single panel — replaces 5 sections)      │
+│  Tabs: Challenges · Circles · Mentors · Events · Rituals   │
+│  Only the active tab renders. Reduces page from 10         │
+│  sections to 4.                                            │
+└────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────┐
+│  RECOGNITION (collapsed accordion)                         │
+│  • Leaderboards                                            │
+│  • Badge gallery                                           │
+│  Both closed by default. User opens what they care about.  │
+└────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────┐
+│  Code of the Circle (slim footer card, unchanged)          │
+└────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## Gamification layer (the engagement engine)
-
-Five mechanics, all surfaced visibly:
-
-1. **Circle Rank** — 7 tiers (Ember → Spark → Flame → Beacon → Lantern → Hearth → Keeper of the Flame). Earned via *contribution*, not consumption.
-2. **Streak** — daily check-in flame; soft-recovery (1 grace day/week) so it never feels punishing.
-3. **Weekly XP** — earned for: posting (10), thoughtful reply (15), completing a challenge day (20), mentoring response (25).
-4. **Glow Bloom** — visual flower that grows on the hero based on the *whole circle's* weekly activity. Collective, not individual.
-5. **Badges** — earnable micro-achievements: "First Reply", "Seven-Day Sit", "Pollinator" (replied to 10 different members), "Lineage Bridge" (engaged across 3+ modalities).
-
-All mechanics framed as **encouragement, not performance pressure** — copy reflects that throughout.
+Page goes from ~10 stacked sections to 4 visual zones: **hero → work area (feed + sidebar) → explore → recognition.** Same content, much less perceived weight.
 
 ---
 
-## Interaction design (the "sticky" bits)
+## Visual refinements
 
-- **One-tap daily intention** at the top (3 chip options + custom) — instant feedback, low friction, returns next day.
-- **Reaction buttons that mean something**: Glow (warm acknowledgment), Resonate (this matched my experience), Bow (gratitude), Amplify (boost into For You).
-- **Tabbed feed** with smooth content switching using `Tabs` from shadcn.
-- **Quick post composer** inline (modality dropdown + intention chip + text), not a modal — friction kills posting.
-- **"Reply with practice"** — when someone asks a question, you can attach a technique/recipe/posture from any module's data layer.
-- **Hover-to-preview** rank badges show what's next.
-- **Subtle motion**: glow blooms animate on load, streak flame pulses, progress rings fill on mount (`animate-fade-in`, `animate-scale-in`).
-
----
-
-## Data & state
-
-A single new file, no DB required (matches the rest of the app's local-first pattern):
-
-- `src/lib/community-data.ts` — static seed: 25+ rich posts across tabs, 10 circles, 6 mentors, 6 events, 3 active challenges, 7 ranks, 12 badges, leaderboard rows, ritual cadence.
-- `src/lib/community-progress.ts` — `useSyncExternalStore` + `localStorage`:
-  - `dailyIntention` (today's chip + timestamp)
-  - `streak` (count + lastCheckIn + graceUsed)
-  - `weeklyXp` (rolls weekly)
-  - `joinedCircles` (string[])
-  - `joinedChallenges` (string[])
-  - `reactions` (postId → reactionType)
-  - `rank` (derived)
-  - `earnedBadges` (string[])
-  - `composedPosts` (local-only drafts/posts shown atop the feed)
-
-Mirrors `breathwork-progress.ts` / `smoothie-progress.ts` exactly — same SSR-safe pattern.
+- **Hero**: trim padding (`p-8 lg:p-12` → `p-6 lg:p-8`), drop the second decorative gradient layer to a single subtle one, hide the intention card once today's intention is set (move a tiny "✓ Today: Soft start" chip into the sidebar instead).
+- **Your Standing**: convert the 4-card grid into a single horizontal "stat bar" — rank chip on the left with progress bar, three inline metrics on the right. Reads as one object, not four.
+- **Feed composer**: collapsed pill ("Share with the circle…") that expands to the full composer on focus. Removes the largest static block above the fold.
+- **Post cards**: tighten padding, smaller avatars, single-line meta row, reaction buttons as a quiet row (icon + count, no chip background until hovered/selected).
+- **Tabs in Explore section**: same `Tabs` primitive already used for the feed — consistent pattern, only one panel visible at a time.
+- **Recognition accordion**: shadcn `Accordion` (already installed), both items closed by default.
+- **Spacing rhythm**: `space-y-12` → `space-y-8` between zones, `space-y-6` inside zones. Tighter, calmer.
+- **Color discipline**: keep semantic tokens. Reduce competing accent colors — primary for active/CTA, muted for everything else. Today every section uses `border-primary/30`, `text-primary`, `text-cyan-glow`, `text-orchid-glow` — pick primary as the single accent on this page.
+- **Mobile**: sidebar collapses to a horizontal scroll strip of three mini-cards above the feed. Explore tabs stay horizontal-scroll.
 
 ---
 
-## Files to create / edit
-
-**Create**
-- `src/lib/community-data.ts`
-- `src/lib/community-progress.ts`
+## Files
 
 **Edit**
-- `src/routes/community.tsx` — full rebuild as the dashboard described above. Keep the existing `head()` meta but expand with richer description.
+- `src/routes/community.tsx` — restructure top-level layout, collapse sections into the Explore tabs and Recognition accordion, slim the hero, convert Your Standing into a stat bar, collapse the composer, tighten post cards.
 
-**Possibly edit**
-- `src/components/platform/data.ts` — only if we want to deprecate the thin `communityPosts` seed (we'll leave it; PlatformUI elsewhere still imports it).
-
-No changes to navigation, no changes to other modality `*.community.tsx` pages (those remain modality-specific; this is the cross-cutting hub).
-
----
-
-## Visual / design notes
-
-- Reuse semantic tokens already in `src/styles.css` (no new colors).
-- Use existing utility classes seen in modality pages: `sanctuary-panel`, `quest-panel-air`, `marble-sheen`, `var(--shadow-aura)`, `var(--gradient-panel)`, `var(--shadow-glow)`.
-- Lean on `lucide-react` icons already in the bundle (Flame, Sparkles, Users, HeartHandshake, Trophy, Crown, Sprout, Wind, Leaf, MessageCircle, Heart).
-- Components from shadcn already present: `Tabs`, `Progress`, `Card`, `Button`, `Badge`, `Avatar`, `Tooltip`, `Dialog` (for "view all members" / rank explainer).
-- Mobile-first: dashboard collapses to single column under `lg`; sticky bottom composer on mobile.
+**No changes**
+- `src/lib/community-data.ts` (all data reused as-is)
+- `src/lib/community-progress.ts` (state API unchanged)
+- Any other route or component
 
 ---
 
-## Out of scope (intentionally)
+## Out of scope
 
-- No real backend / auth / multi-user sync — same local-first pattern as the rest of the app.
-- No new routes, no nav changes.
-- No changes to modality-specific community sub-pages (`/breathwork/community`, `/smoothie/community`, etc.).
-- No paid-tier mechanics — keeping the existing $5 framing in `MembershipCTA` untouched.
+- No new content, no removed sections (challenges, circles, mentors, events, rituals, leaderboards, badges all still present — just reorganized).
+- No new data fields, no new XP rules, no nav changes.
+- No new dependencies (Accordion + Tabs already in the project).
 
 ---
 
-## Success check after build
+## Success check
 
 - `tsc` clean.
-- Hero, gamification strip, challenges, tabbed feed, circles, mentors, events, leaderboards, rituals, code-of-circle all render at `/community`.
-- Daily intention persists across reload via localStorage.
-- Reactions persist; XP/rank update live.
-- Mobile viewport (719px, current preview) renders cleanly with no overflow.
+- At 719px viewport (current preview) the page shows hero → stat bar → composer pill → feed without horizontal overflow; sidebar content appears as a scroll strip above the feed.
+- At ≥1024px the sidebar is sticky beside the feed.
+- Explore section renders exactly one panel at a time.
+- Recognition accordion items both start closed.
+- All existing actions (set intention, join challenge, log day, react, compose, etc.) still work — same handlers wired to the same state.
