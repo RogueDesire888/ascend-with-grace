@@ -52,6 +52,7 @@ import { Route as BreathworkMasteryRouteImport } from './routes/breathwork.maste
 import { Route as BreathworkGoalsRouteImport } from './routes/breathwork.goals'
 import { Route as BreathworkCommunityRouteImport } from './routes/breathwork.community'
 import { Route as BreathworkAboutRouteImport } from './routes/breathwork.about'
+import { Route as AlchemistsPathMasteryRouteImport } from './routes/alchemists-path.mastery'
 import { Route as YogaGoalsGoalIdRouteImport } from './routes/yoga.goals.$goalId'
 import { Route as YogaAsanasSlugRouteImport } from './routes/yoga.asanas.$slug'
 import { Route as TaiChiPosturesSlugRouteImport } from './routes/tai-chi.postures.$slug'
@@ -276,6 +277,11 @@ const BreathworkAboutRoute = BreathworkAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => BreathworkRoute,
 } as any)
+const AlchemistsPathMasteryRoute = AlchemistsPathMasteryRouteImport.update({
+  id: '/mastery',
+  path: '/mastery',
+  getParentRoute: () => AlchemistsPathRoute,
+} as any)
 const YogaGoalsGoalIdRoute = YogaGoalsGoalIdRouteImport.update({
   id: '/$goalId',
   path: '/$goalId',
@@ -321,7 +327,7 @@ const BreathworkGoalsGoalIdRoute = BreathworkGoalsGoalIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/alchemists-path': typeof AlchemistsPathRoute
+  '/alchemists-path': typeof AlchemistsPathRouteWithChildren
   '/breathwork': typeof BreathworkRouteWithChildren
   '/community': typeof CommunityRoute
   '/library': typeof LibraryRoute
@@ -333,6 +339,7 @@ export interface FileRoutesByFullPath {
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
+  '/alchemists-path/mastery': typeof AlchemistsPathMasteryRoute
   '/breathwork/about': typeof BreathworkAboutRoute
   '/breathwork/community': typeof BreathworkCommunityRoute
   '/breathwork/goals': typeof BreathworkGoalsRouteWithChildren
@@ -374,7 +381,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/alchemists-path': typeof AlchemistsPathRoute
+  '/alchemists-path': typeof AlchemistsPathRouteWithChildren
   '/breathwork': typeof BreathworkRouteWithChildren
   '/community': typeof CommunityRoute
   '/library': typeof LibraryRoute
@@ -386,6 +393,7 @@ export interface FileRoutesByTo {
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
+  '/alchemists-path/mastery': typeof AlchemistsPathMasteryRoute
   '/breathwork/about': typeof BreathworkAboutRoute
   '/breathwork/community': typeof BreathworkCommunityRoute
   '/breathwork/goals': typeof BreathworkGoalsRouteWithChildren
@@ -428,7 +436,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/alchemists-path': typeof AlchemistsPathRoute
+  '/alchemists-path': typeof AlchemistsPathRouteWithChildren
   '/breathwork': typeof BreathworkRouteWithChildren
   '/community': typeof CommunityRoute
   '/library': typeof LibraryRoute
@@ -440,6 +448,7 @@ export interface FileRoutesById {
   '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga': typeof YogaRouteWithChildren
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
+  '/alchemists-path/mastery': typeof AlchemistsPathMasteryRoute
   '/breathwork/about': typeof BreathworkAboutRoute
   '/breathwork/community': typeof BreathworkCommunityRoute
   '/breathwork/goals': typeof BreathworkGoalsRouteWithChildren
@@ -495,6 +504,7 @@ export interface FileRouteTypes {
     | '/tai-chi-lab'
     | '/yoga'
     | '/yoga-therapy-lab'
+    | '/alchemists-path/mastery'
     | '/breathwork/about'
     | '/breathwork/community'
     | '/breathwork/goals'
@@ -548,6 +558,7 @@ export interface FileRouteTypes {
     | '/tai-chi-lab'
     | '/yoga'
     | '/yoga-therapy-lab'
+    | '/alchemists-path/mastery'
     | '/breathwork/about'
     | '/breathwork/community'
     | '/breathwork/goals'
@@ -601,6 +612,7 @@ export interface FileRouteTypes {
     | '/tai-chi-lab'
     | '/yoga'
     | '/yoga-therapy-lab'
+    | '/alchemists-path/mastery'
     | '/breathwork/about'
     | '/breathwork/community'
     | '/breathwork/goals'
@@ -643,7 +655,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AlchemistsPathRoute: typeof AlchemistsPathRoute
+  AlchemistsPathRoute: typeof AlchemistsPathRouteWithChildren
   BreathworkRoute: typeof BreathworkRouteWithChildren
   CommunityRoute: typeof CommunityRoute
   LibraryRoute: typeof LibraryRoute
@@ -960,6 +972,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BreathworkAboutRouteImport
       parentRoute: typeof BreathworkRoute
     }
+    '/alchemists-path/mastery': {
+      id: '/alchemists-path/mastery'
+      path: '/mastery'
+      fullPath: '/alchemists-path/mastery'
+      preLoaderRoute: typeof AlchemistsPathMasteryRouteImport
+      parentRoute: typeof AlchemistsPathRoute
+    }
     '/yoga/goals/$goalId': {
       id: '/yoga/goals/$goalId'
       path: '/$goalId'
@@ -1018,6 +1037,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AlchemistsPathRouteChildren {
+  AlchemistsPathMasteryRoute: typeof AlchemistsPathMasteryRoute
+}
+
+const AlchemistsPathRouteChildren: AlchemistsPathRouteChildren = {
+  AlchemistsPathMasteryRoute: AlchemistsPathMasteryRoute,
+}
+
+const AlchemistsPathRouteWithChildren = AlchemistsPathRoute._addFileChildren(
+  AlchemistsPathRouteChildren,
+)
 
 interface BreathworkGoalsRouteChildren {
   BreathworkGoalsGoalIdRoute: typeof BreathworkGoalsGoalIdRoute
@@ -1183,7 +1214,7 @@ const YogaRouteWithChildren = YogaRoute._addFileChildren(YogaRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AlchemistsPathRoute: AlchemistsPathRoute,
+  AlchemistsPathRoute: AlchemistsPathRouteWithChildren,
   BreathworkRoute: BreathworkRouteWithChildren,
   CommunityRoute: CommunityRoute,
   LibraryRoute: LibraryRoute,
