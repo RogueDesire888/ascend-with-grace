@@ -197,8 +197,20 @@ export const navItems = [
 ];
 
 export const movementItems = [
-  { to: "/yoga-therapy-lab" as const, label: "Yoga Therapy Lab" },
   { to: "/tai-chi-lab" as const, label: "Tai Chi Lab" },
+];
+
+export const yogaItems = [
+  { to: "/yoga/start-here" as const, label: "Start Here" },
+  { to: "/yoga/philosophy" as const, label: "Philosophy & History" },
+  { to: "/yoga/asanas" as const, label: "Asana Library" },
+  { to: "/yoga/goals" as const, label: "Yoga by Goal" },
+  { to: "/yoga/mastery" as const, label: "The Path to Mastery" },
+  { to: "/yoga/anatomy" as const, label: "Anatomy & Therapy" },
+  { to: "/yoga/pranayama" as const, label: "Pranayama & Meditation" },
+  { to: "/yoga/community" as const, label: "Community & Teachers" },
+  { to: "/yoga/resources" as const, label: "Resource Hub" },
+  { to: "/yoga/tools" as const, label: "Practice Builder" },
 ];
 
 export const alchemyItems = [
