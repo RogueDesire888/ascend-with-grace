@@ -475,6 +475,8 @@ export function SanctuaryWorld() {
                 glowEarned={glowEarned}
                 isMuted={isMuted}
                 onToggleMute={() => setIsMuted((muted) => !muted)}
+                quality={quality}
+                onCycleQuality={cycleQuality}
               />
               <WorldPanel
                 activeZone={activeZone}
@@ -1828,12 +1830,17 @@ function MovementHud({
   glowEarned,
   isMuted,
   onToggleMute,
+  quality,
+  onCycleQuality,
 }: {
   ascensionLevel: number;
   glowEarned: number;
   isMuted: boolean;
   onToggleMute: () => void;
+  quality: QualityTier;
+  onCycleQuality: () => void;
 }) {
+  const qualityLabel = quality === "cinematic" ? "Cinematic" : quality === "balanced" ? "Balanced" : "Lite";
   return (
     <div className="absolute left-4 top-4 z-30 grid gap-3">
       <div className="sanctuary-panel rounded-2xl border border-primary/30 p-3 shadow-[var(--shadow-soft)]">
