@@ -2,6 +2,9 @@ import { Link } from "@tanstack/react-router";
 import { ChevronDown, Sparkles } from "lucide-react";
 import { movementItems, navItems } from "./data";
 
+const leadingNavItems = navItems.slice(0, 4);
+const trailingNavItems = navItems.slice(4);
+
 function MovementMenu() {
   return (
     <div className="group relative">
@@ -60,20 +63,31 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="sanctuary-panel hidden items-center gap-1 rounded-full border border-border/60 p-1 md:flex"
             aria-label="Primary navigation"
           >
-            {navItems.map((item) => (
-              <div key={item.to} className="contents">
-                <Link
-                  to={item.to}
-                  activeOptions={{ exact: item.to === "/" }}
-                  className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
-                  activeProps={{
-                    className: "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]",
-                  }}
-                >
-                  {item.label}
-                </Link>
-                {item.to === "/skill-trees" ? <MovementMenu /> : null}
-              </div>
+            {leadingNavItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                activeOptions={{ exact: item.to === "/" }}
+                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
+                activeProps={{
+                  className: "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]",
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <MovementMenu />
+            {trailingNavItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
+                activeProps={{
+                  className: "bg-primary text-primary-foreground shadow-[var(--shadow-soft)]",
+                }}
+              >
+                {item.label}
+              </Link>
             ))}
           </nav>
           <Link
@@ -87,35 +101,42 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           className="scrollbar-none flex gap-2 overflow-x-auto px-4 pb-3 md:hidden"
           aria-label="Mobile navigation"
         >
-          {navItems.map((item) => (
-            <div key={item.to} className="contents">
-              <Link
-                to={item.to}
-                activeOptions={{ exact: item.to === "/" }}
-                className="shrink-0 rounded-full border border-border/70 bg-card/60 px-3 py-2 text-sm text-muted-foreground"
-                activeProps={{ className: "border-primary bg-primary text-primary-foreground" }}
-              >
-                {item.label}
-              </Link>
-              {item.to === "/skill-trees" ? (
-                <details className="group relative shrink-0">
-                  <summary className="flex cursor-pointer list-none items-center gap-1 rounded-full border border-border/70 bg-card/60 px-3 py-2 text-sm text-muted-foreground marker:hidden">
-                    Movement <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
-                  </summary>
-                  <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-56 rounded-lg border border-border/60 bg-popover p-2 shadow-[var(--shadow-aura)]">
-                    {movementItems.map((movementItem) => (
-                      <Link
-                        key={movementItem.to}
-                        to={movementItem.to}
-                        className="block rounded-md px-3 py-2 text-sm font-semibold text-popover-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
-                      >
-                        {movementItem.label}
-                      </Link>
-                    ))}
-                  </div>
-                </details>
-              ) : null}
+          {leadingNavItems.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              activeOptions={{ exact: item.to === "/" }}
+              className="shrink-0 rounded-full border border-border/70 bg-card/60 px-3 py-2 text-sm text-muted-foreground"
+              activeProps={{ className: "border-primary bg-primary text-primary-foreground" }}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <details className="group relative shrink-0">
+            <summary className="flex cursor-pointer list-none items-center gap-1 rounded-full border border-border/70 bg-card/60 px-3 py-2 text-sm text-muted-foreground marker:hidden">
+              Movement <ChevronDown className="h-4 w-4 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-56 rounded-lg border border-border/60 bg-popover p-2 shadow-[var(--shadow-aura)]">
+              {movementItems.map((movementItem) => (
+                <Link
+                  key={movementItem.to}
+                  to={movementItem.to}
+                  className="block rounded-md px-3 py-2 text-sm font-semibold text-popover-foreground transition-colors hover:bg-secondary hover:text-secondary-foreground"
+                >
+                  {movementItem.label}
+                </Link>
+              ))}
             </div>
+          </details>
+          {trailingNavItems.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="shrink-0 rounded-full border border-border/70 bg-card/60 px-3 py-2 text-sm text-muted-foreground"
+              activeProps={{ className: "border-primary bg-primary text-primary-foreground" }}
+            >
+              {item.label}
+            </Link>
           ))}
         </nav>
       </header>
