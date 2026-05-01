@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as YogaTherapyLabRouteImport } from './routes/yoga-therapy-lab'
+import { Route as TaiChiLabRouteImport } from './routes/tai-chi-lab'
 import { Route as SkillTreesRouteImport } from './routes/skill-trees'
 import { Route as SanctuaryRouteImport } from './routes/sanctuary'
 import { Route as QuestsRouteImport } from './routes/quests'
@@ -20,6 +21,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const YogaTherapyLabRoute = YogaTherapyLabRouteImport.update({
   id: '/yoga-therapy-lab',
   path: '/yoga-therapy-lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TaiChiLabRoute = TaiChiLabRouteImport.update({
+  id: '/tai-chi-lab',
+  path: '/tai-chi-lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SkillTreesRoute = SkillTreesRouteImport.update({
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/quests': typeof QuestsRoute
   '/sanctuary': typeof SanctuaryRoute
   '/skill-trees': typeof SkillTreesRoute
+  '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/quests': typeof QuestsRoute
   '/sanctuary': typeof SanctuaryRoute
   '/skill-trees': typeof SkillTreesRoute
+  '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/quests': typeof QuestsRoute
   '/sanctuary': typeof SanctuaryRoute
   '/skill-trees': typeof SkillTreesRoute
+  '/tai-chi-lab': typeof TaiChiLabRoute
   '/yoga-therapy-lab': typeof YogaTherapyLabRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/quests'
     | '/sanctuary'
     | '/skill-trees'
+    | '/tai-chi-lab'
     | '/yoga-therapy-lab'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/quests'
     | '/sanctuary'
     | '/skill-trees'
+    | '/tai-chi-lab'
     | '/yoga-therapy-lab'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/quests'
     | '/sanctuary'
     | '/skill-trees'
+    | '/tai-chi-lab'
     | '/yoga-therapy-lab'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   QuestsRoute: typeof QuestsRoute
   SanctuaryRoute: typeof SanctuaryRoute
   SkillTreesRoute: typeof SkillTreesRoute
+  TaiChiLabRoute: typeof TaiChiLabRoute
   YogaTherapyLabRoute: typeof YogaTherapyLabRoute
 }
 
@@ -128,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/yoga-therapy-lab'
       fullPath: '/yoga-therapy-lab'
       preLoaderRoute: typeof YogaTherapyLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tai-chi-lab': {
+      id: '/tai-chi-lab'
+      path: '/tai-chi-lab'
+      fullPath: '/tai-chi-lab'
+      preLoaderRoute: typeof TaiChiLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/skill-trees': {
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   QuestsRoute: QuestsRoute,
   SanctuaryRoute: SanctuaryRoute,
   SkillTreesRoute: SkillTreesRoute,
+  TaiChiLabRoute: TaiChiLabRoute,
   YogaTherapyLabRoute: YogaTherapyLabRoute,
 }
 export const routeTree = rootRouteImport
