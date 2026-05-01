@@ -94,7 +94,7 @@ function HerbPage() {
       <section className="grid gap-6 lg:grid-cols-2">
         <Block title="Actions">
           <ul className="space-y-1.5 text-sm">
-            {herb.actions.map((a) => {
+            {herb.actions.map((a: string) => {
               const act = getAction(a);
               return (
                 <li key={a} className="rounded-lg border border-border/50 bg-background/40 p-2">
@@ -107,7 +107,7 @@ function HerbPage() {
         </Block>
         <Block title="Affinities">
           <div className="flex flex-wrap gap-2">
-            {herb.affinities.map((a) => (
+            {herb.affinities.map((a: string) => (
               <span key={a} className="rounded-full border border-border/60 bg-background/40 px-2.5 py-1 text-xs text-foreground">
                 {a}
               </span>
@@ -119,7 +119,7 @@ function HerbPage() {
       <section className="rounded-3xl border border-border/50 bg-card/40 p-6">
         <h2 className="text-xl font-bold text-foreground">Key Constituents</h2>
         <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-          {herb.constituents.map((c) => (
+          {herb.constituents.map((c: { name: string; klass: string; role: string }) => (
             <li key={c.name} className="rounded-lg border border-border/50 bg-background/40 p-3">
               <p className="text-sm font-semibold text-foreground">{c.name}</p>
               <p className="text-[0.7rem] uppercase tracking-widest text-leaf-glow">{c.klass}</p>
@@ -132,7 +132,7 @@ function HerbPage() {
       <section className="rounded-3xl border border-border/50 bg-card/40 p-6">
         <h2 className="text-xl font-bold text-foreground">Preparations &amp; Doses</h2>
         <ul className="mt-3 space-y-2">
-          {herb.preparations.map((p, i) => (
+          {herb.preparations.map((p: { preparation: string; amount: string; notes?: string }, i: number) => (
             <li key={i} className="rounded-lg border border-border/50 bg-background/40 p-3">
               <p className="text-sm font-semibold text-foreground">{p.preparation}</p>
               <p className="text-sm text-muted-foreground">{p.amount}</p>
@@ -151,7 +151,7 @@ function HerbPage() {
           <div>
             <p className="text-sm font-semibold text-foreground">Contraindications</p>
             <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
-              {herb.contraindications.map((c) => (
+              {herb.contraindications.map((c: string) => (
                 <li key={c}>• {c}</li>
               ))}
             </ul>
@@ -159,7 +159,7 @@ function HerbPage() {
           <div>
             <p className="text-sm font-semibold text-foreground">Drug Interactions</p>
             <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
-              {herb.interactions.map((c) => (
+              {herb.interactions.map((c: string) => (
                 <li key={c}>• {c}</li>
               ))}
             </ul>
@@ -181,7 +181,7 @@ function HerbPage() {
         <section>
           <h2 className="mb-3 text-xl font-bold text-foreground">Related Allies</h2>
           <div className="flex flex-wrap gap-2">
-            {herb.related.map((r) => (
+            {herb.related.map((r: string) => (
               <Link
                 key={r}
                 to="/alchemists-path/materia-medica/$slug"

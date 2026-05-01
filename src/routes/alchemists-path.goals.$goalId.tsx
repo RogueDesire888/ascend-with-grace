@@ -64,7 +64,7 @@ function GoalDetail() {
       <section>
         <h2 className="mb-3 text-xl font-bold text-foreground">Ally herbs</h2>
         <div className="flex flex-wrap gap-2">
-          {goal.herbs.map((slug) => {
+          {goal.herbs.map((slug: string) => {
             const h = getHerb(slug);
             return (
               <Link
@@ -83,7 +83,7 @@ function GoalDetail() {
       <section className="rounded-3xl border border-border/50 bg-card/40 p-6">
         <h2 className="text-xl font-bold text-foreground">Protocol</h2>
         <ol className="mt-3 space-y-2">
-          {goal.protocol.map((step, i) => (
+          {goal.protocol.map((step: string, i: number) => (
             <li
               key={i}
               className="rounded-lg border border-border/50 bg-background/40 p-3 text-sm text-muted-foreground"
@@ -102,7 +102,7 @@ function GoalDetail() {
           <div>
             <p className="text-xs uppercase tracking-widest text-muted-foreground">Ingredients</p>
             <ul className="mt-1 space-y-1 text-sm text-foreground">
-              {goal.recipe.ingredients.map((i) => (
+              {goal.recipe.ingredients.map((i: string) => (
                 <li key={i}>• {i}</li>
               ))}
             </ul>

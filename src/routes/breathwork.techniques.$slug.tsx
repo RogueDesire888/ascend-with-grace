@@ -72,7 +72,7 @@ function TechniqueDetail() {
         <div className="quest-panel-air rounded-3xl p-6">
           <h2 className="mb-3 text-lg font-bold text-foreground">Step-by-Step</h2>
           <ol className="space-y-2">
-            {technique.steps.map((s, i) => (
+            {technique.steps.map((s: string, i: number) => (
               <li key={i} className="flex gap-3 text-sm text-foreground/90">
                 <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-cyan-glow/50 text-xs text-cyan-glow">
                   {i + 1}
@@ -114,7 +114,7 @@ function TechniqueDetail() {
       <section className="rounded-3xl border border-coral-glow/40 bg-background/40 p-6">
         <h2 className="text-lg font-bold text-foreground">Contraindications</h2>
         <ul className="mt-2 list-disc pl-5 text-sm text-foreground/90">
-          {technique.contraindications.map((c) => (
+          {technique.contraindications.map((c: string) => (
             <li key={c}>{c}</li>
           ))}
         </ul>
@@ -124,7 +124,7 @@ function TechniqueDetail() {
         <section>
           <h2 className="mb-3 text-lg font-bold text-foreground">Related</h2>
           <div className="flex flex-wrap gap-2">
-            {technique.related.map((slug) => (
+            {technique.related.map((slug: string) => (
               <Link
                 key={slug}
                 to="/breathwork/techniques/$slug"

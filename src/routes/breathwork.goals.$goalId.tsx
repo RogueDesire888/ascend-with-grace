@@ -34,7 +34,7 @@ export const Route = createFileRoute("/breathwork/goals/$goalId")({
 
 function GoalDetail() {
   const { goal } = Route.useLoaderData();
-  const recs = goal.recommended.map((s) => getTechnique(s)).filter(Boolean);
+  const recs = goal.recommended.map((s: string) => getTechnique(s)).filter(Boolean);
   const featured = recs[0];
 
   return (
@@ -61,7 +61,7 @@ function GoalDetail() {
       <section>
         <h2 className="mb-3 text-lg font-bold text-foreground">Recommended Techniques</h2>
         <div className="grid gap-3 md:grid-cols-2">
-          {recs.map((t) => (
+          {recs.map((t: any) => (
             <Link
               key={t!.slug}
               to="/breathwork/techniques/$slug"
