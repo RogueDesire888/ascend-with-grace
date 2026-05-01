@@ -224,7 +224,17 @@ export const yogaItems = [
 ];
 
 export const alchemyItems = [
-  { to: "/alchemists-path" as const, label: "Herbal Path" },
+  { to: "/alchemists-path/start-here" as const, label: "Start Here" },
+  { to: "/alchemists-path/materia-medica" as const, label: "Materia Medica" },
+  { to: "/alchemists-path/science" as const, label: "Phytochemistry & Science" },
+  { to: "/alchemists-path/preparations" as const, label: "Preparations" },
+  { to: "/alchemists-path/goals" as const, label: "Herbs by Goal" },
+  { to: "/alchemists-path/mastery" as const, label: "Path to Mastery" },
+  { to: "/alchemists-path/traditions" as const, label: "Traditions" },
+  { to: "/alchemists-path/safety" as const, label: "Safety & Sustainability" },
+  { to: "/alchemists-path/community" as const, label: "Community" },
+  { to: "/alchemists-path/resources" as const, label: "Resources" },
+  { to: "/alchemists-path/tools" as const, label: "Tools" },
   { to: "/smoothie-codex" as const, label: "Smoothie Codex" },
 ];
 
