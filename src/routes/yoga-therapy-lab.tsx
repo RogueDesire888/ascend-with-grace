@@ -6,17 +6,25 @@ import {
   Brain,
   CheckCircle2,
   ClipboardList,
+  Compass,
+  Eye,
+  Flame,
+  Flower2,
   GraduationCap,
   HeartPulse,
   Home,
+  Leaf,
   Library,
+  Mountain,
   NotebookPen,
   Search,
   Settings2,
   Sparkles,
+  Sun,
   Wind,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { QuestPath, type QuestLevel, type QuestBadge } from "@/components/platform/QuestPath";
 
 export const Route = createFileRoute("/yoga-therapy-lab")({
   head: () => ({
